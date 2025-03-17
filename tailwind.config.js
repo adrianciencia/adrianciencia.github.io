@@ -1,11 +1,13 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ["./src/**/*.{astro,js,ts,jsx,tsx}"],
-    theme: {
-      extend: {
-        fontFamily: {
-          inter: ["Inter", "sans-serif"]
-        }
-      }
-    }
-  }
-  
+  content: [
+    './src/**/*.{astro,html,js,jsx,ts,tsx,svelte,vue}',
+    './public/**/*.html',
+  ],
+  theme: {
+    extend: {
+      // Customize colors, spacing, etc.
+    },
+  },
+  plugins: [],
+};
