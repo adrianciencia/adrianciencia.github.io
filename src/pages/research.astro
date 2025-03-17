@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const publications = [
+  {
+    title: 'High-redshift Galaxy Analysis',
+    journal: 'Astro Journal, 2024',
+    link: 'https://arxiv.org/abs/1234.5678',
+  },
+  {
+    title: 'Star Formation Rates in Distant Galaxies',
+    journal: 'Galactic Letters, 2023',
+    link: '#',
+  },
+];
+---
+
+<BaseLayout>
+  <section class="max-w-4xl mx-auto p-4">
+    <h2 class="text-2xl font-semibold mb-4">Research Publications</h2>
+    <ul class="space-y-4">
+      {publications.map((pub) => (
+        <li class="border-b pb-2">
+          <h3 class="font-bold">{pub.title}</h3>
+          <p class="text-sm text-gray-600">{pub.journal}</p>
+          <a href={pub.link} class="text-blue-600 hover:underline">View Paper</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+interface ButtonProps {
+  label: string;
+  onClick?: () => void; // Not used in plain Astro, but handy if using a framework
+  type?: 'button' | 'submit' | 'reset';
+}
+
+const { label, type = 'button' } = Astro.props as ButtonProps;
+---
+
+<button
+  type={type}
+  class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+>
+  {label}
+</button>
