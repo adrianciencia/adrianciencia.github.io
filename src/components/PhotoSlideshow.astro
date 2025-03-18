@@ -1,0 +1,256 @@
+---
+interface Photo {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+interface Props {
+  photos: Photo[];
+  autoplay?: boolean;
+  interval?: number;
+  height?: string;
+}
+
+const { 
+  photos, 
+  autoplay = true, 
+  interval = 5000,
+  height = '70vh'
+} = Astro.props;
+
+const uniqueId = `slideshow-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div class="photo-slideshow relative overflow-hidden rounded-2xl" id={uniqueId} style={`height: ${height}; min-height: 400px;`}>
+  <div class="slides-container absolute inset-0">
+    {photos.map((photo, index) => (
+      <div class={`slide absolute inset-0 transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} data-index={index}>
+        <img 
+          src={photo.src} 
+          alt={photo.alt} 
+          class="w-full h-full object-cover"
+        />
+        
+        {photo.caption && (
+          <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent text-white">
+            <div class="max-w-5xl mx-auto">
+              <p class="text-xl font-medium">{photo.caption}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+  
+  <!-- Navigation arrows -->
+  <button class="nav-arrow prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md text-white rounded-full p-2 opacity-0 transition-opacity duration-300 hover:bg-white/30" aria-label="Previous slide">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  
+  <button class="nav-arrow next absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md text-white rounded-full p-2 opacity-0 transition-opacity duration-300 hover:bg-white/30" aria-label="Next slide">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+  
+  <!-- Indicator dots -->
+  <div class="indicators absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+    {photos.map((_, index) => (
+      <button 
+        class={`w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white w-4' : 'bg-white/50'}`} 
+        data-index={index}
+        aria-label={`Go to slide ${index + 1}`}
+      ></button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .photo-slideshow:hover .nav-arrow {
+    opacity: 1;
+  }
+  
+  .slide {
+    z-index: 1;
+  }
+  
+  .slide.active {
+    z-index: 2;
+    opacity: 1;
+  }
+</style>
+
+<script define:vars={{ uniqueId, autoplay, interval, totalSlides: photos.length }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const slideshow = document.getElementById(uniqueId);
+    if (!slideshow) return;
+    
+    const slides = slideshow.querySelectorAll('.slide');
+    const prevButton = slideshow.querySelector('.nav-arrow.prev');
+    const nextButton = slideshow.querySelector('.nav-arrow.next');
+    const indicators = slideshow.querySelectorAll('.indicators button');
+    
+    let currentIndex = 0;
+    let intervalId = null;
+    
+    // Function to show a specific slide
+    const showSlide = (index) => {
+      // Hide all slides
+      slides.forEach(slide => {
+        slide.classList.remove('active');
+        slide.classList.add('opacity-0');
+        slide.classList.remove('opacity-100');
+      });
+      
+      // Update indicators
+      indicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.classList.add('bg-white', 'w-4');
+          indicator.classList.remove('bg-white/50', 'w-2');
+        } else {
+          indicator.classList.remove('bg-white', 'w-4');
+          indicator.classList.add('bg-white/50', 'w-2');
+        }
+      });
+      
+      // Show the current slide
+      slides[index].classList.add('active', 'opacity-100');
+      slides[index].classList.remove('opacity-0');
+      
+      // Update current index
+      currentIndex = index;
+    };
+    
+    // Function to go to the next slide
+    const nextSlide = () => {
+      const newIndex = (currentIndex + 1) % totalSlides;
+      showSlide(newIndex);
+    };
+    
+    // Function to go to the previous slide
+    const prevSlide = () => {
+      const newIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      showSlide(newIndex);
+    };
+    
+    // Set up autoplay
+    const startAutoplay = () => {
+      if (autoplay && totalSlides > 1) {
+        intervalId = setInterval(nextSlide, interval);
+      }
+    };
+    
+    // Clear autoplay
+    const stopAutoplay = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+    
+    // Add event listeners
+    prevButton?.addEventListener('click', () => {
+      prevSlide();
+      stopAutoplay();
+      startAutoplay();
+    });
+    
+    nextButton?.addEventListener('click', () => {
+      nextSlide();
+      stopAutoplay();
+      startAutoplay();
+    });
+    
+    // Add event listeners to indicators
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        showSlide(index);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+    
+    // Pause autoplay when hovering over the slideshow
+    slideshow.addEventListener('mouseenter', stopAutoplay);
+    slideshow.addEventListener('mouseleave', startAutoplay);
+    
+    // Add touch support for mobile devices
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    slideshow.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    slideshow.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+    
+    const handleSwipe = () => {
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        // Swipe left, go to next slide
+        nextSlide();
+        stopAutoplay();
+        startAutoplay();
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        // Swipe right, go to previous slide
+        prevSlide();
+        stopAutoplay();
+        startAutoplay();
+      }
+    };
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      // Only handle keyboard events if the slideshow is in the viewport
+      const rect = slideshow.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom >= 0;
+      
+      if (isInViewport) {
+        if (e.key === 'ArrowLeft') {
+          prevSlide();
+          stopAutoplay();
+          startAutoplay();
+        } else if (e.key === 'ArrowRight') {
+          nextSlide();
+          stopAutoplay();
+          startAutoplay();
+        }
+      }
+    });
+    
+    // Initialize the slideshow
+    showSlide(0);
+    startAutoplay();
+    
+    // Add a subtle animation when slides change
+    const animateSlideTransition = (index) => {
+      const slide = slides[index];
+      const img = slide.querySelector('img');
+      
+      if (img) {
+        img.style.transform = 'scale(1.05)';
+        img.style.transition = 'transform 5s ease-out';
+        
+        setTimeout(() => {
+          img.style.transform = 'scale(1)';
+        }, 50);
+      }
+    };
+    
+    // Apply the animation to the first slide
+    animateSlideTransition(0);
+    
+    // Apply animation when changing slides
+    const originalShowSlide = showSlide;
+    showSlide = (index) => {
+      originalShowSlide(index);
+      animateSlideTransition(index);
+    };
+  });
+</script>

@@ -1,0 +1,49 @@
+---
+interface Props {
+  categories: string[];
+  activeCategory?: string;
+}
+
+const { categories, activeCategory } = Astro.props;
+---
+
+<div class="photo-filter mb-8">
+  <div class="flex flex-wrap items-center gap-3 justify-center">
+    <a 
+      href="/photography" 
+      class={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${!activeCategory ? 'bg-[var(--apple-blue)] text-white' : 'bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-800)] text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] hover:bg-[var(--apple-gray-200)] dark:hover:bg-[var(--apple-gray-700)]'}`}
+    >
+      All
+    </a>
+    
+    {categories.map(category => (
+      <a 
+        href={`/photography/category/${category.toLowerCase()}`} 
+        class={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === category ? 'bg-[var(--apple-blue)] text-white' : 'bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-800)] text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] hover:bg-[var(--apple-gray-200)] dark:hover:bg-[var(--apple-gray-700)]'}`}
+      >
+        {category}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .photo-filter {
+    position: relative;
+  }
+  
+  .photo-filter::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--apple-gray-200), transparent);
+    opacity: 0.6;
+  }
+  
+  .dark .photo-filter::after {
+    background: linear-gradient(to right, transparent, var(--apple-gray-700), transparent);
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import PhotoGallery from '../../components/PhotoGallery.astro';
+import PhotoFilter from '../../components/PhotoFilter.astro';
+import PhotoSlideshow from '../../components/PhotoSlideshow.astro';
+
+// This would typically come from a CMS or data file
+// For now, we'll hardcode some example photos
+const photos = [
+  {
+    src: "/photography/galaxy1.jpg",
+    alt: "Spiral Galaxy",
+    caption: "Spiral Galaxy M51",
+    date: "June 2023",
+    location: "Atacama Desert, Chile",
+    category: "galaxies",
+    featured: true
+  },
+  {
+    src: "/photography/nebula1.jpg",
+    alt: "Orion Nebula",
+    caption: "Orion Nebula",
+    date: "January 2023",
+    location: "La Palma, Spain",
+    category: "nebulae"
+  },
+  {
+    src: "/photography/stars1.jpg",
+    alt: "Star Trails",
+    caption: "Star Trails over Mountains",
+    date: "August 2022",
+    location: "Sierra Nevada, USA",
+    category: "stars"
+  },
+  {
+    src: "/photography/moon1.jpg",
+    alt: "Full Moon",
+    caption: "Full Moon Detail",
+    date: "October 2022",
+    location: "Home Observatory",
+    category: "planets"
+  },
+  {
+    src: "/photography/aurora1.jpg",
+    alt: "Aurora Borealis",
+    caption: "Northern Lights",
+    date: "March 2023",
+    location: "Iceland",
+    category: "phenomena",
+    featured: true
+  },
+  {
+    src: "/photography/milkyway1.jpg",
+    alt: "Milky Way",
+    caption: "Milky Way Core",
+    date: "July 2022",
+    location: "Death Valley, USA",
+    category: "galaxies"
+  },
+  {
+    src: "/photography/eclipse1.jpg",
+    alt: "Solar Eclipse",
+    caption: "Total Solar Eclipse",
+    date: "April 2023",
+    location: "Australia",
+    category: "phenomena"
+  },
+  {
+    src: "/photography/telescope1.jpg",
+    alt: "Telescope Setup",
+    caption: "Astrophotography Setup",
+    date: "May 2022",
+    location: "Home Observatory",
+    category: "equipment"
+  },
+  {
+    src: "/photography/planets1.jpg",
+    alt: "Jupiter",
+    caption: "Jupiter and its Moons",
+    date: "September 2022",
+    location: "Home Observatory",
+    category: "planets"
+  }
+];
+
+// Get featured photos for the slideshow
+const featuredPhotos = photos
+  .filter(photo => photo.featured)
+  .map(photo => ({
+    src: photo.src,
+    alt: photo.alt,
+    caption: photo.caption
+  }));
+
+// Get all unique categories
+const categories = [...new Set(photos.map(photo => photo.category))].map(
+  cat => cat.charAt(0).toUpperCase() + cat.slice(1)
+);
+---
+
+<BaseLayout title="Photography | Adrian Diaz">
+  <!-- Hero section with slideshow -->
+  <div class="relative">
+    <PhotoSlideshow photos={featuredPhotos} height="70vh" />
+    
+    <div class="absolute inset-0 flex items-center justify-center z-10">
+      <div class="text-center text-white px-4">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Astrophotography</h1>
+        <p class="text-xl max-w-2xl mx-auto text-white/90">Capturing the wonders of the cosmos</p>
+      </div>
+    </div>
+  </div>
+  
+  <Section background="white" paddingY="large">
+    <div class="max-w-7xl mx-auto">
+      <PhotoFilter categories={categories} />
+      
+      <PhotoGallery photos={photos} masonry={true} />
+    </div>
+  </Section>
+</BaseLayout>

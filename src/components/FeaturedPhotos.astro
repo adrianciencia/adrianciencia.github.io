@@ -1,0 +1,123 @@
+---
+import PhotoSlideshow from './PhotoSlideshow.astro';
+
+// Featured photos for the slideshow
+const featuredPhotos = [
+  {
+    src: "/photography/galaxy1.jpg",
+    alt: "Spiral Galaxy",
+    caption: "Spiral Galaxy M51"
+  },
+  {
+    src: "/photography/aurora1.jpg",
+    alt: "Aurora Borealis",
+    caption: "Northern Lights in Iceland"
+  },
+  {
+    src: "/photography/nebula1.jpg",
+    alt: "Orion Nebula",
+    caption: "The Great Orion Nebula"
+  }
+];
+
+// Grid photos
+const gridPhotos = [
+  {
+    src: "/photography/milkyway1.jpg",
+    alt: "Milky Way",
+    title: "Milky Way Core",
+    category: "Galaxies"
+  },
+  {
+    src: "/photography/moon1.jpg",
+    alt: "Full Moon",
+    title: "Lunar Details",
+    category: "Planets"
+  },
+  {
+    src: "/photography/stars1.jpg",
+    alt: "Star Trails",
+    title: "Star Trails",
+    category: "Stars"
+  },
+  {
+    src: "/photography/eclipse1.jpg",
+    alt: "Solar Eclipse",
+    title: "Total Solar Eclipse",
+    category: "Phenomena"
+  }
+];
+---
+
+<section class="featured-photos py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-4 md:px-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+      <div>
+        <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-2">Photography</h2>
+        <p class="text-lg text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)]">Capturing the wonders of the cosmos</p>
+      </div>
+      
+      <a href="/photography" class="mt-4 md:mt-0 text-[var(--apple-blue)] font-medium inline-flex items-center group">
+        View all photos
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+    
+    <!-- Slideshow for featured photos -->
+    <div class="mb-8">
+      <PhotoSlideshow photos={featuredPhotos} height="50vh" />
+    </div>
+    
+    <!-- Grid for additional photos -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {gridPhotos.map((photo) => (
+        <a href="/photography" class="group block relative overflow-hidden rounded-xl aspect-square">
+          <img 
+            src={photo.src} 
+            alt={photo.alt} 
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+            <h3 class="text-white font-medium">{photo.title}</h3>
+            <p class="text-white/80 text-sm">{photo.category}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-photos {
+    position: relative;
+  }
+  
+  .featured-photos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--apple-gray-200), transparent);
+    opacity: 0.6;
+  }
+  
+  .featured-photos::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--apple-gray-200), transparent);
+    opacity: 0.6;
+  }
+  
+  .dark .featured-photos::before,
+  .dark .featured-photos::after {
+    background: linear-gradient(to right, transparent, var(--apple-gray-700), transparent);
+  }
+</style>
