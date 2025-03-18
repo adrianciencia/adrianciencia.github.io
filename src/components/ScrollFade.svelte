@@ -1,19 +1,25 @@
 <script>
     import { onMount } from 'svelte';
   
+    export let threshold = 50; // Customizable threshold
+    export let duration = 500; // Customizable duration
+    
     let fadeClass = '';
   
     onMount(() => {
       const handleScroll = () => {
         const scrollPos = window.scrollY;
-        fadeClass = scrollPos > 50 ? 'opacity-0' : 'opacity-100';
+        fadeClass = scrollPos > threshold ? 'opacity-0' : 'opacity-100';
       };
   
+      // Initial check
+      handleScroll();
+      
       window.addEventListener('scroll', handleScroll);
       return () => window.removeEventListener('scroll', handleScroll);
     });
-  </script>
+</script>
   
-  <div class="transition-opacity duration-500 {fadeClass}">
-    <slot />
-  </div>
+<div class="transition-opacity duration-{duration} {fadeClass}">
+  <slot />
+</div>
