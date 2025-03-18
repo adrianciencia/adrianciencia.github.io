@@ -1,17 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-// Import all markdown files from blog folder
-const postImportResult = import.meta.glob('../content/blog/*.md', { eager: true });
-
-// Convert the imports into an array of posts
-const posts = Object.values(postImportResult).map((mod: any) => ({
-  url: '/blog/' + mod.file.replace('../content/blog/', '').replace('.md', ''),
-  ...mod.frontmatter,
-}));
+// Get all blog posts
+const posts = await getCollection('blog');
 
 // Sort posts by date, descending
-posts.sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 ---
 
 <BaseLayout>
@@ -20,11 +15,11 @@ posts.sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
     <ul class="space-y-4">
       {posts.map((post) => (
         <li>
-          <a href={post.url} class="text-blue-500 hover:underline">
-            {post.title}
+          <a href={`/blog/${post.slug}`} class="text-blue-500 hover:underline">
+            {post.data.title}
           </a>
-          <p class="text-sm text-gray-600">{post.description}</p>
-          <p class="text-xs text-gray-400">{post.date}</p>
+          <p class="text-sm text-gray-600">{post.data.description}</p>
+          <p class="text-xs text-gray-400">{post.data.date}</p>
         </li>
       ))}
     </ul>
