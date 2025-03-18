@@ -1,28 +1,73 @@
 ---
-interface CardProps {
+interface Props {
   title: string;
   description: string;
-  link?: string;
   image?: string;
+  link?: string;
+  linkText?: string;
+  date?: string;
+  tags?: string[];
 }
 
-const { title, description, link, image } = Astro.props as CardProps;
+const { 
+  title, 
+  description, 
+  image, 
+  link, 
+  linkText = "Learn more", 
+  date,
+  tags = []
+} = Astro.props;
+
+// Determine if the card should be a link
+const isLink = !!link;
+const Component = isLink ? 'a' : 'div';
+const props = isLink ? { href: link, class: "group" } : { class: "" };
 ---
 
-<article class="rounded-lg border shadow-sm overflow-hidden bg-white">
-  {image && (
-    <img src={image} alt={title} class="w-full h-48 object-cover" />
-  )}
-  <div class="p-4">
-    <h3 class="text-lg font-semibold mb-2">{title}</h3>
-    <p class="text-sm text-gray-600 mb-4">{description}</p>
-    {link && (
-      <a 
-        href={link} 
-        class="inline-block px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
-      >
-        Learn More
-      </a>
+<Component {...props}>
+  <div class={`apple-card h-full flex flex-col ${isLink ? 'cursor-pointer' : ''}`}>
+    {image && (
+      <div class="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
+        <img 
+          src={image} 
+          alt={title} 
+          class={`w-full h-full object-cover ${isLink ? 'transition-transform duration-500 group-hover:scale-105' : ''}`}
+        />
+      </div>
     )}
+    
+    <div class="flex-1 flex flex-col">
+      {date && (
+        <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-2">{date}</p>
+      )}
+      
+      <h3 class={`text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white ${isLink ? 'group-hover:text-[var(--apple-blue)] transition-colors' : ''}`}>
+        {title}
+      </h3>
+      
+      <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4 flex-1">{description}</p>
+      
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-4">
+          {tags.map(tag => (
+            <span class="text-xs px-2 py-1 rounded-full bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-700)] text-[var(--apple-gray-600)] dark:text-[var(--apple-gray-300)]">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      
+      {isLink && linkText && (
+        <div class="mt-auto">
+          <span class="text-[var(--apple-blue)] font-medium inline-flex items-center">
+            {linkText}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </div>
+      )}
+    </div>
   </div>
-</article>
+</Component>

@@ -1,0 +1,67 @@
+---
+interface Props {
+  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date';
+  name: string;
+  id?: string;
+  label?: string;
+  placeholder?: string;
+  value?: string | number;
+  required?: boolean;
+  disabled?: boolean;
+  error?: string;
+  helper?: string;
+  fullWidth?: boolean;
+}
+
+const { 
+  type = 'text', 
+  name, 
+  id = name, 
+  label, 
+  placeholder = '', 
+  value = '',
+  required = false,
+  disabled = false,
+  error,
+  helper,
+  fullWidth = true
+} = Astro.props;
+
+const widthClass = fullWidth ? 'w-full' : '';
+const hasError = !!error;
+---
+
+<div class={`mb-4 ${widthClass}`}>
+  {label && (
+    <label for={id} class="block text-sm font-medium text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] mb-1">
+      {label}
+      {required && <span class="text-[var(--apple-red)]">*</span>}
+    </label>
+  )}
+  
+  <input
+    type={type}
+    name={name}
+    id={id}
+    placeholder={placeholder}
+    value={value}
+    required={required}
+    disabled={disabled}
+    class={`
+      block px-4 py-2.5 rounded-lg border bg-white dark:bg-[var(--apple-gray-800)] 
+      focus:ring-2 focus:outline-none transition-all duration-200
+      ${widthClass}
+      ${hasError 
+        ? 'border-[var(--apple-red)] focus:border-[var(--apple-red)] focus:ring-[var(--apple-red)]/20' 
+        : 'border-[var(--apple-gray-200)] dark:border-[var(--apple-gray-700)] focus:border-[var(--apple-blue)] focus:ring-[var(--apple-blue)]/20 dark:text-white'
+      }
+      ${disabled ? 'opacity-60 cursor-not-allowed' : ''}
+    `}
+  />
+  
+  {(error || helper) && (
+    <p class={`mt-1 text-sm ${hasError ? 'text-[var(--apple-red)]' : 'text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]'}`}>
+      {error || helper}
+    </p>
+  )}
+</div>

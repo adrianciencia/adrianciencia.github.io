@@ -1,0 +1,54 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  centered?: boolean;
+  background?: 'white' | 'light' | 'dark';
+  paddingY?: 'small' | 'medium' | 'large';
+  id?: string;
+}
+
+const { 
+  title, 
+  subtitle, 
+  centered = false, 
+  background = 'white',
+  paddingY = 'medium',
+  id
+} = Astro.props;
+
+// Background classes
+const backgroundClasses = {
+  white: "bg-white dark:bg-[var(--apple-gray-900)]",
+  light: "bg-[var(--apple-gray-50)] dark:bg-[var(--apple-gray-800)] border-y border-gray-200 dark:border-gray-800",
+  dark: "bg-[var(--apple-gray-900)] text-white"
+};
+
+// Padding classes
+const paddingClasses = {
+  small: "py-10",
+  medium: "py-16 md:py-20",
+  large: "py-20 md:py-32"
+};
+
+// Text alignment
+const textAlignClass = centered ? "text-center" : "";
+---
+
+<section id={id} class={`${backgroundClasses[background]} ${paddingClasses[paddingY]}`}>
+  <div class="max-w-7xl mx-auto px-4 md:px-6">
+    {(title || subtitle) && (
+      <div class={`mb-12 ${textAlignClass} ${centered ? 'mx-auto max-w-3xl' : ''}`}>
+        {title && (
+          <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4">{title}</h2>
+        )}
+        
+        {subtitle && (
+          <p class="text-xl text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)]">{subtitle}</p>
+        )}
+      </div>
+    )}
+    
+    <slot />
+  </div>
+</section>
