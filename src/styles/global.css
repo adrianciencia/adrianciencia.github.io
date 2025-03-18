@@ -127,3 +127,70 @@ html {
   }
 }
 
+.photo-detail .absolute:not(a):not(button),
+.photo-gallery .absolute:not(a):not(button),
+.photo-slideshow .absolute:not(a):not(button) {
+  pointer-events: none !important;
+}
+
+.photo-detail a,
+.photo-detail button,
+.photo-gallery a,
+.photo-gallery button,
+.photo-slideshow a,
+.photo-slideshow button {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Unified photo interaction system */
+.photo-detail,
+.photo-slideshow,
+.photo-gallery {
+  --base-z: 1;
+  --content-z: 10;
+  --overlay-z: 20;
+  --controls-z: 30;
+}
+
+/* Disable pointer events on all photo containers */
+.photo-detail img,
+.photo-slideshow img,
+.photo-gallery img,
+.photo-detail .absolute,
+.photo-slideshow .absolute,
+.photo-gallery .absolute {
+  pointer-events: none !important;
+  z-index: var(--base-z);
+}
+
+/* Enable pointer events on interactive elements */
+.photo-detail button,
+.photo-detail a,
+.photo-slideshow button,
+.photo-slideshow a,
+.photo-gallery button,
+.photo-gallery a {
+  pointer-events: auto !important;
+  z-index: var(--controls-z);
+  position: relative;
+}
+
+/* Unified overlay handling */
+.photo-detail .absolute:has(button),
+.photo-slideshow .absolute:has(button),
+.photo-gallery .absolute:has(button) {
+  pointer-events: none !important;
+  z-index: var(--overlay-z);
+}
+
+.photo-detail .absolute > button,
+.photo-slideshow .absolute > button,
+.photo-gallery .absolute > button {
+  pointer-events: auto !important;
+  z-index: var(--controls-z);
+}
+
+
+

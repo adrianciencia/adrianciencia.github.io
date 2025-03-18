@@ -1,35 +1,70 @@
 ---
+// Add type definitions
+import PhotoLink from './PhotoLink.astro';
+
 interface Props {
   categories: string[];
   activeCategory?: string;
+  centered?: boolean;
+  showViewAll?: boolean;
 }
 
-const { categories, activeCategory } = Astro.props;
+const { 
+  categories, 
+  activeCategory,
+  centered = false,
+  showViewAll = false
+} = Astro.props;
+
+// Function to get the URL for a category
+const getCategoryUrl = (category: string) => {
+  return `/photography/category/${category.toLowerCase()}`;
+};
+
+// Function to check if a category is active
+const isActive = (category: string) => {
+  return category === activeCategory;
+};
 ---
 
 <div class="photo-filter mb-8">
-  <div class="flex flex-wrap items-center gap-3 justify-center">
+  <div class={`flex flex-wrap gap-3 ${centered ? 'justify-center w-full' : ''}`}>
     <a 
       href="/photography" 
-      class={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${!activeCategory ? 'bg-[var(--apple-blue)] text-white' : 'bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-800)] text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] hover:bg-[var(--apple-gray-200)] dark:hover:bg-[var(--apple-gray-700)]'}`}
+      class={`px-4 py-2 rounded-full text-sm font-medium transition-colors
+        ${!activeCategory 
+          ? 'bg-[var(--apple-blue)] text-white' 
+          : 'bg-[var(--apple-gray-100)] text-[var(--apple-gray-700)] dark:bg-[var(--apple-gray-800)] hover:bg-[var(--apple-gray-300)] dark:hover:bg-[var(--apple-gray-200)] dark:text-[var(--apple-gray-700)]'
+        }`}
     >
-      All
+      All Photos
     </a>
     
     {categories.map(category => (
-      <a 
-        href={`/photography/category/${category.toLowerCase()}`} 
-        class={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === category ? 'bg-[var(--apple-blue)] text-white' : 'bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-800)] text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] hover:bg-[var(--apple-gray-200)] dark:hover:bg-[var(--apple-gray-700)]'}`}
+      <a
+        href={getCategoryUrl(category)}
+        class={`px-4 py-2 rounded-full text-sm font-medium transition-colors
+          ${isActive(category) 
+            ? 'bg-[var(--apple-blue)] text-white' 
+            : 'bg-[var(--apple-gray-100)] text-[var(--apple-gray-700)] dark:bg-[var(--apple-gray-800)] dark:text-[var(--apple-gray-300)] hover:bg-[var(--apple-gray-200)] dark:hover:bg-[var(--apple-gray-700)]'
+          }`}
       >
         {category}
       </a>
     ))}
   </div>
+  
+  {showViewAll && (
+    <div class="mt-6 text-center">
+      <PhotoLink href="/photography" />
+    </div>
+  )}
 </div>
 
 <style>
   .photo-filter {
     position: relative;
+    width: 100%;
   }
   
   .photo-filter::after {
@@ -47,3 +82,4 @@ const { categories, activeCategory } = Astro.props;
     background: linear-gradient(to right, transparent, var(--apple-gray-700), transparent);
   }
 </style>
+
