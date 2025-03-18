@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Get all blog posts
+// Get all blog posts using the content collections API
 const posts = await getCollection('blog');
 
 // Sort posts by date, descending

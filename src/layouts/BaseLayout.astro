@@ -1,4 +1,7 @@
 ---
+// Add a simple console log to check if the layout is being processed
+console.log("BaseLayout is being processed");
+
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
@@ -14,7 +17,16 @@ import Footer from '../components/Footer.astro';
     <!-- ... -->
     <slot name="head"></slot>
   </head>
-  <body>
-    <!-- your header, main, footer, etc. -->
+  <body class="bg-white text-gray-800">
+    <Header />
+    <main class="min-h-screen">
+      <!-- Debug element inside the body -->
+      <div id="debug" style="position: fixed; bottom: 5px; right: 5px; background: red; color: white; padding: 5px; z-index: 9999; font-size: 12px;">
+        Debug: Site is loading
+      </div>
+      
+      <slot /> <!-- This is where page content will be inserted -->
+    </main>
+    <Footer />
   </body>
 </html>
