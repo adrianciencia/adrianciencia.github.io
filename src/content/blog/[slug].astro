@@ -1,0 +1,17 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+const allPosts = import.meta.glob('../../content/blog/*.md');
+const slug = Astro.params.slug;
+
+// Load the correct post
+const postImport = allPosts[`../../content/blog/${slug}.md`];
+if (!postImport) {
+  throw new Error(`Post not found for slug: ${slug}`);
+}
+const { frontmatter, Content } = await postImport();
+---
+
+<BlogLayout {frontmatter}>
+  <Content />
+</BlogLayout>

@@ -7,12 +7,14 @@ import Footer from '../components/Footer.astro';
   <head>
     <meta charset="UTF-8" />
     <title>My Astro Site</title>
+    <meta name="description" content="A personal site about astronomy, projects, and more." />
+    <meta property="og:title" content="My Astro Site" />
+    <meta property="og:description" content="A personal site about astronomy, projects, and more." />
+    <meta property="og:image" content="/assets/images/og-image.png" />
+    <!-- ... -->
+    <slot name="head"></slot>
   </head>
-  <body class="bg-white text-gray-800">
-    <Header />
-      <main class="min-h-screen">
-        <slot /> <!-- Where child pages will render -->
-      </main>
-    <Footer />
+  <body>
+    <!-- your header, main, footer, etc. -->
   </body>
 </html>
