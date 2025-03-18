@@ -32,32 +32,33 @@ const uniqueId = `slideshow-${Math.random().toString(36).substring(2, 9)}`;
           class="w-full h-full object-cover"
         />
         
+        <!-- Add pointer-events-none to prevent unexpected hover interactions -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+        
         {photo.caption && (
-          <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent text-white">
-            <div class="max-w-5xl mx-auto">
-              <p class="text-xl font-medium">{photo.caption}</p>
-            </div>
+          <div class="absolute bottom-0 left-0 right-0 p-6 pointer-events-none">
+            <h3 class="text-white text-xl md:text-2xl font-medium">{photo.caption}</h3>
           </div>
         )}
       </div>
     ))}
   </div>
   
-  <!-- Navigation arrows -->
-  <button class="nav-arrow prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md text-white rounded-full p-2 opacity-0 transition-opacity duration-300 hover:bg-white/30" aria-label="Previous slide">
+  <!-- Add z-index to ensure controls stay above content -->
+  <button class="nav-arrow prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md text-white rounded-full p-2 opacity-0 transition-opacity duration-300 hover:bg-white/30 z-10" aria-label="Previous slide">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
     </svg>
   </button>
   
-  <button class="nav-arrow next absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md text-white rounded-full p-2 opacity-0 transition-opacity duration-300 hover:bg-white/30" aria-label="Next slide">
+  <button class="nav-arrow next absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md text-white rounded-full p-2 opacity-0 transition-opacity duration-300 hover:bg-white/30 z-10" aria-label="Next slide">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
     </svg>
   </button>
   
-  <!-- Indicator dots -->
-  <div class="indicators absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+  <!-- Add z-index to indicators as well -->
+  <div class="indicators absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
     {photos.map((_, index) => (
       <button 
         class={`w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white w-4' : 'bg-white/50'}`} 

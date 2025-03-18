@@ -328,4 +328,25 @@ const relatedPhotos = photo.related
   .photo-detail > div:first-child img {
     animation: photoReveal 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
   }
+  
+  <!-- For the Jupiter photo specifically, ensure proper containment -->
+  {photo.title === 'Jupiter and its Moons' && (
+  <style>
+    /* Add specific containment for Jupiter photo to prevent hover issues */
+    .photo-detail img {
+      contain: content;
+    }
+    
+    /* Ensure overlays don't extend beyond boundaries */
+    .photo-detail .absolute {
+      pointer-events: none;
+    }
+    
+    /* But allow buttons and links to receive events */
+    .photo-detail a, 
+    .photo-detail button {
+      pointer-events: auto;
+    }
+  </style>
+)}
 </style>
