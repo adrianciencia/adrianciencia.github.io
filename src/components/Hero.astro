@@ -1,0 +1,74 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  ctaText?: string;
+  ctaLink?: string;
+  secondaryCtaText?: string;
+  secondaryCtaLink?: string;
+  image?: string;
+}
+
+const { 
+  title, 
+  subtitle, 
+  ctaText = "Learn more", 
+  ctaLink = "#", 
+  secondaryCtaText, 
+  secondaryCtaLink,
+  image 
+} = Astro.props;
+---
+
+<section class="relative overflow-hidden py-20 md:py-32">
+  <!-- Background gradient -->
+  <div class="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black z-0"></div>
+  
+  <!-- Optional background image with overlay -->
+  {image && (
+    <div class="absolute inset-0 z-0">
+      <img src={image} alt="" class="w-full h-full object-cover opacity-10" />
+      <div class="absolute inset-0 bg-gradient-to-b from-white/80 to-white dark:from-black/80 dark:to-black"></div>
+    </div>
+  )}
+  
+  <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center">
+    <!-- Heading with Apple-style typography -->
+    <h1 class="text-4xl md:text-6xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-6 leading-tight">
+      {title}
+    </h1>
+    
+    <!-- Subtitle with Apple-style typography -->
+    <p class="text-xl md:text-2xl text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)] max-w-3xl mx-auto mb-10 leading-relaxed">
+      {subtitle}
+    </p>
+    
+    <!-- Call to action buttons -->
+    <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+      <a 
+        href={ctaLink} 
+        class="apple-button text-lg px-8 py-3 inline-flex items-center justify-center"
+      >
+        {ctaText}
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </a>
+      
+      {secondaryCtaText && secondaryCtaLink && (
+        <a 
+          href={secondaryCtaLink} 
+          class="text-lg px-8 py-3 inline-flex items-center justify-center text-[var(--apple-gray-800)] dark:text-white hover:text-[var(--apple-blue)] transition-colors"
+        >
+          {secondaryCtaText}
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      )}
+    </div>
+  </div>
+  
+  <!-- Decorative element: subtle dot pattern -->
+  <div class="absolute bottom-0 left-0 right-0 h-40 z-0 opacity-30 dark:opacity-10" style="background-image: radial-gradient(circle, var(--apple-gray-300) 1px, transparent 1px); background-size: 20px 20px;"></div>
+</section>

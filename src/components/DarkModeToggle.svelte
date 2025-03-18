@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   
   let darkMode = false;
+  let animating = false;
   
   onMount(() => {
     // Check for saved preference or system preference
@@ -13,8 +14,24 @@
   });
   
   function toggleDarkMode() {
+    if (animating) return;
+    
+    animating = true;
     darkMode = !darkMode;
-    updateTheme();
+    
+    // Add animation class
+    document.documentElement.classList.add('theme-transition');
+    
+    // Update theme after a small delay to allow animation
+    setTimeout(() => {
+      updateTheme();
+      
+      // Remove animation class after transition completes
+      setTimeout(() => {
+        document.documentElement.classList.remove('theme-transition');
+        animating = false;
+      }, 300);
+    }, 50);
   }
   
   function updateTheme() {
@@ -28,20 +45,88 @@
   }
 </script>
 
+<style>
+  .toggle-button {
+    position: relative;
+    width: 40px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: var(--toggle-bg, #e8e8ed);
+    transition: background-color 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    cursor: pointer;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .toggle-button.dark {
+    --toggle-bg: #424245;
+  }
+  
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  
+  .toggle-button.dark .toggle-thumb {
+    transform: translateX(16px);
+  }
+  
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    color: #ffcc00;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .icon.sun {
+    opacity: var(--sun-opacity, 0);
+  }
+  
+  .icon.moon {
+    opacity: var(--moon-opacity, 0);
+  }
+  
+  .toggle-button:not(.dark) {
+    --sun-opacity: 0.7;
+  }
+  
+  .toggle-button.dark {
+    --moon-opacity: 0.7;
+  }
+  
+  /* Add focus styles for accessibility */
+  .toggle-button:focus-visible {
+    outline: 2px solid #0071e3;
+    outline-offset: 2px;
+  }
+  
+  :global(.theme-transition) {
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+  }
+</style>
+
 <button 
   aria-label="Toggle dark mode"
-  class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+  class="toggle-button {darkMode ? 'dark' : ''}"
   on:click={toggleDarkMode}
 >
-  {#if darkMode}
-    <!-- Sun icon for light mode -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+  <span class="toggle-thumb">
+    <svg class="icon sun" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM12 5a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zm0 19a1 1 0 0 1-1-1v-2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zm7-10a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2h-2zM3 12a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2H3z"/>
     </svg>
-  {:else}
-    <!-- Moon icon for dark mode -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+    <svg class="icon moon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
     </svg>
-  {/if}
+  </span>
 </button>

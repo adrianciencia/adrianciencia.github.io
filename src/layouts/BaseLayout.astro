@@ -4,6 +4,7 @@ console.log("BaseLayout is being processed");
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ScrollToTop from '../components/ScrollToTop.svelte';
 ---
 
 <html lang="en">
@@ -18,7 +19,7 @@ import Footer from '../components/Footer.astro';
     <!-- ... -->
     <slot name="head"></slot>
   </head>
-  <body class="bg-white text-gray-800">
+  <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors">
     <Header />
     <main class="min-h-screen">
       <!-- Debug element inside the body -->
@@ -29,5 +30,6 @@ import Footer from '../components/Footer.astro';
       <slot /> <!-- This is where page content will be inserted -->
     </main>
     <Footer />
+    <ScrollToTop client:load />
   </body>
 </html>
