@@ -7,6 +7,7 @@ interface Props {
   secondaryCtaText?: string;
   secondaryCtaLink?: string;
   image?: string;
+  backgroundType?: 'gradient' | 'particles' | 'minimal';
 }
 
 const { 
@@ -16,13 +17,29 @@ const {
   ctaLink = "#", 
   secondaryCtaText, 
   secondaryCtaLink,
-  image 
+  image,
+  backgroundType = 'gradient'
 } = Astro.props;
 ---
 
-<section class="relative overflow-hidden py-20 md:py-32">
-  <!-- Background gradient -->
-  <div class="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black z-0"></div>
+<section class="relative overflow-hidden py-24 md:py-40">
+  <!-- Background options -->
+  {backgroundType === 'gradient' && (
+    <div class="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-black dark:via-gray-900 dark:to-black z-0"></div>
+  )}
+  
+  {backgroundType === 'particles' && (
+    <div class="absolute inset-0 z-0">
+      <div class="particles-bg"></div>
+      <div class="absolute inset-0 bg-white/70 dark:bg-black/70"></div>
+    </div>
+  )}
+  
+  {backgroundType === 'minimal' && (
+    <div class="absolute inset-0 bg-white dark:bg-black z-0">
+      <div class="absolute inset-0 bg-gradient-to-tr from-blue-50/20 to-purple-50/20 dark:from-blue-900/10 dark:to-purple-900/10"></div>
+    </div>
+  )}
   
   <!-- Optional background image with overlay -->
   {image && (
@@ -32,43 +49,71 @@ const {
     </div>
   )}
   
-  <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6 text-center">
-    <!-- Heading with Apple-style typography -->
-    <h1 class="text-4xl md:text-6xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-6 leading-tight">
-      {title}
-    </h1>
-    
-    <!-- Subtitle with Apple-style typography -->
-    <p class="text-xl md:text-2xl text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)] max-w-3xl mx-auto mb-10 leading-relaxed">
-      {subtitle}
-    </p>
-    
-    <!-- Call to action buttons -->
-    <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-      <a 
-        href={ctaLink} 
-        class="apple-button text-lg px-8 py-3 inline-flex items-center justify-center"
-      >
-        {ctaText}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-        </svg>
-      </a>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+    <div class="flex flex-col items-center">
+      <!-- Decorative element: subtle line -->
+      <div class="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mb-12 opacity-70"></div>
       
-      {secondaryCtaText && secondaryCtaLink && (
+      <!-- Heading with Apple-style typography -->
+      <h1 class="text-5xl md:text-7xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-8 leading-tight text-center max-w-4xl">
+        {title}
+      </h1>
+      
+      <!-- Subtitle with Apple-style typography -->
+      <p class="text-xl md:text-2xl text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)] max-w-2xl mx-auto mb-12 leading-relaxed text-center">
+        {subtitle}
+      </p>
+      
+      <!-- Call to action buttons -->
+      <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
         <a 
-          href={secondaryCtaLink} 
-          class="text-lg px-8 py-3 inline-flex items-center justify-center text-[var(--apple-gray-800)] dark:text-white hover:text-[var(--apple-blue)] transition-colors"
+          href={ctaLink} 
+          class="apple-button text-lg px-8 py-3 inline-flex items-center justify-center backdrop-blur-sm bg-white/90 dark:bg-black/90 hover:bg-white dark:hover:bg-black transition-all"
         >
-          {secondaryCtaText}
+          {ctaText}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         </a>
-      )}
+        
+        {secondaryCtaText && secondaryCtaLink && (
+          <a 
+            href={secondaryCtaLink} 
+            class="text-lg px-8 py-3 inline-flex items-center justify-center text-[var(--apple-gray-800)] dark:text-white hover:text-[var(--apple-blue)] transition-colors backdrop-blur-sm"
+          >
+            {secondaryCtaText}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        )}
+      </div>
     </div>
   </div>
   
-  <!-- Decorative element: subtle dot pattern -->
-  <div class="absolute bottom-0 left-0 right-0 h-40 z-0 opacity-30 dark:opacity-10" style="background-image: radial-gradient(circle, var(--apple-gray-300) 1px, transparent 1px); background-size: 20px 20px;"></div>
+  <!-- Decorative elements -->
+  <div class="absolute bottom-0 left-0 right-0 h-40 z-0 opacity-30 dark:opacity-10" 
+       style="background-image: radial-gradient(circle, var(--apple-gray-300) 1px, transparent 1px); background-size: 20px 20px;"></div>
+  
+  <!-- Floating shapes -->
+  <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl z-0"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-3xl z-0"></div>
 </section>
+
+<style>
+  .particles-bg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(120, 120, 255, 0.1) 0%, transparent 8%),
+      radial-gradient(circle at 80% 70%, rgba(180, 120, 255, 0.1) 0%, transparent 8%);
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .particles-bg {
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(120, 120, 255, 0.15) 0%, transparent 8%),
+        radial-gradient(circle at 80% 70%, rgba(180, 120, 255, 0.15) 0%, transparent 8%);
+    }
+  }
+</style>

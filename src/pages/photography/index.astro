@@ -30,7 +30,7 @@ const categories = [...new Set(allPhotos.map(p => p.category))].map(formatCatego
   <!-- Main Content -->
   <Section background="white" paddingY="large">
     <div class="mb-8">
-      <PhotoFilter categories={categories} centered={true} />
+      <PhotoFilter categories={categories} centered={true} includeAllPhotos={true} />
     </div>
     <div class="max-w-7xl mx-auto">
       <PhotoGallery photos={allPhotos} masonry={true} />
@@ -51,16 +51,6 @@ const categories = [...new Set(allPhotos.map(p => p.category))].map(formatCatego
     opacity: 1 !important;
   }
   
-  .group:hover h3 {
-    color: inherit !important;
-  }
 
-  /* Filter button hover states */
-  .hover\:bg-\[var\(--apple-gray-200\)\]:hover {
-    background-color: inherit !important;
-  }
-  
-  .dark .hover\:bg-\[var\(--apple-gray-700\)\]:hover {
-    background-color: inherit !important;
-  }
+
 </style>

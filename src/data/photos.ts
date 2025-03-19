@@ -1,30 +1,30 @@
-/**
- * @typedef {{
- *  slug: string;
- *  src: string;
- *  alt: string;
- *  caption: string;
- *  date: string;
- *  location: string;
- *  category: string;
- *  featured?: boolean;
- *  equipment?: string;
- *  exposure?: string;
- *  description?: string;
- * }} Photo
- */
+export interface Photo {
+  slug: string;
+  src: string;
+  alt: string;
+  caption: string;
+  title?: string;
+  date: string;
+  location: string;
+  category: string;
+  featured?: boolean;
+  equipment?: string;
+  exposure?: string;
+  description?: string;
+  related?: string[];
+  processing?: string;
+}
 
-/** @type {Photo[]} */
-export const allPhotos = [
+export const allPhotos: Photo[] = [
   {
     slug: "spiral-galaxy-m51",
     src: "/photography/galaxy1.jpg",
-    alt: "Spiral Galaxy",
+    alt: "Spiral Galaxy M51 in visible spectrum", 
+    title: "Spiral Galaxy M51",
     caption: "Spiral Galaxy M51",
     date: "June 2023",
     location: "Atacama Desert, Chile",
     category: "birds",
-    featured: true,
     equipment: "Celestron EdgeHD 1100, ZWO ASI2600MM Pro",
     exposure: "48 x 10 minutes (8 hours total)",
     description: "Also known as the Whirlpool Galaxy..."
@@ -54,7 +54,7 @@ export const allPhotos = [
     description: "The giraffe is a large genus of African equid..."
   },
   {
-    slug: "giraffe",
+    slug: "zuricatas2",
     src: "/photography/DSC01731.jpg",
     alt: "Zuricatas",
     caption: "Giraffe",
@@ -65,26 +65,29 @@ export const allPhotos = [
     exposure: "32 x 5 minutes (2.7 hours total)",
     description: "The giraffe is a large genus of African equid..."
   },
+  {
+    slug: "bumblebee",
+    src: "/photography/DSC02783.jpg",
+    alt: "Bumblebee",
+    caption: "Abeja grande",
+    date: "January 2023",
+    location: "La Palma, Spain",
+    category: "insects",
+    equipment: "Takahashi FSQ-106ED, Sony A7III (modified)",
+    exposure: "32 x 5 minutes (2.7 hours total)",
+    description: "The giraffe is a large genus of African equid..."
+  },
   
 ];
 
-export const formatCategory = (cat) => 
-  cat.charAt(0).toUpperCase() + cat.slice(1);
-
-// Add data helpers
-/** 
- * @param {string} category 
- * @returns {Photo[]}
- */
-export const getCategoryPhotos = (category) =>
+export const getCategoryPhotos = (category: string): Photo[] =>
   allPhotos.filter(p => p.category === category);
 
-/**
- * @param {string} slug
- * @returns {Photo | undefined}
- */
-export const getPhotoBySlug = (slug) => 
+export const formatCategory = (cat: string): string => 
+  cat.charAt(0).toUpperCase() + cat.slice(1);
+
+export const getPhotoBySlug = (slug: string): Photo | undefined => 
   allPhotos.find(p => p.slug === slug);
 
-export const getFeaturedPhotos = () => 
+export const getFeaturedPhotos = (): Photo[] => 
   allPhotos.filter(p => p.featured);

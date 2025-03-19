@@ -1,24 +1,24 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Section from '../../../components/Section.astro';
-import PhotoGallery from '../../../components/PhotoGallery.astro';
 import PhotoFilter from '../../../components/PhotoFilter.astro';
-import { allPhotos, formatCategory } from '../../../data/photos';
 import PhotoGrid from '../../../components/PhotoGrid.astro';
-import PhotoCard from '../../../components/PhotoCard.astro';
+import { allPhotos, formatCategory } from '../../../data/photos';
 
+// Define a props interface for type safety
+interface Props {
+  categoryPhotos: typeof allPhotos;
+  categoryTitle: string;
+}
+
+// Export getStaticPaths using the precomputed uniqueCategories
 export function getStaticPaths() {
-  // Get all unique categories
-  const categories = [...new Set(allPhotos.map(photo => photo.category))];
-  
-  // Create a path for each category
-  return categories.map(category => {
-    // Filter photos for this category
+  const uniqueCategories = [...new Set(allPhotos.map(photo => photo.category))];
+  return uniqueCategories.map(category => {
     const categoryPhotos = allPhotos.filter(photo => photo.category === category);
-    
     return {
       params: { category },
-      props: { 
+      props: {
         categoryPhotos,
         categoryTitle: formatCategory(category)
       }
@@ -26,12 +26,18 @@ export function getStaticPaths() {
   });
 }
 
-// Get the category photos from props
-const { categoryPhotos, categoryTitle } = Astro.props;
+// Get the category-specific props from Astro.props using the defined interface
+const { categoryPhotos, categoryTitle } = Astro.props as Props;
 
-// Get all categories for the filter
-const allCategories = [...new Set(allPhotos.map(photo => photo.category))]
-  .map(formatCategory);
+// Prepare all categories for the PhotoFilter component
+const allCategories = [...new Set(allPhotos.map(photo => photo.category))].map(formatCategory);
+
+// Define a mapping for hero section descriptions for better maintainability
+const heroDescriptions: Record<string, string> = {
+  Birds: 'Distant islands of stars in the cosmic ocean',
+  Primates: 'Our celestial neighbors in the solar system',
+  Mammals: 'Cosmic clouds of gas and dust'
+};
 ---
 
 <BaseLayout title={`${categoryTitle} Photos | Adrian Diaz`}>
@@ -40,10 +46,7 @@ const allCategories = [...new Set(allPhotos.map(photo => photo.category))]
     <div class="text-center text-white px-4 z-10">
       <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">{categoryTitle}</h1>
       <p class="text-xl max-w-2xl mx-auto text-white/90">
-        {categoryTitle === 'Galaxies' && 'Distant islands of stars in the cosmic ocean'}
-        {categoryTitle === 'Planets' && 'Our celestial neighbors in the solar system'}
-        {categoryTitle === 'Nebulae' && 'Cosmic clouds of gas and dust'}
-        {categoryTitle === 'Stars' && 'The building blocks of the universe'}
+        {heroDescriptions[categoryTitle] ?? ''}
       </p>
     </div>
   </div>
@@ -51,8 +54,11 @@ const allCategories = [...new Set(allPhotos.map(photo => photo.category))]
   <!-- Main Content -->
   <Section background="white" paddingY="large">
     <div class="max-w-7xl mx-auto">
-      <PhotoFilter categories={allCategories} activeCategory={categoryTitle} />
-      <!-- Replace PhotoCard with PhotoGrid which you've already imported -->
+      <PhotoFilter 
+        categories={allCategories} 
+        activeCategory={categoryTitle} 
+        includeAllPhotos={true} 
+      />
       <PhotoGrid photos={categoryPhotos} />
     </div>
   </Section>

@@ -1,0 +1,99 @@
+/* Apple-style blog typography enhancements */
+.prose {
+  font-feature-settings: "kern", "liga", "clig", "calt";
+  text-rendering: optimizeLegibility;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
+  letter-spacing: -0.003em;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.prose blockquote {
+  font-style: italic;
+  color: var(--apple-gray-600);
+  border-left-width: 4px;
+  border-left-color: var(--apple-gray-300);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.prose blockquote p {
+  font-size: 1.1em;
+}
+
+.prose code {
+  font-family: "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.prose pre {
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 2em 0;
+}
+
+.prose pre code {
+  font-size: 0.85em;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.prose img {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 2em 0;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--apple-gray-200);
+  margin: 2em 0;
+}
+
+.prose table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 2em 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.prose th {
+  background-color: var(--apple-gray-100);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75em 1em;
+}
+
+.prose td {
+  padding: 0.75em 1em;
+  border-top: 1px solid var(--apple-gray-200);
+}
+
+/* Dark mode adjustments */
+.dark .prose blockquote {
+  color: var(--apple-gray-400);
+  border-left-color: var(--apple-gray-600);
+}
+
+.dark .prose hr {
+  border-top-color: var(--apple-gray-800);
+}
+
+.dark .prose th {
+  background-color: var(--apple-gray-800);
+}
+
+.dark .prose td {
+  border-top-color: var(--apple-gray-800);
+}

@@ -1,161 +1,321 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import { getCollection } from 'astro:content';
+import { allPhotos } from '../data/photos';
+import PhotoSlideshow from '../components/PhotoSlideshow.astro';
+
+// Get featured photos for the homepage
+const featuredPhotos = allPhotos.filter(photo => photo.featured).length > 0 
+? allPhotos.filter(photo => photo.featured).slice(0, 5)
+: allPhotos.slice(0, 5);
+
+// Fetch actual blog posts
+const allBlogPosts = await getCollection('blog');
+// Sort by date, most recent first
+const recentBlogPosts = allBlogPosts
+.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf())
+.slice(0, 3); // Get only the 3 most recent posts
+
+// Fetch projects (assuming you have a projects collection)
+let featuredProjects = [];
+try {
+const allProjects = await getCollection('projects');
+// Get featured projects or most recent ones
+featuredProjects = allProjects
+.filter(project => project.data.featured)
+.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf())
+.slice(0, 3);
+
+// If there aren't enough featured projects, add the most recent ones
+if (featuredProjects.length < 3) {
+const additionalProjects = allProjects
+.filter(project => !project.data.featured)
+.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf())
+.slice(0, 3 - featuredProjects.length);
+
+featuredProjects = [...featuredProjects, ...additionalProjects];
+}
+} catch (error) {
+console.error('Error fetching projects:', error);
+// Fallback to empty array if projects collection doesn't exist yet
+}
+
+// Format date function
+function formatDate(dateString) {
+return new Date(dateString).toLocaleDateString('en-US', {
+year: 'numeric',
+month: 'long',
+day: 'numeric'
+});
+}
 ---
 
 <BaseLayout>
-  <Hero 
-    title="Exploring the Universe Through Science and Code"
-    subtitle="Astronomy researcher, developer, and science communicator passionate about understanding our cosmos."
-    ctaText="View Projects"
-    ctaLink="/projects"
-    secondaryCtaText="Read Blog"
-    secondaryCtaLink="/blog"
+<Hero 
+  title="Adrian Diaz"
+  subtitle="Astronomy researcher, developer, and science communicator passionate about understanding our cosmos."
+  ctaText="My Research"
+  ctaLink="/projects"
+  secondaryCtaText="Read Blog"
+  secondaryCtaLink="/blog"
+  backgroundType="minimal"
+  image="/assets/images/cosmos-bg.jpg"
+/>
+
+<!-- Latest blog posts section -->
+<section class="py-20 bg-[var(--apple-gray-50)] dark:bg-[var(--apple-gray-900)] border-y border-gray-200 dark:border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 md:px-6">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+  <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4 md:mb-0">Latest Articles</h2>
+  <a href="/blog" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
+  View all articles
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+  </svg>
+  </a>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  {recentBlogPosts.length > 0 ? (
+  recentBlogPosts.map((post) => (
+  <a href={`/blog/${post.slug}`} class="group">
+  <div class="bg-white dark:bg-[var(--apple-gray-800)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
+  <div class="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
+  <img 
+  src={post.data.image || `/assets/images/blog-placeholder.jpg`}
+  alt={post.data.title} 
+  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
   />
-  
-  <!-- Featured content section -->
-  <section class="py-20 max-w-7xl mx-auto px-4 md:px-6">
-    <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-12 text-center">Featured Work</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Featured card 1 -->
-      <div class="apple-card group">
-        <div class="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
-          <img 
-            src="/assets/images/project1.jpg" 
-            alt="Project 1" 
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-        <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white">Galaxy Classification</h3>
-        <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4">Machine learning approach to classify galaxies from telescope imagery.</p>
-        <a href="/projects/galaxy-classification" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
-          Learn more
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </a>
-      </div>
-      
-      <!-- Featured card 2 -->
-      <div class="apple-card group">
-        <div class="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
-          <img 
-            src="/assets/images/project2.jpg" 
-            alt="Project 2" 
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-        <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white">Exoplanet Detection</h3>
-        <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4">Analyzing light curves to detect exoplanets using transit method.</p>
-        <a href="/projects/exoplanet-detection" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
-          Learn more
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </a>
-      </div>
-      
-      <!-- Featured card 3 -->
-      <div class="apple-card group">
-        <div class="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
-          <img 
-            src="/assets/images/project3.jpg" 
-            alt="Project 3" 
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-        <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white">Stellar Evolution Model</h3>
-        <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4">Interactive visualization of stellar evolution across different masses.</p>
-        <a href="/projects/stellar-evolution" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
-          Learn more
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Latest blog posts section -->
-  <section class="py-20 bg-[var(--apple-gray-50)] dark:bg-[var(--apple-gray-900)] border-y border-gray-200 dark:border-gray-800">
+  </div>
+  <div class="p-6">
+  <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-2">
+  {formatDate(post.data.date)}
+  </p>
+  <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">
+  {post.data.title}
+  </h3>
+  <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">
+  {post.data.description}
+  </p>
+  </div>
+  </div>
+  </a>
+  ))
+  ) : (
+  /* Fallback blog posts if none are found */
+  Array(3).fill(0).map((_, i) => (
+  <a href={`/blog/post-${i+1}`} class="group">
+  <div class="bg-white dark:bg-[var(--apple-gray-800)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
+  <div class="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
+  <img 
+  src={`/assets/images/blog${i+1}.jpg`}
+  alt={`Blog post ${i+1}`} 
+  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+  />
+  </div>
+  <div class="p-6">
+  <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-2">
+  {i === 0 ? "June 12, 2023" : i === 1 ? "May 28, 2023" : "April 15, 2023"}
+  </p>
+  <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">
+  {i === 0 ? "Understanding Dark Matter: Current Theories" : i === 1 ? "The Future of Space Telescopes" : "Machine Learning in Astronomy"}
+  </h3>
+  <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">
+  {i === 0 
+  ? "An exploration of the leading theories explaining dark matter in the universe." 
+  : i === 1 
+  ? "What's next after James Webb? The upcoming generation of space observatories." 
+  : "How AI is revolutionizing the way we analyze astronomical data."}
+  </p>
+  </div>
+  </div>
+  </a>
+  ))
+  )}
+  </div>
+  </div>
+</section>
+
+<!-- About Me section - NEW -->
+<section class="py-20 bg-white dark:bg-black">
+  <div class="max-w-5xl mx-auto px-4 md:px-6">
+  <div class="flex flex-col md:flex-row gap-12 items-center">
+  <div class="md:w-1/3">
+  <img 
+  src="/assets/images/profile.jpg" 
+  alt="Adrian Diaz" 
+  class="rounded-2xl shadow-lg w-full max-w-sm mx-auto"
+  />
+  </div>
+  <div class="md:w-2/3">
+  <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-6">About Me</h2>
+  <p class="text-lg text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] mb-4">
+  I'm an astronomy researcher and science communicator with a passion for exploring the cosmos through both scientific inquiry and visual storytelling.
+  </p>
+  <p class="text-lg text-[var(--apple-gray-700)] dark:text-[var(--apple-gray-300)] mb-6">
+  My research focuses on high-redshift galaxies, where I use computational methods to measure and improve our current methods for star formation estimation.
+  </p>
+  <a href="/about" class="apple-button-secondary inline-flex items-center">
+  More About Me
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+  </svg>
+  </a>
+  </div>
+  </div>
+  </div>
+</section>
+
+<!-- Photography section - UNCHANGED as requested -->
+<section class="py-20 bg-[var(--apple-gray-50)] dark:bg-[var(--apple-gray-900)] border-y border-gray-200 dark:border-gray-800">
+<div class="max-w-7xl mx-auto px-4 md:px-6">
+<div class="flex flex-col md:flex-row justify-between items-center mb-12">
+<h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4 md:mb-0">Photography</h2>
+<a href="/photography" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
+View all photos
+<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+<path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+</svg>
+</a>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+{featuredPhotos.length > 0 ? (
+featuredPhotos.map((photo, index) => (
+<a 
+href={`/photography/${photo.slug}`} 
+class="group relative overflow-hidden rounded-xl aspect-square"
+style={index === 0 ? "grid-column: span 2; grid-row: span 2;" : ""}
+>
+<img 
+src={photo.src} 
+alt={photo.title || photo.caption || "Photography by Adrian Diaz"} 
+class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+<div class="p-4 text-white">
+<h3 class="font-medium">{photo.title || photo.caption}</h3>
+{photo.category && (
+<p class="text-sm text-white/80">{photo.category}</p>
+)}
+</div>
+</div>
+</a>
+))
+) : (
+/* Fallback photos if none are found */
+Array(4).fill(0).map((_, i) => (
+<a 
+href="/photography" 
+class="group relative overflow-hidden rounded-xl aspect-square"
+style={i === 0 ? "grid-column: span 2; grid-row: span 2;" : ""}
+>
+<img 
+src={`/assets/images/photo${i+1}.jpg`} 
+alt={`Photo ${i+1}`} 
+class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+<div class="p-4 text-white">
+<h3 class="font-medium">{i === 0 ? "Cosmic Nebula" : i === 1 ? "Lunar Surface" : i === 2 ? "Milky Way" : "Solar Flare"}</h3>
+<p class="text-sm text-white/80">{i === 0 ? "Nebulae" : i === 1 ? "Moon" : i === 2 ? "Galaxy" : "Sun"}</p>
+</div>
+</div>
+</a>
+))
+)}
+</div>
+</div>
+</section>
+
+
+
+
+  <!-- Research Projects - MOVED DOWN -->
+<section class="py-20 bg-white dark:bg-black">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
       <div class="flex flex-col md:flex-row justify-between items-center mb-12">
-        <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4 md:mb-0">Latest Articles</h2>
-        <a href="/blog" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
-          View all articles
+        <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4 md:mb-0">Research Projects</h2>
+        <a href="/projects" class="text-[var(--apple-blue)] font-medium inline-flex items-center">
+          View all projects
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         </a>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Blog post 1 -->
-        <a href="/blog/post-1" class="group">
-          <div class="bg-white dark:bg-[var(--apple-gray-800)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <div class="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
-              <img 
-                src="/assets/images/blog1.jpg" 
-                alt="Blog post 1" 
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {featuredProjects.length > 0 ? (
+          featuredProjects.map((project) => (
+            <div class="apple-card group h-full">
+              <div class="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                <img 
+                  src={project.data.image || `/assets/images/project-placeholder.jpg`}
+                  alt={project.data.title} 
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white">{project.data.title}</h3>
+              <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4">{project.data.description}</p>
+              <a href={`/projects/${project.slug}`} class="text-[var(--apple-blue)] font-medium inline-flex items-center mt-auto">
+                Learn more
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </a>
             </div>
-            <div class="p-6">
-              <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-2">June 12, 2023</p>
-              <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">Understanding Dark Matter: Current Theories</h3>
-              <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">An exploration of the leading theories explaining dark matter in the universe.</p>
+          ))
+        ) : (
+          /* Fallback cards if no projects are found */
+          Array(3).fill(0).map((_, i) => (
+            <div class="apple-card group h-full">
+              <div class="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                <img 
+                  src={`/assets/images/project${i+1}.jpg`} 
+                  alt={`Project ${i+1}`} 
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white">
+                {i === 0 ? "Galaxy Classification" : i === 1 ? "Exoplanet Detection" : "Stellar Evolution Model"}
+              </h3>
+              <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4">
+                {i === 0 
+                  ? "Machine learning approach to classify galaxies from telescope imagery." 
+                  : i === 1 
+                    ? "Analyzing light curves to detect exoplanets using transit method." 
+                    : "Interactive visualization of stellar evolution across different masses."}
+              </p>
+              <a href={`/projects/project-${i+1}`} class="text-[var(--apple-blue)] font-medium inline-flex items-center mt-auto">
+                Learn more
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </a>
             </div>
-          </div>
-        </a>
-        
-        <!-- Blog post 2 -->
-        <a href="/blog/post-2" class="group">
-          <div class="bg-white dark:bg-[var(--apple-gray-800)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <div class="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
-              <img 
-                src="/assets/images/blog2.jpg" 
-                alt="Blog post 2" 
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <div class="p-6">
-              <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-2">May 28, 2023</p>
-              <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">The Future of Space Telescopes</h3>
-              <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">What's next after James Webb? The upcoming generation of space observatories.</p>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Blog post 3 -->
-        <a href="/blog/post-3" class="group">
-          <div class="bg-white dark:bg-[var(--apple-gray-800)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <div class="aspect-video bg-gray-100 dark:bg-gray-700 overflow-hidden">
-              <img 
-                src="/assets/images/blog3.jpg" 
-                alt="Blog post 3" 
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <div class="p-6">
-              <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-2">April 15, 2023</p>
-              <h3 class="text-xl font-semibold mb-2 text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">Machine Learning in Astronomy</h3>
-              <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">How AI is revolutionizing the way we analyze astronomical data.</p>
-            </div>
-          </div>
-        </a>
+          ))
+        )}
       </div>
     </div>
-  </section>
+</section>
   
-  <!-- Contact/CTA section -->
-  <section class="py-20 max-w-7xl mx-auto px-4 md:px-6 text-center">
+  <!-- Contact/CTA section - SIMPLIFIED -->
+<section class="py-20 max-w-7xl mx-auto px-4 md:px-6 text-center">
     <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4">Let's Connect</h2>
     <p class="text-xl text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)] max-w-2xl mx-auto mb-10">
       Have a question about my research or interested in collaboration? I'd love to hear from you.
     </p>
-    <a href="/contact" class="apple-button text-lg px-8 py-3 inline-flex items-center justify-center">
-      Get in Touch
-    </a>
-  </section>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="/contact" class="apple-button text-lg px-8 py-3 inline-flex items-center justify-center">
+        Get in Touch
+      </a>
+      <a href="https://twitter.com/yourusername" class="apple-button-secondary text-lg px-8 py-3 inline-flex items-center justify-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+        </svg>
+        Follow Me
+      </a>
+    </div>
+</section>
 </BaseLayout>

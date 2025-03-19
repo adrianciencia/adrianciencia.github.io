@@ -9,11 +9,6 @@ const gridPhotos = allPhotos.slice(3, 7); // Temporary until we create a proper 
 ---
 
 <section class="featured-photos py-16 md:py-24">
-  ---
-  // Replace existing link with PhotoLink
-  import PhotoLink from './PhotoLink.astro';
-  ---
-  
   // Update navigation link section
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
     <div>
@@ -28,9 +23,7 @@ const gridPhotos = allPhotos.slice(3, 7); // Temporary until we create a proper 
       </svg>
     </a>
     </div>
-    
-    // Remove gridPhotos derivation and use slice directly in template
-    
+        
     // In template section:
     <div class="mb-8">
       <PhotoSlideshow photos={featuredPhotos} height="50vh" />
@@ -40,10 +33,10 @@ const gridPhotos = allPhotos.slice(3, 7); // Temporary until we create a proper 
     <PhotoGrid photos={gridPhotos} columns={{ sm: 2, md: 4 }} />
     
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {gridPhotos.map((photo) => (
-        <a href={`/photography/${photo.slug}`} class="group block relative overflow-hidden rounded-xl aspect-square" key={photo.src}>
+      {gridPhotos.map((photo, index) => (
+        <a href={`/photography/${photo.slug}`} class="group block relative overflow-hidden rounded-xl aspect-square">
           <img src={photo.src} alt={photo.alt} class="w-full h-full object-cover" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/10 to-transparent flex flex-col justify-end p-4">
             <h3 class="text-white font-medium">{photo.caption}</h3>
             <p class="text-white/80 text-sm">{formatCategory(photo.category)}</p>
           </div>

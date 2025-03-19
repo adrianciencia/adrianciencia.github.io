@@ -1,6 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getPhotoBySlug, allPhotos } from '../../data/photos';
+import { allPhotos } from '../../data/photos';
+import type { Photo } from '../../data/photos';
+
+// Define the props interface for the page
+interface Props {
+  photo: Photo;
+}
 
 export function getStaticPaths() {
   return allPhotos.map(photo => ({
@@ -9,17 +15,23 @@ export function getStaticPaths() {
   }));
 }
 
-const { photo } = Astro.props;
+const { photo } = Astro.props as Props;
 const { slug } = Astro.params; // Get the slug from Astro.params
 
-// Generate related photos safely
-const relatedPhotos = photo.related ? photo.related
-  .map(relatedSlug => allPhotos.find(p => p.slug === relatedSlug))
-  .filter(Boolean) : [];
+// Generate related photos safely using optional chaining and nullish coalescing
+const relatedPhotos = photo.related
+  ?.map(relatedSlug => {
+    const found = allPhotos.find(p => p.slug === relatedSlug);
+    return found ? {...found} : undefined;
+  })
+  ?.filter(p => !!p) ?? [];
+
+// Define a base URL for share links to avoid hard-coding it multiple times
+const baseUrl = 'https://adrianciencia.github.io/photography';
 ---
 
 <BaseLayout>
-  <article class={`photo-detail ${photo.title === 'Jupiter and its Moons' ? 'jupiter-photo' : ''}`}>
+  <article class="photo-detail">
     <div class="relative h-[70vh] min-h-[500px] overflow-hidden">
       <img
         src={photo.src}
@@ -47,7 +59,7 @@ const relatedPhotos = photo.related ? photo.related
       </a>
       <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
         <div class="max-w-5xl mx-auto">
-          <h1 class="text-3xl md:text-5xl font-bold mb-4">{photo.title}</h1>
+          <h1 class="text-3xl md:text-5xl font-bold mb-4">{photo.title || photo.caption}</h1>
           <div class="flex flex-wrap items-center text-white/80 text-sm md:text-base gap-x-6 gap-y-2">
             {photo.date && (
               <div class="flex items-center">
@@ -118,8 +130,8 @@ const relatedPhotos = photo.related ? photo.related
             <span class="text-sm font-medium text-[var(--apple-gray-500)]">Share:</span>
             <a
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                photo.title
-              )}&url=${encodeURIComponent(`https://adrianciencia.github.io/photography/${slug}`)}`}
+                photo.title || photo.caption
+              )}&url=${encodeURIComponent(`${baseUrl}/${slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               class="text-[var(--apple-gray-600)] dark:text-[var(--apple-gray-400)] hover:text-[var(--apple-blue)]"
@@ -136,7 +148,7 @@ const relatedPhotos = photo.related ? photo.related
             </a>
             <a
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                `https://adrianciencia.github.io/photography/${slug}`
+                `${baseUrl}/${slug}`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -154,9 +166,9 @@ const relatedPhotos = photo.related ? photo.related
             </a>
             <a
               href={`mailto:?subject=${encodeURIComponent(
-                `Check out this photo: ${photo.title}`
+                `Check out this photo: ${photo.title || photo.caption}`
               )}&body=${encodeURIComponent(
-                `I thought you might like this photo: https://adrianciencia.github.io/photography/${slug}`
+                `I thought you might like this photo: ${baseUrl}/${slug}`
               )}`}
               class="text-[var(--apple-gray-600)] dark:text-[var(--apple-gray-400)] hover:text-[var(--apple-blue)]"
             >
@@ -246,13 +258,13 @@ const relatedPhotos = photo.related ? photo.related
                   <div class="aspect-video bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     <img
                       src={relatedPhoto.src}
-                      alt={relatedPhoto.title}
+                      alt={relatedPhoto.title || relatedPhoto.caption || relatedPhoto.alt}
                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div class="p-4">
                     <h3 class="font-medium text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">
-                      {relatedPhoto.title}
+                      {relatedPhoto.title || relatedPhoto.caption}
                     </h3>
                     {relatedPhoto.category && (
                       <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">

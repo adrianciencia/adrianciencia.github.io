@@ -1,15 +1,152 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import '../styles/blog.css'; // Import the blog-specific styles
+import '../styles/blog-apple.css';
 
-const { frontmatter } = Astro.props;
+const { frontmatter, seo, relatedPosts = [] } = Astro.props;
+
+// Format date if available
+const formattedDate = frontmatter.date ? new Date(frontmatter.date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}) : null;
+
+// Calculate reading time (approximately)
+let readingTime = 1;
+try {
+  const content = await Astro.slots.render('default');
+  if (typeof content === 'string') {
+    const wordCount = content.split(/\s+/g).length;
+    readingTime = Math.max(1, Math.round(wordCount / 200)); // Assuming 200 words per minute
+  }
+} catch (e) {
+  console.error('Error calculating reading time:', e);
+  // Default to 1 minute if calculation fails
+  readingTime = 1;
+}
 ---
 
-<BaseLayout>
-  <article class="prose dark:prose-invert mx-auto p-4">
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold">{frontmatter.title}</h1>
-      <p class="text-gray-500 text-sm">{frontmatter.date}</p>
-    </header>
-    <slot />
-  </article>
+<BaseLayout title={frontmatter.title ? `${frontmatter.title} | Blog` : 'Blog'}>
+  <!-- Hero section with subtle gradient background -->
+  <div class="relative bg-gradient-to-b from-[var(--apple-gray-50)] to-white dark:from-[var(--apple-gray-900)] dark:to-[var(--apple-gray-900)] pt-16 pb-8">
+    <div class="max-w-3xl mx-auto px-4">
+      <a href="/blog" class="inline-flex items-center text-[var(--apple-blue)] hover:text-[var(--apple-blue-dark)] transition-colors mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Articles
+      </a>
+      
+      <header class="mb-10">
+        <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-4 leading-tight">
+          {frontmatter.title}
+        </h1>
+        
+        <div class="flex flex-wrap items-center text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] text-sm gap-x-4 gap-y-2">
+          {formattedDate && (
+            <span class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {formattedDate}
+            </span>
+          )}
+          
+          <span class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {readingTime} min read
+          </span>
+          
+          {frontmatter.category && (
+            <span class="inline-block bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-800)] text-[var(--apple-gray-800)] dark:text-[var(--apple-gray-200)] text-xs px-3 py-1 rounded-full">
+              {frontmatter.category}
+            </span>
+          )}
+        </div>
+      </header>
+    </div>
+  </div>
+  
+  <div class="max-w-3xl mx-auto px-4 py-8 md:py-12">
+    <article>
+      <!-- Featured image if available -->
+      {frontmatter.image && (
+        <div class="mb-10 rounded-2xl overflow-hidden shadow-sm">
+          <img 
+            src={frontmatter.image} 
+            alt={frontmatter.imageAlt || frontmatter.title} 
+            class="w-full h-auto object-cover"
+          />
+        </div>
+      )}
+      
+      <div class="blog-content prose dark:prose-invert max-w-none">
+        <slot />
+      </div>
+      
+      {frontmatter.tags && frontmatter.tags.length > 0 && (
+        <div class="mt-12 pt-6 border-t border-[var(--apple-gray-200)] dark:border-[var(--apple-gray-800)]">
+          <h3 class="text-sm font-medium text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-3">Tags</h3>
+          <div class="flex flex-wrap gap-2">
+            {frontmatter.tags.map((tag: string) => (
+              <span class="inline-block bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-800)] text-[var(--apple-gray-800)] dark:text-[var(--apple-gray-200)] text-xs px-3 py-1 rounded-full">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <!-- Author section -->
+      <div class="mt-12 pt-6 border-t border-[var(--apple-gray-200)] dark:border-[var(--apple-gray-800)]">
+        <div class="flex items-center">
+          <img 
+            src="/assets/images/profile.jpg" 
+            alt="Adrian Diaz" 
+            class="w-12 h-12 rounded-full mr-4 object-cover"
+            onerror="this.src='/assets/images/default-profile.jpg'; this.onerror='';"
+          />
+          <div>
+            <h3 class="font-medium text-[var(--apple-gray-900)] dark:text-white">Adrian Diaz</h3>
+            <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">
+              Astronomy researcher and science communicator
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+    
+    <!-- Related articles section -->
+    {relatedPosts && relatedPosts.length > 0 && (
+      <div class="mt-16 pt-8 border-t border-[var(--apple-gray-200)] dark:border-[var(--apple-gray-800)]">
+        <h2 class="text-xl font-semibold text-[var(--apple-gray-900)] dark:text-white mb-6">You might also like</h2>
+        <div class="grid gap-6 md:grid-cols-2">
+          {relatedPosts.map((post: any) => (
+            <a href={`/blog/${post.slug}`} class="group block bg-[var(--apple-gray-50)] dark:bg-[var(--apple-gray-800)] rounded-xl p-4 hover:shadow-md transition-shadow">
+              <h3 class="font-medium text-[var(--apple-gray-900)] dark:text-white group-hover:text-[var(--apple-blue)] transition-colors">
+                {post.title}
+              </h3>
+              {post.description && (
+                <p class="text-sm text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mt-2">
+                  {post.description}
+                </p>
+              )}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <div class="mt-16 flex justify-center">
+      <a href="/blog" class="apple-button inline-flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Back to all articles
+      </a>
+    </div>
+  </div>
 </BaseLayout>

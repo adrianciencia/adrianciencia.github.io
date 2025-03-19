@@ -1,27 +1,72 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import Section from '../components/Section.astro';
 
 // Get all blog posts using the content collections API
 const posts = await getCollection('blog');
 
 // Sort posts by date, descending
 posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+
+// Format date function
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
 ---
 
-<BaseLayout>
-  <section class="max-w-4xl mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">Blog</h1>
-    <ul class="space-y-4">
-      {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.slug}`} class="text-blue-500 hover:underline">
-            {post.data.title}
-          </a>
-          <p class="text-sm text-gray-600">{post.data.description}</p>
-          <p class="text-xs text-gray-400">{post.data.date}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
+<BaseLayout title="Blog | Adrian Diaz">
+  <!-- Hero Section -->
+  <div class="relative bg-gradient-to-r from-[var(--apple-gray-900)] to-[var(--apple-gray-800)] py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--apple-gray-300)] mb-4">Blog</h1>
+      <p class="text-xl text-[var(--apple-gray-300)] max-w-2xl mx-auto">
+        Thoughts, insights, and explorations in astronomy, physics, and technology
+      </p>
+    </div>
+  </div>
+
+  <Section background="white" paddingY="large">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid gap-10">
+        {posts.map((post) => (
+          <article class="bg-white dark:bg-[var(--apple-gray-800)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--apple-gray-100)] dark:border-[var(--apple-gray-700)]">
+            <a href={`/blog/${post.slug}`} class="block p-6 md:p-8">
+              <div class="flex flex-col">
+                <h2 class="text-2xl font-semibold text-[var(--apple-gray-900)] dark:text-white mb-3 hover:text-[var(--apple-blue)] transition-colors">
+                  {post.data.title}
+                </h2>
+                
+                <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)] mb-4">
+                  {post.data.description}
+                </p>
+                
+                <div class="mt-auto flex items-center justify-between">
+                  <p class="text-sm text-[var(--apple-gray-400)] dark:text-[var(--apple-gray-500)]">
+                    {formatDate(post.data.date)}
+                  </p>
+                  
+                  {post.data.category && (
+                    <span class="inline-block bg-[var(--apple-gray-100)] dark:bg-[var(--apple-gray-700)] text-[var(--apple-gray-800)] dark:text-[var(--apple-gray-300)] text-xs px-3 py-1 rounded-full">
+                      {post.data.category}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+      
+      {posts.length === 0 && (
+        <div class="text-center py-12">
+          <p class="text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-400)]">No blog posts found. Check back soon!</p>
+        </div>
+      )}
+    </div>
+  </Section>
 </BaseLayout>

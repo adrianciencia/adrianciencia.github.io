@@ -5,17 +5,61 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 // Generate static paths for all blog posts
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog');
-  return blogEntries.map(entry => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+  
+  return blogEntries.map(entry => {
+    // Find related posts (excluding current post)
+    // This assumes you might want to show related posts by matching tags
+    const related = blogEntries
+      .filter(post => {
+        // Don't include the current post
+        if (post.slug === entry.slug) return false;
+        
+        // If the current post has tags, try to match them
+        if (entry.data.tags && entry.data.tags.length > 0) {
+          // Check if this post shares any tags with the current post
+          return post.data.tags && post.data.tags.some(tag => 
+            entry.data.tags.includes(tag)
+          );
+        }
+        
+        // If no tags, match by category
+        if (entry.data.category) {
+          return post.data.category === entry.data.category;
+        }
+        
+        return false;
+      })
+      .slice(0, 2) // Limit to 2 related posts
+      .map(post => ({
+        slug: post.slug,
+        title: post.data.title,
+        description: post.data.description,
+        image: post.data.image
+      }));
+    
+    return {
+      params: { slug: entry.slug },
+      props: { 
+        entry,
+        related
+      },
+    };
+  });
 }
 
 // Get the blog post for this page
-const { entry } = Astro.props;
+const { entry, related } = Astro.props;
 const { Content } = await entry.render();
+
+// Prepare SEO metadata
+const seo = {
+  title: entry.data.title,
+  description: entry.data.description || `Read ${entry.data.title} on Adrian Diaz's blog`,
+  image: entry.data.image || '/assets/images/og-image.png',
+  url: new URL(Astro.url.pathname, Astro.site).toString()
+};
 ---
 
-<BlogLayout frontmatter={entry.data}>
+<BlogLayout frontmatter={entry.data} seo={seo} relatedPosts={related}>
   <Content />
 </BlogLayout>

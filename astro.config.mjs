@@ -8,6 +8,17 @@ export default defineConfig({
   base: '/', // Explicitly set the base path
   integrations: [tailwind(), svelte()],
   output: 'static', // Ensure static output for GitHub Pages
+  markdown: {
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      theme: 'github-light',
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark'
+      },
+      wrap: true
+    }
+  }
 });
 
 
