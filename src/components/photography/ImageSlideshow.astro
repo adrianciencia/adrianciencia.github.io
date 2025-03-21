@@ -88,14 +88,38 @@ console.log("Slideshow photos count:", slideshowPhotos.length);
     <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
       {slideshowPhotos.map((_, index) => (
         <button 
-          class={`slide-indicator w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white scale-125' : 'bg-white/50'}`}
+          class="slide-indicator rounded-full transition-all duration-300 !w-2 !h-2 md:!w-2 md:!h-2 flex-shrink-0 block"
           data-index={index}
+          data-state={index === 0 ? 'active' : 'inactive'}
           aria-label={`Go to slide ${index + 1}`}
         ></button>
       ))}
     </div>
   )}
 </div>
+
+<style>
+  /* Ensure indicator styles are applied consistently */
+  .slide-indicator {
+    min-width: 0.25rem;
+    min-height: 0.25rem;
+    padding: 0;
+    border: none;
+  }
+  
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    .slide-indicator {
+      min-width: 0.25rem !important;
+      min-height: 0.25rem !important;
+      transform-origin: center;
+    }
+    
+    .slide-indicator[data-state="active"] {
+      transform: scale(1.1) !important;
+    }
+  }
+</style>
 
 <script>
   // Initialize all slideshows on the page
@@ -111,7 +135,6 @@ console.log("Slideshow photos count:", slideshowPhotos.length);
     const autoplay = slideshow.dataset.autoplay === 'true';
     const interval = parseInt(slideshow.dataset.interval || '5000', 10);
     
-    // Fix line 113: Add type annotation
     let autoplayTimer: number | null = null;
     
     // Set up navigation
@@ -119,10 +142,14 @@ console.log("Slideshow photos count:", slideshowPhotos.length);
     const nextButton = slideshow.querySelector('.next-slide');
     const indicators = slideshow.querySelectorAll<HTMLElement>('.slide-indicator');
     
+    // Apply initial indicator styles
+    indicators.forEach((indicator, i) => {
+      updateIndicatorState(indicator, i === 0);
+    });
+    
     if (prevButton) prevButton.addEventListener('click', () => goToSlide(currentIndex - 1));
     if (nextButton) nextButton.addEventListener('click', () => goToSlide(currentIndex + 1));
     
-    // Fix line 122: Add parameter type
     function goToSlide(index: number) {
       if (autoplayTimer !== null) {
         clearInterval(autoplayTimer);
@@ -141,13 +168,7 @@ console.log("Slideshow photos count:", slideshowPhotos.length);
       
       // Update indicators
       indicators.forEach((indicator, i) => {
-        if (i === index) {
-          indicator.classList.add('bg-white', 'scale-125');
-          indicator.classList.remove('bg-white/50');
-        } else {
-          indicator.classList.remove('bg-white', 'scale-125');
-          indicator.classList.add('bg-white/50');
-        }
+        updateIndicatorState(indicator, i === index);
       });
       
       currentIndex = index;
@@ -155,6 +176,19 @@ console.log("Slideshow photos count:", slideshowPhotos.length);
       // Restart autoplay if enabled
       if (autoplay) {
         autoplayTimer = setInterval(() => goToSlide(currentIndex + 1), interval) as unknown as number;
+      }
+    }
+    
+    // Helper function to update indicator state without affecting size classes
+    function updateIndicatorState(indicator: HTMLElement, isActive: boolean) {
+      if (isActive) {
+        indicator.classList.add('bg-white', 'scale-125');
+        indicator.classList.remove('bg-white/50');
+        indicator.dataset.state = 'active';
+      } else {
+        indicator.classList.remove('bg-white', 'scale-125');
+        indicator.classList.add('bg-white/50');
+        indicator.dataset.state = 'inactive';
       }
     }
     
