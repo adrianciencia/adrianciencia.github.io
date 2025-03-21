@@ -1,0 +1,72 @@
+---
+interface Props {
+  label: string;
+  href?: string;
+  type?: 'primary' | 'secondary' | 'tertiary';
+  size?: 'small' | 'medium' | 'large';
+  icon?: string; // Path to SVG icon or HTML content
+  iconPosition?: 'left' | 'right';
+  fullWidth?: boolean;
+  buttonType?: 'button' | 'submit' | 'reset';
+  disabled?: boolean; // Add disabled prop
+}
+
+const { 
+  label, 
+  href, 
+  type = 'primary', 
+  size = 'medium',
+  icon,
+  iconPosition = 'right',
+  fullWidth = false,
+  buttonType = 'button',
+  disabled = false
+} = Astro.props;
+
+// Reuse the same logic as Button.astro
+const isLink = !!href && !disabled;
+const Component = isLink ? 'a' : 'button';
+
+// Base classes
+let classes = "inline-flex items-center justify-center font-medium transition-all duration-200";
+
+// Size classes
+const sizeClasses = {
+  small: "text-sm px-3.5 py-1 rounded-lg",
+  medium: "text-base px-5 py-1.5 rounded-lg",
+  large: "text-lg px-6 py-2 rounded-lg"
+};
+
+// Type classes
+const typeClasses = {
+  primary: "bg-[var(--apple-blue)] text-white hover:bg-[var(--apple-blue-dark)] active:scale-[0.98] shadow-sm backdrop-blur-sm",
+  secondary: "bg-[rgba(240,240,247,0.8)] dark:bg-[rgba(60,60,67,0.3)] text-[var(--apple-gray-900)] dark:text-white hover:bg-[rgba(240,240,247,0.9)] dark:hover:bg-[rgba(60,60,67,0.35)] active:scale-[0.98] backdrop-blur-sm",
+  tertiary: "bg-transparent text-[var(--apple-blue)] hover:bg-[rgba(0,122,255,0.1)] dark:hover:bg-[rgba(10,132,255,0.1)] active:scale-[0.98]"
+};
+
+// Full width class
+const fullWidthClass = fullWidth ? "w-full" : "";
+
+// Disabled class
+const disabledClass = disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "";
+
+// Combine all classes
+classes = `${classes} ${sizeClasses[size]} ${typeClasses[type]} ${fullWidthClass} ${disabledClass}`;
+
+// Props for the component
+const componentProps = isLink 
+  ? { href, class: classes } 
+  : { type: buttonType, class: classes, disabled };
+---
+
+<Component {...componentProps}>
+  {icon && iconPosition === 'left' && (
+    <span class="mr-2" set:html={icon} />
+  )}
+  
+  <span>{label}</span>
+  
+  {icon && iconPosition === 'right' && (
+    <span class="ml-2" set:html={icon} />
+  )}
+</Component>

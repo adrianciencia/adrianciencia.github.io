@@ -1,0 +1,47 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  backgroundType?: 'minimal' | 'gradient' | 'image';
+  image?: string;
+}
+
+const { 
+  title, 
+  subtitle, 
+  backgroundType = 'minimal',
+  image
+} = Astro.props;
+
+// Background classes based on type
+let bgClasses = '';
+if (backgroundType === 'minimal') {
+  bgClasses = 'bg-white dark:bg-black';
+} else if (backgroundType === 'gradient') {
+  bgClasses = 'bg-gradient-to-br from-[var(--apple-blue-light)] to-[var(--apple-blue-dark)] text-white';
+} else if (backgroundType === 'image' && image) {
+  bgClasses = 'relative bg-cover bg-center';
+}
+---
+
+<section class={`py-24 md:py-32 ${bgClasses}`} style={backgroundType === 'image' && image ? `background-image: url(${image})` : ''}>
+  {backgroundType === 'image' && (
+    <div class="absolute inset-0 bg-black/40"></div>
+  )}
+  
+  <div class="max-w-5xl mx-auto px-4 md:px-6 relative">
+    <div class="text-center">
+      <h1 class={`text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 ${backgroundType === 'image' ? 'text-white' : 'text-[var(--apple-gray-900)] dark:text-white'}`}>
+        {title}
+      </h1>
+      
+      {subtitle && (
+        <p class={`text-xl md:text-2xl max-w-3xl mx-auto mb-8 ${backgroundType === 'image' ? 'text-white/90' : 'text-[var(--apple-gray-600)] dark:text-[var(--apple-gray-300)]'}`}>
+          {subtitle}
+        </p>
+      )}
+      
+      <slot />
+    </div>
+  </div>
+</section>

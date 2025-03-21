@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/common/Button.astro';
 ---
 
 <BaseLayout>
   <section class="flex flex-col items-center justify-center h-screen text-center">
     <h1 class="text-4xl font-bold mb-4">404</h1>
     <p class="mb-8">Page not found.</p>
-    <a href="/" class="px-4 py-2 bg-blue-500 text-white rounded">Go Home</a>
+    <Button label="Go Home" href="/" type="primary" />
   </section>
 </BaseLayout>

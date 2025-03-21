@@ -1,0 +1,290 @@
+/* =========================================
+   PHOTOGRAPHY COMPONENTS - APPLE STYLE
+   ========================================= */
+
+/* 
+ * Revised version with consistent Apple-inspired design.
+ */
+
+/* ---------- GRID ---------- */
+:root {
+  /* Transition settings */
+  --photo-transition-duration: 0.2s;
+  --photo-transition-timing: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Hover scale factor (slightly subtler) */
+  --photo-hover-scale: 1.02;
+
+  /* Border radius */
+  --photo-border-radius: 0.75rem;
+  --photo-border-radius-full: 9999px;
+
+  /* Z-index layers */
+  --photo-base-z: 1;
+  --photo-overlay-z: 10;
+  --photo-controls-z: 30;
+  --photo-grid-gap: 1.5rem;
+
+  }
+
+
+/* ---------- LAYOUT COMPONENTS ---------- */
+
+/* Hero section */
+.photo-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Gallery container */
+.photo-gallery {
+  position: relative;
+}
+
+/* ---------- CARD & ITEM STYLES ---------- */
+
+.photo-card,
+.photo-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--photo-border-radius);
+  background-color: var(--apple-gray-50);
+  transition:
+    box-shadow var(--photo-transition-duration) var(--photo-transition-timing),
+    transform var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+.dark .photo-card,
+.dark .photo-item {
+  background-color: var(--apple-gray-800);
+}
+
+.photo-card img,
+.photo-item img,
+.photo-gallery .group img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform var(--photo-transition-duration) var(--photo-transition-timing),
+    filter var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+/* Hover effect for images */
+.photo-card:hover img,
+.photo-item:hover img,
+.photo-gallery .group:hover img {
+  transform: scale(var(--photo-hover-scale));
+}
+
+/* ---------- OVERLAYS & HOVER STATES ---------- */
+
+.hover-reveal .overlay {
+  opacity: 0;
+  transition: opacity var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+.hover-reveal:hover .overlay {
+  opacity: 1;
+}
+
+/* Disable hover effects when needed */
+.no-hover-effects:hover img {
+  transform: none !important;
+}
+
+.no-hover-effects .overlay {
+  opacity: 1 !important;
+}
+
+/* ---------- FILTER COMPONENTS ---------- */
+
+.photo-filter-item {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--photo-border-radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+.photo-filter-item.active {
+  background-color: var(--apple-blue);
+  color: #fff;
+}
+
+.photo-filter-item.inactive {
+  background-color: var(--apple-gray-100);
+  color: var(--apple-gray-900);
+}
+
+.dark .photo-filter-item.inactive {
+  background-color: var(--apple-gray-700);
+  color: var(--apple-gray-50);
+}
+
+.photo-filter-item.inactive:hover {
+  background-color: var(--apple-gray-200);
+}
+
+.dark .photo-filter-item.inactive:hover {
+  background-color: var(--apple-gray-600);
+}
+
+/* ---------- DETAIL PAGE ANIMATIONS ---------- */
+
+.photo-detail > div:first-child img {
+  animation: photoReveal 1.2s var(--photo-transition-timing) forwards;
+}
+
+@keyframes photoReveal {
+  from {
+    transform: scale(1.03);
+    filter: blur(5px);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- Z-INDEX SYSTEM ---------- */
+
+.photo-detail,
+.photo-gallery,
+.photo-hero {
+  isolation: isolate;
+}
+
+.photo-gallery .absolute:not(a):not(button),
+.photo-hero .absolute:not(a):not(button),
+.photo-detail .absolute:not(a):not(button) {
+  pointer-events: none !important;
+  z-index: var(--photo-base-z);
+}
+
+.photo-gallery a,
+.photo-gallery button,
+.photo-hero a,
+.photo-hero button,
+.photo-detail a,
+.photo-detail button {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: var(--photo-controls-z);
+}
+
+/* ---------- PHOTO PROTECTION ---------- */
+
+.photo-detail img {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+/* Watermark */
+.watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: var(--photo-overlay-z);
+}
+
+.watermark-text {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 1.5rem;
+  font-weight: bold;
+  transform: rotate(-30deg);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* ---------- MACOS INSPIRED DETAIL PAGE ---------- */
+
+.photo-detail .sidebar {
+  background-color: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: var(--photo-border-radius);
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition:
+    transform var(--photo-transition-duration) var(--photo-transition-timing),
+    box-shadow var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+.dark .photo-detail .sidebar {
+  background-color: rgba(31, 41, 55, 0.7);
+  border-color: rgba(55, 65, 81, 0.3);
+}
+
+.photo-detail .sidebar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Related photos */
+.photo-detail .related-photo {
+  border-radius: var(--photo-border-radius);
+  overflow: hidden;
+  transition:
+    transform var(--photo-transition-duration) var(--photo-transition-timing),
+    box-shadow var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+.photo-detail .related-photo:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Description box */
+.photo-detail .description-box {
+  background-color: rgba(249, 250, 251, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: var(--photo-border-radius);
+  border: 1px solid rgba(229, 231, 235, 0.3);
+  transition:
+    transform var(--photo-transition-duration) var(--photo-transition-timing);
+}
+
+.dark .photo-detail .description-box {
+  background-color: rgba(31, 41, 55, 0.3);
+  border-color: rgba(55, 65, 81, 0.3);
+}
+
+/* Page load animation */
+.photo-detail .content-section {
+  animation: fadeSlideUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.photo-detail .content-section:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.photo-detail .content-section:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.photo-detail .content-section:nth-child(3) {
+  animation-delay: 0.6s;
+}

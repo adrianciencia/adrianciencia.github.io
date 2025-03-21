@@ -1,0 +1,180 @@
+---
+/**
+ * PhotoSlideshow Component
+ * 
+ * Creates an interactive slideshow for featuring photography content.
+ * Includes navigation controls, autoplay functionality, and caption display.
+ * 
+ * Features:
+ * - Automatic slideshow with configurable interval
+ * - Previous/next navigation controls
+ * - Responsive design with customizable height
+ * - Smooth transitions between slides
+ * - Gradient overlay for better text visibility
+ * - Displays photo captions and categories
+ * 
+ * @prop {CollectionEntry<'photography'>[]} photos - Array of photos to display in the slideshow
+ * @prop {string} height - CSS height value for the slideshow container (default: "60vh")
+ * @prop {boolean} autoplay - Whether to automatically advance slides (default: true)
+ * @prop {number} interval - Time in milliseconds between slide transitions (default: 5000)
+ */
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  photos: CollectionEntry<'photography'>[];
+  height?: string;
+  autoplay?: boolean;
+  interval?: number;
+}
+
+const { 
+  photos, 
+  height = "60vh", 
+  autoplay = true, 
+  interval = 5000 
+} = Astro.props;
+
+// Ensure we have photos to display
+const slideshowPhotos = photos && photos.length > 0 ? photos : [];
+console.log("Slideshow photos count:", slideshowPhotos.length);
+---
+
+<div class="photo-slideshow relative overflow-hidden" style={`height: ${height};`} data-autoplay={autoplay} data-interval={interval}>
+  {slideshowPhotos.length === 0 ? (
+    <div class="absolute inset-0 flex items-center justify-center bg-gray-800">
+      <p class="text-white">No photos available for slideshow</p>
+    </div>
+  ) : (
+    slideshowPhotos.map((photo, index) => (
+      <div 
+        class={`slide absolute inset-0 transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+        data-index={index}
+      >
+        <img 
+          src={photo.data.src} 
+          alt={photo.data.alt || 'Slideshow image'} 
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+      </div>
+    ))
+  )}
+  
+  <!-- Navigation arrows - only show if we have multiple photos -->
+  {slideshowPhotos.length > 1 && (
+    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300">
+      <button 
+        class="prev-slide bg-black/30 hover:bg-black/50 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300"
+        aria-label="Previous slide"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      <button 
+        class="next-slide bg-black/30 hover:bg-black/50 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300"
+        aria-label="Next slide"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  )}
+  
+  <!-- Slide indicators - only show if we have multiple photos -->
+  {slideshowPhotos.length > 1 && (
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+      {slideshowPhotos.map((_, index) => (
+        <button 
+          class={`slide-indicator w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white scale-125' : 'bg-white/50'}`}
+          data-index={index}
+          aria-label={`Go to slide ${index + 1}`}
+        ></button>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  // Initialize all slideshows on the page
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll<HTMLElement>('.photo-slideshow').forEach(initSlideshow);
+  });
+
+  function initSlideshow(slideshow: HTMLElement) {
+    const slides = slideshow.querySelectorAll<HTMLElement>('.slide');
+    if (slides.length <= 1) return;
+
+    let currentIndex = 0;
+    const autoplay = slideshow.dataset.autoplay === 'true';
+    const interval = parseInt(slideshow.dataset.interval || '5000', 10);
+    
+    // Fix line 113: Add type annotation
+    let autoplayTimer: number | null = null;
+    
+    // Set up navigation
+    const prevButton = slideshow.querySelector('.prev-slide');
+    const nextButton = slideshow.querySelector('.next-slide');
+    const indicators = slideshow.querySelectorAll<HTMLElement>('.slide-indicator');
+    
+    if (prevButton) prevButton.addEventListener('click', () => goToSlide(currentIndex - 1));
+    if (nextButton) nextButton.addEventListener('click', () => goToSlide(currentIndex + 1));
+    
+    // Fix line 122: Add parameter type
+    function goToSlide(index: number) {
+      if (autoplayTimer !== null) {
+        clearInterval(autoplayTimer);
+      }
+      
+      // Handle wrapping around
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+      
+      // Hide current slide, show new slide
+      slides[currentIndex].classList.remove('opacity-100');
+      slides[currentIndex].classList.add('opacity-0');
+      
+      slides[index].classList.remove('opacity-0');
+      slides[index].classList.add('opacity-100');
+      
+      // Update indicators
+      indicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.classList.add('bg-white', 'scale-125');
+          indicator.classList.remove('bg-white/50');
+        } else {
+          indicator.classList.remove('bg-white', 'scale-125');
+          indicator.classList.add('bg-white/50');
+        }
+      });
+      
+      currentIndex = index;
+      
+      // Restart autoplay if enabled
+      if (autoplay) {
+        autoplayTimer = setInterval(() => goToSlide(currentIndex + 1), interval) as unknown as number;
+      }
+    }
+    
+    // Start autoplay if enabled
+    if (autoplay) {
+      autoplayTimer = setInterval(() => goToSlide(currentIndex + 1), interval);
+    }
+    
+    // Pause autoplay when user hovers over slideshow
+    slideshow.addEventListener('mouseenter', () => {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+      }
+    });
+    
+    // Resume autoplay when user leaves slideshow
+    slideshow.addEventListener('mouseleave', () => {
+      if (autoplay) {
+        autoplayTimer = setInterval(() => goToSlide(currentIndex + 1), interval);
+      }
+    });
+  }
+</script>

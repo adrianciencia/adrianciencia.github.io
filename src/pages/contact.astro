@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/common/Button.astro';
 ---
 
 <BaseLayout>
@@ -40,12 +41,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           required 
         ></textarea>
       </div>
-      <button 
-        type="submit" 
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Send
-      </button>
+      <Button 
+        label="Send" 
+        buttonType="submit" 
+        type="primary"
+      />
     </form>
     <div class="mt-8">
       <p>Or reach me on social:</p>

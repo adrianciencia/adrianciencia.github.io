@@ -1,56 +1,124 @@
 ---
-import { allPhotos, formatCategory } from '../../data/photos';
+import { getAllPhotos, getFeaturedPhotos, formatCategory } from '../../utils/photoUtils';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Section from '../../components/Section.astro';
-import PhotoGallery from '../../components/PhotoGallery.astro';
-import PhotoFilter from '../../components/PhotoFilter.astro';
-import PhotoSlideshow from '../../components/PhotoSlideshow.astro';
+import PhotoGrid from '../../components/photography/PhotoGrid.astro';
+import ImageSlideshow from '../../components/photography/ImageSlideshow.astro';
+import CategoryFilter from '../../components/photography/CategoryFilter.svelte';
 
-const photos = allPhotos;
-// Define featuredPhotos properly - select photos marked as featured or fall back to first 3
-const featuredPhotos = allPhotos.filter(photo => photo.featured).length > 0 
-  ? allPhotos.filter(photo => photo.featured) 
-  : allPhotos.slice(0, 3);
-const categories = [...new Set(allPhotos.map(p => p.category))].map(formatCategory);
+
+// Get all photos
+const allPhotos = await getAllPhotos();
+console.log("All photos count:", allPhotos.length);
+
+// Get featured photos or use the first 3 photos if none are featured
+const featuredPhotos = await getFeaturedPhotos();
+console.log("Featured photos count:", featuredPhotos.length);
+
+// Make sure we have photos for the slideshow - always use at least 3 photos
+const displayFeatured = featuredPhotos.length >= 3 ? featuredPhotos : allPhotos.slice(0, 3);
+console.log("Display featured count:", displayFeatured.length);
+
+// Get unique categories
+const categories = [...new Set(allPhotos.map(photo => photo.data.category).filter(Boolean))].map(formatCategory);
+
+// Get the current category from the URL query parameter (if any)
+const url = new URL(Astro.request.url);
+const categoryParam = url.searchParams.get('category') || '';
+const categoryTitle = formatCategory(categoryParam);
 ---
 
 <BaseLayout title="Photography | Adrian Diaz">
   <!-- Hero Section -->
-  <div class="relative">
-    <PhotoSlideshow photos={featuredPhotos} height="70vh" />
+  <div class="relative photo-hero">
+    <ImageSlideshow photos={displayFeatured} height="70vh" />
     
     <div class="absolute inset-0 flex items-center justify-center z-10">
-      <div class="text-center text-white px-4">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Photography</h1>
-        <p class="text-xl max-w-2xl mx-auto text-white/90">The world through the lens of an astrophysicist</p>
+      <div class="text-center text-white p-4">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Photography</h1>
+        <p class="text-xl md:text-2xl max-w-2xl mx-auto drop-shadow-md">
+          Capturing the wonders of nature through my lens
+        </p>
       </div>
     </div>
   </div>
-
-  <!-- Main Content -->
-  <Section background="white" paddingY="large">
+  
+  <!-- Main Gallery Section -->
+  <section class="py-12 md:py-20 max-w-7xl mx-auto px-4">
     <div class="mb-8">
-      <PhotoFilter categories={categories} centered={true} includeAllPhotos={true} />
+      <h2 class="text-2xl font-semibold mb-6 text-[var(--apple-gray-900)] dark:text-white">Photo Gallery</h2>
+      
+      <!-- Use the Svelte CategoryFilter component with client:load -->
+      <div class="mb-8">
+        <CategoryFilter categories={categories} currentCategory={categoryTitle} client:load />
+      </div>
     </div>
-    <div class="max-w-7xl mx-auto">
-      <PhotoGallery photos={allPhotos} masonry={true} />
+    
+    <div id="photo-container" class="photo-gallery">
+      <PhotoGrid photos={allPhotos} masonry={true} />
     </div>
-  </Section>
+  </section>
 </BaseLayout>
-<style>
-  /* Gallery hover overrides */
-  .group:hover img {
-    transform: none !important;
-  }
-  
-  .group img {
-    transition: none !important;
-  }
-  
-  .group:hover .opacity-0 {
-    opacity: 1 !important;
-  }
-  
 
+<script is:inline>
+  // Client-side filtering logic
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get the current category from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentCategory = urlParams.get('category') || '';
+    
+    // Initial filtering based on URL parameter
+    if (currentCategory) {
+      filterPhotosByCategory(currentCategory);
+    }
+    
+    // Listen for category selection events
+    document.addEventListener('categorySelect', (e) => {
+      const category = e.detail.category;
+      
+      // Update URL without page reload
+      const url = new URL(window.location.href);
+      if (category) {
+        url.searchParams.set('category', category);
+      } else {
+        url.searchParams.delete('category');
+      }
+      window.history.pushState({}, '', url);
+      
+      // Filter photos
+      filterPhotosByCategory(category);
+    });
+  });
 
-</style>
+  function filterPhotosByCategory(selectedCategory) {
+    const photoContainer = document.querySelector('.masonry-grid');
+    const photoItems = document.querySelectorAll('.photo-item');
+    const cleanCategory = selectedCategory ? selectedCategory.toLowerCase().trim() : '';
+    
+    // First fade out all items
+    photoItems.forEach((item) => {
+      const photoCategory = (item.dataset.category || '').toLowerCase().trim();
+      
+      if (!cleanCategory || cleanCategory === 'all' || photoCategory === cleanCategory) {
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          item.style.opacity = '1';
+          item.style.transform = 'scale(1)';
+          item.style.display = '';
+        }, 300);
+      } else {
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          item.style.display = 'none';
+        }, 300);
+      }
+    });
+    
+    // Force layout recalculation
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 350);
+  }
+</script>
+

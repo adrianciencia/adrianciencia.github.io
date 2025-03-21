@@ -1,0 +1,21 @@
+/* Global button styles that match Button.astro component */
+
+.apple-button {
+  @apply inline-flex items-center justify-center font-medium transition-all duration-200;
+  @apply text-base px-5 py-1.5 rounded-lg;
+  @apply bg-[var(--apple-blue)] text-white hover:bg-[var(--apple-blue-dark)] active:scale-[0.98] shadow-sm;
+  backdrop-filter: blur(20px);
+}
+
+.apple-button-secondary {
+  @apply inline-flex items-center justify-center font-medium transition-all duration-200;
+  @apply text-base px-5 py-1.5 rounded-lg;
+  @apply bg-[rgba(240,240,247,0.8)] text-[var(--apple-gray-900)] dark:bg-[rgba(60,60,67,0.3)] dark:text-white hover:bg-[rgba(240,240,247,0.9)] dark:hover:bg-[rgba(60,60,67,0.35)] active:scale-[0.98];
+  backdrop-filter: blur(20px);
+}
+
+.apple-button-tertiary {
+  @apply inline-flex items-center justify-center font-medium transition-all duration-200;
+  @apply text-base px-5 py-1.5 rounded-lg;
+  @apply bg-transparent text-[var(--apple-blue)] hover:bg-[rgba(0,122,255,0.1)] dark:hover:bg-[rgba(10,132,255,0.1)] active:scale-[0.98];
+}

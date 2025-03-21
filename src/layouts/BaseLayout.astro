@@ -2,34 +2,65 @@
 // Add a simple console log to check if the layout is being processed
 console.log("BaseLayout is being processed");
 
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import ScrollToTop from '../components/ScrollToTop.svelte';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import ScrollToTop from '../components/utils/ScrollToTop.svelte';
+
+// Import global styles in the correct order to avoid overrides
+import '../styles/global.css';
+import '../styles/typography.css';
+import '../styles/photography.css';
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Astro Site</title>
+    <title>Adrian Diaz Espinoza</title>
     <meta name="description" content="A personal site about astronomy, projects, and more." />
-    <meta property="og:title" content="My Astro Site" />
+    <meta property="og:title" content="Adrian Diaz Espinoza" />
     <meta property="og:description" content="A personal site about astronomy, projects, and more." />
     <meta property="og:image" content="/assets/images/og-image.png" />
-    <!-- ... -->
-    <slot name="head"></slot>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors">
+  <body class="min-h-screen flex flex-col transition-colors duration-300">
     <Header />
-    <main class="min-h-screen">
-      <!-- Debug element inside the body -->
-      <div id="debug" style="position: fixed; bottom: 5px; right: 5px; background: red; color: white; padding: 5px; z-index: 9999; font-size: 12px;">
-        Debug: Site is loading
-      </div>
-      
-      <slot /> <!-- This is where page content will be inserted -->
+    <main class="flex-grow">
+      <slot />
     </main>
     <Footer />
-    <ScrollToTop client:load />
+    <ScrollToTop client:idle />
+    
+    <script>
+      // Theme handling
+      document.addEventListener('DOMContentLoaded', () => {
+        // Check for saved theme preference or respect OS preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (savedTheme === 'light') {
+          document.documentElement.classList.add('light');
+        } else {
+          // If no saved preference, check system preference
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          }
+        }
+        
+        // Add subtle fade-in effect for page content
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+          document.body.style.opacity = '1';
+          document.body.style.transition = 'opacity 0.5s ease';
+        }, 0);
+      });
+    </script>
   </body>
 </html>

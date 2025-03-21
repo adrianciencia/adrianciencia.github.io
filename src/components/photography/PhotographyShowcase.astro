@@ -1,0 +1,51 @@
+---
+/**
+ * PhotographyShowcase Component
+ * 
+ * A showcase section for highlighting selected photography content on the homepage.
+ * Combines a slideshow of featured photos with a grid of additional photos.
+ * 
+ * Features:
+ * - Hero slideshow with featured photos
+ * - Grid display of additional photos
+ * - Section heading with descriptive text
+ * - "View all" link to the full photography collection
+ * - Responsive layout that adapts to different screen sizes
+ * 
+ * This component serves as an entry point to the photography section from the homepage.
+ */
+import ImageSlideshow from './ImageSlideshow.astro';
+import { formatCategory } from '../../utils/photoUtils';
+import { getFeaturedPhotos, getAllPhotos } from '../../utils/photoUtils';
+import PhotoGrid from './PhotoGrid.astro';
+
+const featuredPhotos = getFeaturedPhotos();
+const allPhotos = await getAllPhotos();
+const gridPhotos = allPhotos.slice(3, 7); // Temporary until we create a proper selection logic
+---
+
+<section class="featured-photos py-16 md:py-24">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+    <div>
+      <h2 class="text-3xl font-semibold tracking-tight text-[var(--apple-gray-900)] dark:text-white mb-2">Photography</h2>
+      <p class="text-lg text-[var(--apple-gray-500)] dark:text-[var(--apple-gray-300)]">Capturing the wonders of the cosmos</p>
+    </div>
+    
+    <a href="/photography" class="mt-4 md:mt-0 text-[var(--apple-blue)] font-medium inline-flex items-center group">
+      View all photos
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </a>
+  </div>
+        
+  <div class="mb-8">
+    <ImageSlideshow photos={featuredPhotos} height="50vh" autoplay={true} interval={5000} />
+  </div>
+    
+  <div class="mt-12">
+    <h3 class="text-xl font-medium mb-6 text-[var(--apple-gray-800)] dark:text-[var(--apple-gray-200)]">More Photos</h3>
+    <PhotoGrid photos={gridPhotos} columns={{ sm: 2, md: 2, lg: 4 }} />
+  </div>
+</section>
+
