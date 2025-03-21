@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Inter font */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900; /* Variable font */
+  font-display: swap;
+  src: url('/fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
+}
+
 /* =========================================
    DESIGN SYSTEM - COLORS
    ========================================= */
@@ -70,7 +79,7 @@ body {
 /* Responsive typography */
 @media (min-width: 768px) {
   html {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
