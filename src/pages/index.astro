@@ -34,7 +34,7 @@ import '../styles/global.css';
         <section id="now" aria-labelledby="now-heading" class="section-compact">
           <p class="section-label">Now</p>
           <h2 id="now-heading">Current focus placeholder</h2>
-          <p>Compact current-activities placeholder.</p>
+          <p class="now-note">Compact current-activities placeholder.</p>
         </section>
 
         <section id="research" aria-labelledby="research-heading" class="section-research">
@@ -47,7 +47,7 @@ import '../styles/global.css';
                 <h3>Research item 01</h3>
                 <p>Question / title placeholder.</p>
                 <p>Short result placeholder.</p>
-                <p class="artifact-labels">Artifact links placeholder</p>
+                <p class="artifact-labels">Metadata / artifact placeholders</p>
               </div>
             </article>
 
@@ -57,17 +57,35 @@ import '../styles/global.css';
                 <h3>Research item 02</h3>
                 <p>Question / title placeholder.</p>
                 <p>Short result placeholder.</p>
-                <p class="artifact-labels">Artifact links placeholder</p>
+                <p class="artifact-labels">Metadata / artifact placeholders</p>
               </div>
             </article>
           </div>
 
           <div class="publications-placeholder">
             <h3>Selected publications</h3>
-            <ol>
-              <li>Publication placeholder</li>
-              <li>Publication placeholder</li>
-              <li>Publication placeholder</li>
+            <ol class="publication-list">
+              <li>
+                <div>
+                  <strong>Publication title placeholder</strong>
+                  <span>Author / venue metadata placeholder</span>
+                </div>
+                <span>Year placeholder</span>
+              </li>
+              <li>
+                <div>
+                  <strong>Publication title placeholder</strong>
+                  <span>Author / venue metadata placeholder</span>
+                </div>
+                <span>Year placeholder</span>
+              </li>
+              <li>
+                <div>
+                  <strong>Publication title placeholder</strong>
+                  <span>Author / venue metadata placeholder</span>
+                </div>
+                <span>Year placeholder</span>
+              </li>
             </ol>
           </div>
         </section>
@@ -75,29 +93,59 @@ import '../styles/global.css';
         <section id="building" aria-labelledby="building-heading">
           <p class="section-label">Building</p>
           <h2 id="building-heading">Work in progress placeholder</h2>
-          <ul class="placeholder-list">
-            <li>Building placeholder</li>
-            <li>Building placeholder</li>
+          <ul class="editorial-list">
+            <li>
+              <div>
+                <strong>Project title placeholder <span aria-hidden="true">↗</span></strong>
+                <p>One-line project description placeholder.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>Project title placeholder <span aria-hidden="true">↗</span></strong>
+                <p>One-line project description placeholder.</p>
+              </div>
+            </li>
           </ul>
         </section>
 
         <section id="writing" aria-labelledby="writing-heading">
           <p class="section-label">Writing</p>
           <h2 id="writing-heading">Selected writing placeholder</h2>
-          <ul class="placeholder-list">
-            <li>Essay, note, or guide placeholder</li>
-            <li>Essay, note, or guide placeholder</li>
-            <li>Essay, note, or guide placeholder</li>
+          <ul class="editorial-list editorial-list-writing">
+            <li>
+              <div>
+                <strong>Essay, note, or guide placeholder</strong>
+                <p>Type / short description placeholder.</p>
+              </div>
+              <span>Year placeholder</span>
+            </li>
+            <li>
+              <div>
+                <strong>Essay, note, or guide placeholder</strong>
+                <p>Type / short description placeholder.</p>
+              </div>
+              <span>Year placeholder</span>
+            </li>
+            <li>
+              <div>
+                <strong>Essay, note, or guide placeholder</strong>
+                <p>Type / short description placeholder.</p>
+              </div>
+              <span>Year placeholder</span>
+            </li>
           </ul>
         </section>
 
         <section id="community" aria-labelledby="community-heading">
           <p class="section-label">Community</p>
           <h2 id="community-heading">Community &amp; Public Science</h2>
-          <p>
-            Placeholder for future community-building, teaching, outreach, and
-            public communication work.
-          </p>
+          <div class="community-note">
+            <p>
+              Placeholder for future community-building, teaching, outreach, and
+              public communication work.
+            </p>
+          </div>
         </section>
 
         <section id="photography" aria-labelledby="photography-heading">
@@ -113,11 +161,15 @@ import '../styles/global.css';
         <section id="archive" aria-labelledby="archive-heading" class="section-archive">
           <p class="section-label">Archive</p>
           <h2 id="archive-heading">Earlier work placeholder</h2>
-          <p>Compact placeholder for older stages and material.</p>
+          <dl class="archive-list">
+            <div><dt>2025–26</dt><dd>Placeholder</dd></div>
+            <div><dt>2022–25</dt><dd>Placeholder</dd></div>
+            <div><dt>2020–22</dt><dd>Placeholder</dd></div>
+          </dl>
         </section>
 
         <footer class="site-footer">
-          <p>Structural homepage skeleton.</p>
+          <p>Editorial homepage placeholder.</p>
         </footer>
       </div>
     </main>
