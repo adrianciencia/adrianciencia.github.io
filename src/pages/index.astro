@@ -1,4 +1,6 @@
 ---
+import ProfileSidebar from '../components/ProfileSidebar.astro';
+import TopNav from '../components/TopNav.astro';
 import '../styles/global.css';
 ---
 
@@ -7,12 +9,117 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Structural homepage for Adrian Díaz Espinoza."
+    />
     <title>Adrian Díaz Espinoza</title>
   </head>
   <body>
-    <main>
-      <h1>Adrian Díaz Espinoza</h1>
-      <p>Site rebuild in progress.</p>
+    <TopNav />
+
+    <main class="site-layout">
+      <ProfileSidebar />
+
+      <div class="document-column">
+        <section id="about" aria-labelledby="about-heading">
+          <p class="section-label">About</p>
+          <h2 id="about-heading">A short introduction placeholder.</h2>
+          <p>
+            This space will introduce the scientific work and wider practice in a
+            concise way.
+          </p>
+        </section>
+
+        <section id="now" aria-labelledby="now-heading" class="section-compact">
+          <p class="section-label">Now</p>
+          <h2 id="now-heading">Current focus placeholder</h2>
+          <p>Compact current-activities placeholder.</p>
+        </section>
+
+        <section id="research" aria-labelledby="research-heading" class="section-research">
+          <p class="section-label">Research</p>
+          <h2 id="research-heading">Selected research</h2>
+          <div class="research-items">
+            <article class="research-item">
+              <div class="figure-placeholder" aria-hidden="true">Figure placeholder</div>
+              <div>
+                <h3>Research item 01</h3>
+                <p>Question / title placeholder.</p>
+                <p>Short result placeholder.</p>
+                <p class="artifact-labels">Artifact links placeholder</p>
+              </div>
+            </article>
+
+            <article class="research-item">
+              <div class="figure-placeholder" aria-hidden="true">Figure placeholder</div>
+              <div>
+                <h3>Research item 02</h3>
+                <p>Question / title placeholder.</p>
+                <p>Short result placeholder.</p>
+                <p class="artifact-labels">Artifact links placeholder</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="publications-placeholder">
+            <h3>Selected publications</h3>
+            <ol>
+              <li>Publication placeholder</li>
+              <li>Publication placeholder</li>
+              <li>Publication placeholder</li>
+            </ol>
+          </div>
+        </section>
+
+        <section id="building" aria-labelledby="building-heading">
+          <p class="section-label">Building</p>
+          <h2 id="building-heading">Work in progress placeholder</h2>
+          <ul class="placeholder-list">
+            <li>Building placeholder</li>
+            <li>Building placeholder</li>
+          </ul>
+        </section>
+
+        <section id="writing" aria-labelledby="writing-heading">
+          <p class="section-label">Writing</p>
+          <h2 id="writing-heading">Selected writing placeholder</h2>
+          <ul class="placeholder-list">
+            <li>Essay, note, or guide placeholder</li>
+            <li>Essay, note, or guide placeholder</li>
+            <li>Essay, note, or guide placeholder</li>
+          </ul>
+        </section>
+
+        <section id="community" aria-labelledby="community-heading">
+          <p class="section-label">Community</p>
+          <h2 id="community-heading">Community &amp; Public Science</h2>
+          <p>
+            Placeholder for future community-building, teaching, outreach, and
+            public communication work.
+          </p>
+        </section>
+
+        <section id="photography" aria-labelledby="photography-heading">
+          <p class="section-label">Photography</p>
+          <h2 id="photography-heading">Future visual gallery placeholder</h2>
+          <div class="gallery-placeholder" aria-hidden="true">
+            <span>Visual placeholder</span>
+            <span>Visual placeholder</span>
+            <span>Visual placeholder</span>
+          </div>
+        </section>
+
+        <section id="archive" aria-labelledby="archive-heading" class="section-archive">
+          <p class="section-label">Archive</p>
+          <h2 id="archive-heading">Earlier work placeholder</h2>
+          <p>Compact placeholder for older stages and material.</p>
+        </section>
+
+        <footer class="site-footer">
+          <p>Structural homepage skeleton.</p>
+        </footer>
+      </div>
     </main>
   </body>
 </html>
