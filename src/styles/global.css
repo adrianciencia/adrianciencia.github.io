@@ -3,7 +3,7 @@
   --color-text: #171717;
   --color-accent: #a51d1d;
   --color-muted: #666666;
-  --color-faint: #8a8a8a;
+  --color-faint: #767676;
   --color-rule: #e3e3e3;
 
   --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
@@ -570,6 +570,38 @@ a:focus-visible {
 
 .site-footer p {
   margin: 0;
+}
+
+.not-found-page {
+  display: grid;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--space-8) var(--page-gutter);
+}
+
+.not-found-content {
+  width: min(100%, 42rem);
+  margin: 0 auto;
+  padding-top: var(--space-5);
+  border-top: var(--rule);
+}
+
+.not-found-content h1 {
+  margin: 0;
+  font-size: var(--font-size-profile);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.not-found-content p:not(.section-label) {
+  margin: var(--space-3) 0 0;
+}
+
+.not-found-content a {
+  display: inline-block;
+  margin-top: var(--space-5);
 }
 
 @media (max-width: 860px) {

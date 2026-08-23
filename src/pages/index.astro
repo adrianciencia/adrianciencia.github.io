@@ -16,6 +16,17 @@ const writingEntries = (await getCollection('writing'))
   .sort((first, second) => second.data.date.getTime() - first.data.date.getTime());
 const showWriting = writingEntries.length > 0;
 const showPhotography = photography.length > 0;
+const canonicalUrl = 'https://adrianciencia.github.io/';
+const siteDescription =
+  'Observational astrophysicist studying high-redshift galaxy evolution, spectroscopy, and scientific inference.';
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: canonicalUrl,
+  jobTitle: profile.title,
+  sameAs: ['https://github.com/adrianciencia', 'https://www.linkedin.com/in/adrianciencia'],
+};
 ---
 
 <!doctype html>
@@ -25,8 +36,19 @@ const showPhotography = photography.length > 0;
     <meta name="viewport" content="width=device-width" />
     <meta
       name="description"
-      content="Observational astrophysicist studying high-redshift galaxy evolution, spectroscopy, and scientific inference."
+      content={siteDescription}
     />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${profile.name} — Astrophysicist`} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={`${profile.name} — Astrophysicist`} />
+    <meta name="twitter:description" content={siteDescription} />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <title>{profile.name} — Astrophysicist</title>
   </head>
   <body>
