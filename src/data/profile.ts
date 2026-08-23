@@ -9,6 +9,8 @@ export const profile = {
   portrait: {
     src: '/images/profile/portrait.jpg',
     alt: '',
+    width: 778,
+    height: 1167,
   },
   links: [
     { label: 'Email', href: 'mailto:adrdiazes@gmail.com' },

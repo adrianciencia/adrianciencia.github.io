@@ -7,8 +7,8 @@ import { profile } from '../data/profile';
     class="portrait-image"
     src={profile.portrait.src}
     alt={profile.portrait.alt ?? ''}
-    width="800"
-    height="1200"
+    width={profile.portrait.width}
+    height={profile.portrait.height}
     decoding="async"
   />
 

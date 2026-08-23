@@ -7,6 +7,8 @@ export type ImageMetadata = {
   src?: string;
   alt?: string;
   caption?: string;
+  width?: number;
+  height?: number;
   placeholder?: string;
 };
 
