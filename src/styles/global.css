@@ -24,9 +24,9 @@
   --space-8: 4rem;
   --space-9: 6rem;
 
-  --layout-max: 75rem;
-  --sidebar-width: 16.25rem;
-  --document-width: 47.5rem;
+  --layout-max: 76.5rem;
+  --sidebar-width: 16rem;
+  --document-width: 52.5rem;
   --header-height: 4rem;
   --page-gutter: 2rem;
   --rule: 1px solid var(--color-rule);
@@ -134,7 +134,8 @@ a:focus-visible {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, var(--document-width));
   align-items: start;
-  gap: clamp(3.5rem, 6vw, 5rem);
+  justify-content: center;
+  gap: clamp(3.5rem, 5vw, 4.5rem);
   width: min(100% - (var(--page-gutter) * 2), var(--layout-max));
   margin: 0 auto;
   padding: var(--space-8) 0 var(--space-9);
@@ -319,17 +320,21 @@ a:focus-visible {
 
 .research-items {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-8);
   margin-top: var(--space-6);
 }
 
 .research-item {
-  display: grid;
-  grid-template-columns: minmax(12.5rem, 0.62fr) minmax(0, 1fr);
-  gap: var(--space-5);
-  align-items: start;
-  padding-bottom: var(--space-6);
+  padding-bottom: var(--space-8);
   border-bottom: var(--rule);
+}
+
+.research-media {
+  margin: 0 0 var(--space-5);
+}
+
+.research-copy {
+  max-width: 44rem;
 }
 
 .research-item h3 {
@@ -346,7 +351,7 @@ a:focus-visible {
 }
 
 .research-summary {
-  max-width: 34rem;
+  max-width: 42rem;
 }
 
 .research-status {
@@ -358,8 +363,18 @@ a:focus-visible {
   display: block;
   width: 100%;
   height: auto;
-  border: var(--rule);
-  background: var(--color-bg);
+}
+
+#recalibrating-halpha-high-redshift .research-media {
+  max-width: 48rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.research-figure-link {
+  display: none;
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
 }
 
 .artifact-labels {
@@ -424,6 +439,10 @@ a:focus-visible {
 
 .editorial-list {
   border-top: var(--rule);
+}
+
+.editorial-list-detailed {
+  max-width: 44rem;
 }
 
 .editorial-list > li {
@@ -618,9 +637,9 @@ a:focus-visible {
     font-size: 1.5rem;
   }
 
-  .research-item {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-4);
+  .research-figure-link {
+    display: inline-block;
+    margin-top: var(--space-2);
   }
 
   .publication-list li,

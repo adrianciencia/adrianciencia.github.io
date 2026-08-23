@@ -64,16 +64,25 @@ const showPhotography = photography.length > 0;
             {
               research.map((item) => (
                 <article class="research-item" id={item.id}>
-                  <img
-                    class="research-figure"
-                    src={item.figure.src}
-                    alt={item.figure.alt ?? ''}
-                    width={item.figure.width}
-                    height={item.figure.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div>
+                  <figure class="research-media">
+                    <img
+                      class="research-figure"
+                      src={item.figure.src}
+                      alt={item.figure.alt ?? ''}
+                      width={item.figure.width}
+                      height={item.figure.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    {
+                      item.figure.src && (
+                        <a class="research-figure-link" href={item.figure.src}>
+                          Open full figure <span aria-hidden="true">↗</span>
+                        </a>
+                      )
+                    }
+                  </figure>
+                  <div class="research-copy">
                     <h3>{item.title}</h3>
                     <p class="research-question">{item.question}</p>
                     <p class="research-summary">{item.summary}</p>
@@ -115,6 +124,25 @@ const showPhotography = photography.length > 0;
               </div>
             )
           }
+        </section>
+
+        <section id="community" aria-labelledby="community-heading">
+          <p class="section-label">Community</p>
+          <h2 id="community-heading">Community &amp; Public Science</h2>
+          <ul class="editorial-list editorial-list-detailed community-list">
+            {
+              community.map((item) => (
+                <li>
+                  <div>
+                    <strong>{item.title}</strong>
+                    {item.role && <p class="editorial-item-role">{item.role}</p>}
+                    <p class="editorial-item-description">{item.description}</p>
+                  </div>
+                  {item.period && <span>{item.period}</span>}
+                </li>
+              ))
+            }
+          </ul>
         </section>
 
         <section id="building" aria-labelledby="building-heading">
@@ -159,25 +187,6 @@ const showPhotography = photography.length > 0;
           )
         }
 
-        <section id="community" aria-labelledby="community-heading">
-          <p class="section-label">Community</p>
-          <h2 id="community-heading">Community &amp; Public Science</h2>
-          <ul class="editorial-list editorial-list-detailed community-list">
-            {
-              community.map((item) => (
-                <li>
-                  <div>
-                    <strong>{item.title}</strong>
-                    {item.role && <p class="editorial-item-role">{item.role}</p>}
-                    <p class="editorial-item-description">{item.description}</p>
-                  </div>
-                  {item.period && <span>{item.period}</span>}
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-
         {
           showPhotography && (
             <section id="photography" aria-labelledby="photography-heading">
@@ -194,7 +203,7 @@ const showPhotography = photography.length > 0;
 
         <section id="archive" aria-labelledby="archive-heading" class="section-archive">
           <p class="section-label">Archive</p>
-          <h2 id="archive-heading" class="sr-only">Archive</h2>
+          <h2 id="archive-heading">Selected earlier work</h2>
           <dl class="archive-list">
             {
               archive.map((item) => (

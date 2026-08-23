@@ -21,10 +21,10 @@ export const research = [
     title: 'How should Hα trace star formation at z > 3?',
     question: 'Can local Hα star-formation-rate calibrations be applied to galaxies in the early Universe?',
     summary:
-      'Using JWST/NIRSpec spectroscopy and HST/NIRCam photometry for roughly 200 RUBIES galaxies at z = 3.4–7, I found that classical Hα calibrations overestimate 10 Myr Prospector SFRs by 0.16 ± 0.04 dex, with a gas-metallicity dependence. I developed a metallicity-dependent conversion that reduces the offset.',
+      'Using JWST/NIRSpec spectroscopy and HST/NIRCam photometry for roughly 200 RUBIES galaxies at z = 3.4–7, I found that classical Hα calibrations overestimate 10 Myr Prospector SFRs by 0.16 ± 0.04 dex, with the empirical offset varying with gas metallicity. I also developed metallicity-dependent Hα-to-SFR conversions; the figure shows the MIST/FSPS prediction for κ(Hα) as a function of stellar metallicity.',
     figure: {
       src: '/images/research/halpha-calibration.png',
-      alt: 'Logarithmic Hα-to-SFR conversion factor versus stellar metallicity for the Prospector/MIST sample. Gray points and a red robust MIST relation show the conversion factor increasing with metallicity while remaining below the dashed local Chabrier calibration.',
+      alt: 'MIST/FSPS Hα-to-SFR conversion factor κ(Hα) as a function of stellar metallicity, compared with the standard local Chabrier calibration. Gray points and a red robust relation with a 95% credible interval on the mean are shown.',
       width: 2164,
       height: 1804,
     },
