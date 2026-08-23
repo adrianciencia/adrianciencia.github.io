@@ -106,15 +106,18 @@ const writingPlaceholders = Array.from({ length: 3 });
 
         <section id="building" aria-labelledby="building-heading">
           <p class="section-label">Building</p>
-          <h2 id="building-heading">Work in progress placeholder</h2>
-          <ul class="editorial-list">
+          <h2 id="building-heading" class="sr-only">Building</h2>
+          <ul class="editorial-list editorial-list-detailed">
             {
               building.map((item) => (
                 <li>
                   <div>
-                    <strong>{item.title} <span aria-hidden="true">↗</span></strong>
-                    <p>{item.description}</p>
+                    <strong>{item.title}</strong>
+                    {item.role && <p class="editorial-item-role">{item.role}</p>}
+                    <p class="editorial-item-description">{item.description}</p>
+                    {item.evidence && <p class="editorial-item-evidence">{item.evidence}</p>}
                   </div>
+                  {item.period && <span>{item.period}</span>}
                 </li>
               ))
             }
@@ -142,9 +145,20 @@ const writingPlaceholders = Array.from({ length: 3 });
         <section id="community" aria-labelledby="community-heading">
           <p class="section-label">Community</p>
           <h2 id="community-heading">Community &amp; Public Science</h2>
-          <div class="community-note">
-            {community.map((item) => <p>{item.description}</p>)}
-          </div>
+          <ul class="editorial-list editorial-list-detailed community-list">
+            {
+              community.map((item) => (
+                <li>
+                  <div>
+                    <strong>{item.title}</strong>
+                    {item.role && <p class="editorial-item-role">{item.role}</p>}
+                    <p class="editorial-item-description">{item.description}</p>
+                  </div>
+                  {item.period && <span>{item.period}</span>}
+                </li>
+              ))
+            }
+          </ul>
         </section>
 
         <section id="photography" aria-labelledby="photography-heading">

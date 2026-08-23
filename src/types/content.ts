@@ -66,13 +66,15 @@ export type BuildingItem = {
   description: string;
   role?: string;
   period?: string;
+  evidence?: string;
   link?: ExternalLink;
   status?: string;
 };
 
 export type CommunityItem = {
-  title?: string;
+  title: string;
   description: string;
+  role?: string;
   period?: string;
   links: ExternalLink[];
 };
