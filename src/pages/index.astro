@@ -62,19 +62,18 @@ const writingPlaceholders = Array.from({ length: 3 });
                   <div class="figure-placeholder" aria-hidden="true">{item.figure.placeholder}</div>
                   <div>
                     <h3>{item.title}</h3>
-                    <p>{item.question}</p>
-                    <p>{item.summary}</p>
+                    <p class="research-question">{item.question}</p>
+                    <p class="research-summary">{item.summary}</p>
+                    {item.status && <p class="research-status">{item.status}</p>}
                     {
-                      item.artifacts.length > 0 ? (
+                      item.artifacts.some((artifact) => artifact.href) && (
                         <p class="artifact-labels">
                           {
                             item.artifacts.map((artifact) =>
-                              artifact.href ? <a href={artifact.href}>{artifact.label}</a> : <span>{artifact.label}</span>,
+                              artifact.href && <a href={artifact.href}>{artifact.label}</a>,
                             )
                           }
                         </p>
-                      ) : (
-                        <p class="artifact-labels">{item.metadata}</p>
                       )
                     }
                   </div>
@@ -83,22 +82,26 @@ const writingPlaceholders = Array.from({ length: 3 });
             }
           </div>
 
-          <div class="publications-placeholder">
-            <h3>Selected publications</h3>
-            <ol class="publication-list">
-              {
-                publications.map((publication) => (
-                  <li>
-                    <div>
-                      <strong>{publication.title}</strong>
-                      <span>{publication.authors}</span>
-                    </div>
-                    <span>{publication.year}</span>
-                  </li>
-                ))
-              }
-            </ol>
-          </div>
+          {
+            publications.length > 0 && (
+              <div class="publications-placeholder">
+                <h3>Selected publications</h3>
+                <ol class="publication-list">
+                  {
+                    publications.map((publication) => (
+                      <li>
+                        <div>
+                          <strong>{publication.title}</strong>
+                          <span>{publication.authors}</span>
+                        </div>
+                        <span>{publication.year}</span>
+                      </li>
+                    ))
+                  }
+                </ol>
+              </div>
+            )
+          }
         </section>
 
         <section id="building" aria-labelledby="building-heading">

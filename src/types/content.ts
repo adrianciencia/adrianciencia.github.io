@@ -46,7 +46,7 @@ export type ResearchItem = {
   question: string;
   summary: string;
   figure: ImageMetadata;
-  metadata: string;
+  metadata?: string;
   status?: string;
   year?: string;
   artifacts: ResearchArtifact[];
