@@ -21,9 +21,17 @@ export type Profile = {
   cv?: ExternalLink;
 };
 
-export type EditorialSection = {
-  title: string;
-  body: string;
+export type AboutContent = {
+  paragraphs: string[];
+};
+
+export type NowItem = {
+  label: string;
+  text: string;
+};
+
+export type NowContent = {
+  items: NowItem[];
 };
 
 export type ResearchArtifactKind = 'paper' | 'arxiv' | 'ads' | 'code' | 'data' | 'project';

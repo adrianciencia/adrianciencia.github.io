@@ -14,15 +14,15 @@ const writingPlaceholders = Array.from({ length: 3 });
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta
       name="description"
-      content={`Structural homepage for ${profile.name}.`}
+      content="Observational astrophysicist studying high-redshift galaxy evolution, spectroscopy, and scientific inference."
     />
-    <title>{profile.name}</title>
+    <title>{profile.name} — Astrophysicist</title>
   </head>
   <body>
     <TopNav />
@@ -33,14 +33,23 @@ const writingPlaceholders = Array.from({ length: 3 });
       <div class="document-column">
         <section id="about" aria-labelledby="about-heading">
           <p class="section-label">About</p>
-          <h2 id="about-heading">{about.title}</h2>
-          <p>{about.body}</p>
+          <h2 id="about-heading" class="sr-only">About</h2>
+          {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
         </section>
 
         <section id="now" aria-labelledby="now-heading" class="section-compact">
           <p class="section-label">Now</p>
-          <h2 id="now-heading">{now.title}</h2>
-          <p class="now-note">{now.body}</p>
+          <h2 id="now-heading" class="sr-only">Now</h2>
+          <div class="now-list">
+            {
+              now.items.map((item) => (
+                <article class="now-item">
+                  <p class="now-item-label">{item.label}</p>
+                  <p class="now-note">{item.text}</p>
+                </article>
+              ))
+            }
+          </div>
         </section>
 
         <section id="research" aria-labelledby="research-heading" class="section-research">

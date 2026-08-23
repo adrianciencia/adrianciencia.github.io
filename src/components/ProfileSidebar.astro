@@ -11,7 +11,10 @@ import { profile } from '../data/profile';
     <p>{profile.descriptor}</p>
   </div>
 
-  <p class="profile-status">{profile.currentStatus}</p>
+  <p class="profile-status">
+    {profile.currentStatus}
+    {profile.location && <><br />{profile.location}</>}
+  </p>
 
   <div class="profile-links" aria-label="Professional links">
     <h2>Links</h2>
