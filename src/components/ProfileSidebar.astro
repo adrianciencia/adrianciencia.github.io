@@ -3,7 +3,14 @@ import { profile } from '../data/profile';
 ---
 
 <aside class="profile-sidebar" aria-labelledby="profile-name">
-  <div class="portrait-placeholder" aria-hidden="true">{profile.portrait.placeholder}</div>
+  <img
+    class="portrait-image"
+    src={profile.portrait.src}
+    alt={profile.portrait.alt ?? ''}
+    width="800"
+    height="1200"
+    decoding="async"
+  />
 
   <div class="profile-introduction">
     <h1 id="profile-name">{profile.name}</h1>

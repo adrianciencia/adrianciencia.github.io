@@ -64,7 +64,13 @@ const showPhotography = photography.length > 0;
             {
               research.map((item) => (
                 <article class="research-item" id={item.id}>
-                  <div class="figure-placeholder" aria-hidden="true">{item.figure.placeholder}</div>
+                  <img
+                    class="research-figure"
+                    src={item.figure.src}
+                    alt={item.figure.alt ?? ''}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <div>
                     <h3>{item.title}</h3>
                     <p class="research-question">{item.question}</p>

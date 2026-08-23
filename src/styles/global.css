@@ -148,8 +148,6 @@ a:focus-visible {
   padding-bottom: var(--space-4);
 }
 
-.portrait-placeholder,
-.figure-placeholder,
 .gallery-placeholder span {
   display: grid;
   place-items: center;
@@ -161,10 +159,15 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.portrait-placeholder {
+.portrait-image {
   width: min(100%, 13.75rem);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 2 / 3;
+  height: auto;
   margin-bottom: var(--space-5);
+  display: block;
+  border: var(--rule);
+  background: var(--color-bg);
+  object-fit: cover;
 }
 
 .profile-introduction h1,
@@ -351,8 +354,12 @@ a:focus-visible {
   font-size: var(--font-size-small);
 }
 
-.figure-placeholder {
-  aspect-ratio: 4 / 3;
+.research-figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--rule);
+  background: var(--color-bg);
 }
 
 .artifact-labels {
@@ -577,7 +584,7 @@ a:focus-visible {
     padding-bottom: 0;
   }
 
-  .portrait-placeholder {
+  .portrait-image {
     width: min(100%, 12rem);
     margin-bottom: var(--space-4);
   }
@@ -614,10 +621,6 @@ a:focus-visible {
   .research-item {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
-  }
-
-  .figure-placeholder {
-    max-width: 18rem;
   }
 
   .publication-list li,

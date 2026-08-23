@@ -7,7 +7,8 @@ export const profile = {
   currentStatus: 'JWST/RUBIES research collaboration',
   location: 'Lima, Peru',
   portrait: {
-    placeholder: 'Portrait placeholder',
+    src: '/images/profile/portrait.jpg',
+    alt: '',
   },
   links: [
     { label: 'Email', href: 'mailto:adrdiazes@gmail.com' },
