@@ -1,7 +1,16 @@
 ---
 import ProfileSidebar from '../components/ProfileSidebar.astro';
 import TopNav from '../components/TopNav.astro';
+import { archive } from '../data/archive';
+import { building } from '../data/building';
+import { community } from '../data/community';
+import { photography } from '../data/photography';
+import { about, now, profile } from '../data/profile';
+import { publications } from '../data/publications';
+import { research } from '../data/research';
 import '../styles/global.css';
+
+const writingPlaceholders = Array.from({ length: 3 });
 ---
 
 <!doctype html>
@@ -11,9 +20,9 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width" />
     <meta
       name="description"
-      content="Structural homepage for Adrian Díaz Espinoza."
+      content={`Structural homepage for ${profile.name}.`}
     />
-    <title>Adrian Díaz Espinoza</title>
+    <title>{profile.name}</title>
   </head>
   <body>
     <TopNav />
@@ -24,68 +33,61 @@ import '../styles/global.css';
       <div class="document-column">
         <section id="about" aria-labelledby="about-heading">
           <p class="section-label">About</p>
-          <h2 id="about-heading">A short introduction placeholder.</h2>
-          <p>
-            This space will introduce the scientific work and wider practice in a
-            concise way.
-          </p>
+          <h2 id="about-heading">{about.title}</h2>
+          <p>{about.body}</p>
         </section>
 
         <section id="now" aria-labelledby="now-heading" class="section-compact">
           <p class="section-label">Now</p>
-          <h2 id="now-heading">Current focus placeholder</h2>
-          <p class="now-note">Compact current-activities placeholder.</p>
+          <h2 id="now-heading">{now.title}</h2>
+          <p class="now-note">{now.body}</p>
         </section>
 
         <section id="research" aria-labelledby="research-heading" class="section-research">
           <p class="section-label">Research</p>
           <h2 id="research-heading">Selected research</h2>
           <div class="research-items">
-            <article class="research-item">
-              <div class="figure-placeholder" aria-hidden="true">Figure placeholder</div>
-              <div>
-                <h3>Research item 01</h3>
-                <p>Question / title placeholder.</p>
-                <p>Short result placeholder.</p>
-                <p class="artifact-labels">Metadata / artifact placeholders</p>
-              </div>
-            </article>
-
-            <article class="research-item">
-              <div class="figure-placeholder" aria-hidden="true">Figure placeholder</div>
-              <div>
-                <h3>Research item 02</h3>
-                <p>Question / title placeholder.</p>
-                <p>Short result placeholder.</p>
-                <p class="artifact-labels">Metadata / artifact placeholders</p>
-              </div>
-            </article>
+            {
+              research.map((item) => (
+                <article class="research-item" id={item.id}>
+                  <div class="figure-placeholder" aria-hidden="true">{item.figure.placeholder}</div>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.question}</p>
+                    <p>{item.summary}</p>
+                    {
+                      item.artifacts.length > 0 ? (
+                        <p class="artifact-labels">
+                          {
+                            item.artifacts.map((artifact) =>
+                              artifact.href ? <a href={artifact.href}>{artifact.label}</a> : <span>{artifact.label}</span>,
+                            )
+                          }
+                        </p>
+                      ) : (
+                        <p class="artifact-labels">{item.metadata}</p>
+                      )
+                    }
+                  </div>
+                </article>
+              ))
+            }
           </div>
 
           <div class="publications-placeholder">
             <h3>Selected publications</h3>
             <ol class="publication-list">
-              <li>
-                <div>
-                  <strong>Publication title placeholder</strong>
-                  <span>Author / venue metadata placeholder</span>
-                </div>
-                <span>Year placeholder</span>
-              </li>
-              <li>
-                <div>
-                  <strong>Publication title placeholder</strong>
-                  <span>Author / venue metadata placeholder</span>
-                </div>
-                <span>Year placeholder</span>
-              </li>
-              <li>
-                <div>
-                  <strong>Publication title placeholder</strong>
-                  <span>Author / venue metadata placeholder</span>
-                </div>
-                <span>Year placeholder</span>
-              </li>
+              {
+                publications.map((publication) => (
+                  <li>
+                    <div>
+                      <strong>{publication.title}</strong>
+                      <span>{publication.authors}</span>
+                    </div>
+                    <span>{publication.year}</span>
+                  </li>
+                ))
+              }
             </ol>
           </div>
         </section>
@@ -94,18 +96,16 @@ import '../styles/global.css';
           <p class="section-label">Building</p>
           <h2 id="building-heading">Work in progress placeholder</h2>
           <ul class="editorial-list">
-            <li>
-              <div>
-                <strong>Project title placeholder <span aria-hidden="true">↗</span></strong>
-                <p>One-line project description placeholder.</p>
-              </div>
-            </li>
-            <li>
-              <div>
-                <strong>Project title placeholder <span aria-hidden="true">↗</span></strong>
-                <p>One-line project description placeholder.</p>
-              </div>
-            </li>
+            {
+              building.map((item) => (
+                <li>
+                  <div>
+                    <strong>{item.title} <span aria-hidden="true">↗</span></strong>
+                    <p>{item.description}</p>
+                  </div>
+                </li>
+              ))
+            }
           </ul>
         </section>
 
@@ -113,27 +113,17 @@ import '../styles/global.css';
           <p class="section-label">Writing</p>
           <h2 id="writing-heading">Selected writing placeholder</h2>
           <ul class="editorial-list editorial-list-writing">
-            <li>
-              <div>
-                <strong>Essay, note, or guide placeholder</strong>
-                <p>Type / short description placeholder.</p>
-              </div>
-              <span>Year placeholder</span>
-            </li>
-            <li>
-              <div>
-                <strong>Essay, note, or guide placeholder</strong>
-                <p>Type / short description placeholder.</p>
-              </div>
-              <span>Year placeholder</span>
-            </li>
-            <li>
-              <div>
-                <strong>Essay, note, or guide placeholder</strong>
-                <p>Type / short description placeholder.</p>
-              </div>
-              <span>Year placeholder</span>
-            </li>
+            {
+              writingPlaceholders.map(() => (
+                <li>
+                  <div>
+                    <strong>Essay, note, or guide placeholder</strong>
+                    <p>Type / short description placeholder.</p>
+                  </div>
+                  <span>Year placeholder</span>
+                </li>
+              ))
+            }
           </ul>
         </section>
 
@@ -141,30 +131,35 @@ import '../styles/global.css';
           <p class="section-label">Community</p>
           <h2 id="community-heading">Community &amp; Public Science</h2>
           <div class="community-note">
-            <p>
-              Placeholder for future community-building, teaching, outreach, and
-              public communication work.
-            </p>
+            {community.map((item) => <p>{item.description}</p>)}
           </div>
         </section>
 
         <section id="photography" aria-labelledby="photography-heading">
           <p class="section-label">Photography</p>
           <h2 id="photography-heading">Future visual gallery placeholder</h2>
-          <div class="gallery-placeholder" aria-hidden="true">
-            <span>Visual placeholder</span>
-            <span>Visual placeholder</span>
-            <span>Visual placeholder</span>
-          </div>
+          {
+            photography.length > 0 ? (
+              <div class="gallery-placeholder">
+                {photography.map((item) => (
+                  <span>{item.caption ?? item.placeholder ?? 'Visual placeholder'}</span>
+                ))}
+              </div>
+            ) : (
+              <div class="gallery-placeholder" aria-hidden="true">
+                <span>Visual placeholder</span>
+                <span>Visual placeholder</span>
+                <span>Visual placeholder</span>
+              </div>
+            )
+          }
         </section>
 
         <section id="archive" aria-labelledby="archive-heading" class="section-archive">
           <p class="section-label">Archive</p>
           <h2 id="archive-heading">Earlier work placeholder</h2>
           <dl class="archive-list">
-            <div><dt>2025–26</dt><dd>Placeholder</dd></div>
-            <div><dt>2022–25</dt><dd>Placeholder</dd></div>
-            <div><dt>2020–22</dt><dd>Placeholder</dd></div>
+            {archive.map((item) => <div><dt>{item.period}</dt><dd>{item.description}</dd></div>)}
           </dl>
         </section>
 

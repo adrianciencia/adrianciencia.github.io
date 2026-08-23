@@ -1,22 +1,28 @@
+---
+import { profile } from '../data/profile';
+---
+
 <aside class="profile-sidebar" aria-labelledby="profile-name">
-  <div class="portrait-placeholder" aria-hidden="true">Portrait placeholder</div>
+  <div class="portrait-placeholder" aria-hidden="true">{profile.portrait.placeholder}</div>
 
   <div class="profile-introduction">
-    <h1 id="profile-name">Adrian Díaz Espinoza</h1>
-    <p class="profile-role">Astrophysicist</p>
-    <p>Short scientific descriptor placeholder.</p>
+    <h1 id="profile-name">{profile.name}</h1>
+    <p class="profile-role">{profile.title}</p>
+    <p>{profile.descriptor}</p>
   </div>
 
-  <p class="profile-status">Current status / location placeholder.</p>
+  <p class="profile-status">{profile.currentStatus}</p>
 
   <div class="profile-links" aria-label="Professional links">
     <h2>Links</h2>
     <ul>
-      <li>Email — link placeholder</li>
-      <li>Google Scholar — link placeholder</li>
-      <li>ORCID — link placeholder</li>
-      <li>ADS — link placeholder</li>
-      <li>GitHub — link placeholder</li>
+      {
+        profile.links.map((link) => (
+          <li>
+            {link.href ? <a href={link.href}>{link.label}</a> : <span>{link.label} — link placeholder</span>}
+          </li>
+        ))
+      }
     </ul>
   </div>
 </aside>
