@@ -1,5 +1,12 @@
 ---
 import { profile } from '../data/profile';
+
+interface Props {
+  showWriting: boolean;
+  showPhotography: boolean;
+}
+
+const { showWriting, showPhotography } = Astro.props;
 ---
 
 <header class="site-header">
@@ -8,8 +15,8 @@ import { profile } from '../data/profile';
     <div class="nav-links">
       <a href="#research">Research</a>
       <a href="#building">Building</a>
-      <a href="#writing">Writing</a>
-      <a href="#photography">Photography</a>
+      {showWriting && <a href="#writing">Writing</a>}
+      {showPhotography && <a href="#photography">Photography</a>}
     </div>
   </nav>
 </header>

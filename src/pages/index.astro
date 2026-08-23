@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import ProfileSidebar from '../components/ProfileSidebar.astro';
 import TopNav from '../components/TopNav.astro';
 import { archive } from '../data/archive';
@@ -10,7 +11,11 @@ import { publications } from '../data/publications';
 import { research } from '../data/research';
 import '../styles/global.css';
 
-const writingPlaceholders = Array.from({ length: 3 });
+const writingEntries = (await getCollection('writing'))
+  .filter((entry) => !entry.data.draft)
+  .sort((first, second) => second.data.date.getTime() - first.data.date.getTime());
+const showWriting = writingEntries.length > 0;
+const showPhotography = photography.length > 0;
 ---
 
 <!doctype html>
@@ -25,7 +30,7 @@ const writingPlaceholders = Array.from({ length: 3 });
     <title>{profile.name} — Astrophysicist</title>
   </head>
   <body>
-    <TopNav />
+    <TopNav showWriting={showWriting} showPhotography={showPhotography} />
 
     <main class="site-layout">
       <ProfileSidebar />
@@ -124,23 +129,27 @@ const writingPlaceholders = Array.from({ length: 3 });
           </ul>
         </section>
 
-        <section id="writing" aria-labelledby="writing-heading">
-          <p class="section-label">Writing</p>
-          <h2 id="writing-heading">Selected writing placeholder</h2>
-          <ul class="editorial-list editorial-list-writing">
-            {
-              writingPlaceholders.map(() => (
-                <li>
-                  <div>
-                    <strong>Essay, note, or guide placeholder</strong>
-                    <p>Type / short description placeholder.</p>
-                  </div>
-                  <span>Year placeholder</span>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
+        {
+          showWriting && (
+            <section id="writing" aria-labelledby="writing-heading">
+              <p class="section-label">Writing</p>
+              <h2 id="writing-heading">Selected writing</h2>
+              <ul class="editorial-list editorial-list-writing">
+                {
+                  writingEntries.map((entry) => (
+                    <li>
+                      <div>
+                        <strong>{entry.data.title}</strong>
+                        <p>{entry.data.summary}</p>
+                      </div>
+                      <span>{entry.data.date.getFullYear()}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </section>
+          )
+        }
 
         <section id="community" aria-labelledby="community-heading">
           <p class="section-label">Community</p>
@@ -161,36 +170,45 @@ const writingPlaceholders = Array.from({ length: 3 });
           </ul>
         </section>
 
-        <section id="photography" aria-labelledby="photography-heading">
-          <p class="section-label">Photography</p>
-          <h2 id="photography-heading">Future visual gallery placeholder</h2>
-          {
-            photography.length > 0 ? (
+        {
+          showPhotography && (
+            <section id="photography" aria-labelledby="photography-heading">
+              <p class="section-label">Photography</p>
+              <h2 id="photography-heading">Selected photography</h2>
               <div class="gallery-placeholder">
                 {photography.map((item) => (
-                  <span>{item.caption ?? item.placeholder ?? 'Visual placeholder'}</span>
+                  <span>{item.caption ?? item.placeholder}</span>
                 ))}
               </div>
-            ) : (
-              <div class="gallery-placeholder" aria-hidden="true">
-                <span>Visual placeholder</span>
-                <span>Visual placeholder</span>
-                <span>Visual placeholder</span>
-              </div>
-            )
-          }
-        </section>
+            </section>
+          )
+        }
 
         <section id="archive" aria-labelledby="archive-heading" class="section-archive">
           <p class="section-label">Archive</p>
-          <h2 id="archive-heading">Earlier work placeholder</h2>
+          <h2 id="archive-heading" class="sr-only">Archive</h2>
           <dl class="archive-list">
-            {archive.map((item) => <div><dt>{item.period}</dt><dd>{item.description}</dd></div>)}
+            {
+              archive.map((item) => (
+                <div>
+                  <dt>{item.period}</dt>
+                  <dd>
+                    {item.title && <strong class="archive-item-title">{item.title}</strong>}
+                    <p class="archive-item-description">{item.description}</p>
+                    {
+                      item.link?.href && (
+                        <a class="archive-item-link" href={item.link.href}>{item.link.label}</a>
+                      )
+                    }
+                  </dd>
+                </div>
+              ))
+            }
           </dl>
         </section>
 
         <footer class="site-footer">
-          <p>Editorial homepage placeholder.</p>
+          <p>© 2026 Adrian Díaz Espinoza</p>
         </footer>
       </div>
     </main>

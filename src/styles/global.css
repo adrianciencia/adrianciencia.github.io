@@ -494,11 +494,6 @@ a:focus-visible {
   padding-bottom: var(--space-6) !important;
 }
 
-.section-archive h2 {
-  color: var(--color-muted);
-  font-size: 1.0625rem;
-}
-
 .archive-list {
   max-width: 29rem;
   margin: var(--space-5) 0 0;
@@ -520,6 +515,24 @@ a:focus-visible {
 .archive-list dd {
   margin: 0;
   color: var(--color-muted);
+}
+
+.archive-item-title {
+  display: block;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.archive-item-description {
+  margin: var(--space-1) 0 0;
+}
+
+.archive-item-link {
+  display: inline-block;
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
 }
 
 .site-footer {
@@ -625,6 +638,11 @@ a:focus-visible {
 
   .gallery-placeholder span {
     min-height: 8rem;
+  }
+
+  .archive-list div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
   }
 }
 
