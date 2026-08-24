@@ -368,6 +368,21 @@ a:focus-visible {
   margin-left: auto;
 }
 
+@media (min-width: 68rem) {
+  .research-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .research-media,
+  #recalibrating-halpha-high-redshift .research-media {
+    max-width: none;
+    margin: 0;
+  }
+}
+
 .research-figure-link {
   display: none;
   color: var(--color-muted);
