@@ -27,15 +27,6 @@ export type AboutContent = {
   paragraphs: string[];
 };
 
-export type NowItem = {
-  label: string;
-  text: string;
-};
-
-export type NowContent = {
-  items: NowItem[];
-};
-
 export type ResearchArtifactKind = 'paper' | 'arxiv' | 'ads' | 'code' | 'data' | 'project';
 
 export type ResearchArtifact = ExternalLink & {

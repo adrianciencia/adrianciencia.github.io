@@ -6,7 +6,7 @@ import { archive } from '../data/archive';
 import { building } from '../data/building';
 import { community } from '../data/community';
 import { photography } from '../data/photography';
-import { about, now, profile } from '../data/profile';
+import { about, profile } from '../data/profile';
 import { publications } from '../data/publications';
 import { research } from '../data/research';
 import '../styles/global.css';
@@ -62,21 +62,6 @@ const personSchema = {
           <p class="section-label">About</p>
           <h2 id="about-heading" class="sr-only">About</h2>
           {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-        </section>
-
-        <section id="now" aria-labelledby="now-heading" class="section-compact">
-          <p class="section-label">Now</p>
-          <h2 id="now-heading" class="sr-only">Now</h2>
-          <div class="now-list">
-            {
-              now.items.map((item) => (
-                <article class="now-item">
-                  <p class="now-item-label">{item.label}</p>
-                  <p class="now-note">{item.text}</p>
-                </article>
-              ))
-            }
-          </div>
         </section>
 
         <section id="research" aria-labelledby="research-heading" class="section-research">

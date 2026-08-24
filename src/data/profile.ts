@@ -1,4 +1,4 @@
-import type { AboutContent, NowContent, Profile } from '../types/content';
+import type { AboutContent, Profile } from '../types/content';
 
 export const profile = {
   name: 'Adrian Díaz Espinoza',
@@ -25,20 +25,3 @@ export const about = {
     'I am especially interested in separating astrophysical trends from fitting systematics and, over time, extending that work toward broader multi-wavelength inference. Beyond research, I build tools and communities around difficult problems—work that also shapes how I think about evidence, systems, and scientific training.',
   ],
 } satisfies AboutContent;
-
-export const now = {
-  items: [
-    {
-      label: 'Research',
-      text: 'Continuing a JWST/RUBIES research collaboration with Michael V. Maseda, testing how spectroscopy changes recent-SFR inference at z ≈ 4–7.',
-    },
-    {
-      label: 'Community',
-      text: "Advising Derívate's research-training and mentoring work for Peruvian physics students pursuing research and graduate study.",
-    },
-    {
-      label: 'Building',
-      text: "Building Mindari's product and AI-assisted intake and therapist-matching system.",
-    },
-  ],
-} satisfies NowContent;
