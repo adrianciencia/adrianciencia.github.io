@@ -448,10 +448,6 @@ a:focus-visible {
   border-top: var(--rule);
 }
 
-.editorial-list-detailed {
-  max-width: 44rem;
-}
-
 .editorial-list > li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -476,7 +472,6 @@ a:focus-visible {
 }
 
 .editorial-list .editorial-item-description {
-  max-width: 37rem;
   color: var(--color-text);
   font-size: 0.9375rem;
 }
@@ -528,7 +523,6 @@ a:focus-visible {
 }
 
 .archive-list {
-  max-width: 29rem;
   margin: var(--space-5) 0 0;
 }
 
