@@ -24,11 +24,12 @@
   --space-8: 4rem;
   --space-9: 6rem;
 
-  --layout-max: 76.5rem;
+  --layout-max: 73rem;
   --sidebar-width: 16rem;
   --document-width: 52.5rem;
   --header-height: 4rem;
-  --page-gutter: 2rem;
+  --page-gutter: clamp(1.5rem, 3vw, 3rem);
+  --sidebar-sticky-top: calc(var(--header-height) + var(--space-8) + 1px);
   --rule: 1px solid var(--color-rule);
   --transition-fast: 140ms ease;
 
@@ -91,14 +92,18 @@ a:focus-visible {
   background: var(--color-bg);
 }
 
+.top-nav,
+.site-layout {
+  width: min(var(--layout-max), calc(100% - (var(--page-gutter) * 2)));
+  margin-inline: auto;
+}
+
 .top-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
-  width: min(100% - (var(--page-gutter) * 2), var(--layout-max));
   min-height: var(--header-height);
-  margin: 0 auto;
 }
 
 .wordmark {
@@ -136,17 +141,19 @@ a:focus-visible {
   align-items: start;
   justify-content: center;
   gap: clamp(3.5rem, 5vw, 4.5rem);
-  width: min(100% - (var(--page-gutter) * 2), var(--layout-max));
-  margin: 0 auto;
   padding: var(--space-8) 0 var(--space-9);
 }
 
 .profile-sidebar {
   position: sticky;
-  top: calc(var(--header-height) + var(--space-5));
-  max-height: calc(100vh - var(--header-height) - var(--space-7));
-  overflow: auto;
+  top: var(--sidebar-sticky-top);
   padding-bottom: var(--space-4);
+}
+
+@media (min-width: 53.8125rem) and (max-height: 52rem) {
+  .profile-sidebar {
+    position: static;
+  }
 }
 
 .gallery-placeholder span {
@@ -630,8 +637,6 @@ a:focus-visible {
   .profile-sidebar {
     position: static;
     max-width: 36rem;
-    max-height: none;
-    overflow: visible;
     padding-bottom: 0;
   }
 
