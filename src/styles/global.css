@@ -290,7 +290,6 @@ a:focus-visible {
 }
 
 .document-column section > p:not(.section-label) {
-  max-width: 42rem;
   margin-bottom: 0;
 }
 
@@ -299,7 +298,6 @@ a:focus-visible {
 }
 
 .now-note {
-  max-width: 42rem;
   margin: var(--space-1) 0 0;
   color: var(--color-muted);
   font-size: 0.9375rem;
@@ -340,10 +338,6 @@ a:focus-visible {
   margin: 0 0 var(--space-5);
 }
 
-.research-copy {
-  max-width: 44rem;
-}
-
 .research-item h3 {
   font-size: 1.25rem;
 }
@@ -355,10 +349,6 @@ a:focus-visible {
 .research-question {
   color: var(--color-muted);
   font-size: 0.9375rem;
-}
-
-.research-summary {
-  max-width: 42rem;
 }
 
 .research-status {
@@ -491,7 +481,6 @@ a:focus-visible {
 }
 
 .community-note {
-  max-width: 38rem;
   margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: var(--rule);
