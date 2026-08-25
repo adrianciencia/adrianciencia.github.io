@@ -57,18 +57,17 @@ export type Publication = {
 export type BuildingItem = {
   title: string;
   description: string;
+  contribution?: string;
   role?: string;
-  period?: string;
-  evidence?: string;
   link?: ExternalLink;
   status?: string;
 };
 
 export type CommunityItem = {
+  category: 'feature' | 'initiative' | 'outreach';
   title: string;
   description: string;
   role?: string;
-  period?: string;
   links: ExternalLink[];
 };
 
@@ -79,7 +78,6 @@ export type PhotographyItem = ImageMetadata & {
 };
 
 export type ArchiveItem = {
-  period: string;
   title?: string;
   description: string;
   link?: ExternalLink;

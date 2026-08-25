@@ -16,6 +16,9 @@ const writingEntries = (await getCollection('writing'))
   .sort((first, second) => second.data.date.getTime() - first.data.date.getTime());
 const showWriting = writingEntries.length > 0;
 const showPhotography = photography.length > 0;
+const communityFeature = community.find((item) => item.category === 'feature');
+const communityInitiatives = community.filter((item) => item.category === 'initiative');
+const communityOutreach = community.find((item) => item.category === 'outreach');
 const canonicalUrl = 'https://adrianciencia.github.io/';
 const siteDescription =
   'Observational astrophysicist studying high-redshift galaxy evolution, spectroscopy, and scientific inference.';
@@ -136,57 +139,79 @@ const personSchema = {
         <section id="community" aria-labelledby="community-heading">
           <p class="section-label">Community</p>
           <h2 id="community-heading">Community &amp; Public Science</h2>
-          <ul class="editorial-list editorial-list-detailed community-list">
-            {
-              community.map((item) => (
-                <li>
-                  <div>
-                    <strong>{item.title}</strong>
-                    {item.role && <p class="editorial-item-role">{item.role}</p>}
-                    <p class="editorial-item-description">{item.description}</p>
-                    {
-                      item.links.map(
-                        (link) =>
-                          link.href && (
-                            <a class="editorial-item-link" href={link.href}>
-                              {link.label} <span aria-hidden="true">↗</span>
-                            </a>
-                          ),
-                      )
-                    }
-                  </div>
-                  {item.period && <span>{item.period}</span>}
-                </li>
-              ))
-            }
-          </ul>
+          {
+            communityFeature && (
+              <article class="community-feature">
+                <h3>{communityFeature.title}</h3>
+                <p class="community-feature-description">{communityFeature.description}</p>
+                {
+                  communityFeature.links.map(
+                    (link) =>
+                      link.href && (
+                        <a class="editorial-item-link" href={link.href}>
+                          {link.label} <span aria-hidden="true">↗</span>
+                        </a>
+                      ),
+                  )
+                }
+                {communityFeature.role && <p class="community-meta">{communityFeature.role}</p>}
+              </article>
+            )
+          }
+
+          {
+            communityInitiatives.length > 0 && (
+              <div class="community-initiatives">
+                <p class="subsection-label">Selected initiatives</p>
+                <ul class="community-initiative-list">
+                  {
+                    communityInitiatives.map((item) => (
+                      <li>
+                        <h3>{item.title}</h3>
+                        <p>{item.description}</p>
+                        {item.role && <p class="community-meta">{item.role}</p>}
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            )
+          }
+
+          {
+            communityOutreach && (
+              <article class="community-outreach">
+                <p class="subsection-label">Earlier public science</p>
+                <h3>{communityOutreach.title}</h3>
+                <p>{communityOutreach.description}</p>
+                {communityOutreach.role && <p class="community-meta">{communityOutreach.role}</p>}
+              </article>
+            )
+          }
         </section>
 
         <section id="building" aria-labelledby="building-heading">
           <p class="section-label">Building</p>
           <h2 id="building-heading" class="sr-only">Building</h2>
-          <ul class="editorial-list editorial-list-detailed">
+          <div class="building-items">
             {
               building.map((item) => (
-                <li>
-                  <div>
-                    <strong>{item.title}</strong>
-                    {item.role && <p class="editorial-item-role">{item.role}</p>}
-                    <p class="editorial-item-description">{item.description}</p>
-                    {item.evidence && <p class="editorial-item-evidence">{item.evidence}</p>}
-                    {
-                      item.link?.href && (
-                        <a class="editorial-item-link" href={item.link.href}>
-                          {item.link.label} <span aria-hidden="true">↗</span>
-                        </a>
-                      )
-                    }
-                  </div>
-                  {item.period && <span>{item.period}</span>}
-                </li>
+                <article class="building-feature">
+                  <h3>{item.title}</h3>
+                  <p class="building-proposition">{item.description}</p>
+                  {item.contribution && <p>{item.contribution}</p>}
+                  {
+                    item.link?.href && (
+                      <a class="editorial-item-link" href={item.link.href}>
+                        {item.link.label} <span aria-hidden="true">↗</span>
+                      </a>
+                    )
+                  }
+                  {item.role && <p class="building-meta">{item.role}</p>}
+                </article>
               ))
             }
-          </ul>
+          </div>
         </section>
 
         {
@@ -227,25 +252,27 @@ const personSchema = {
 
         <section id="archive" aria-labelledby="archive-heading" class="section-archive">
           <p class="section-label">Archive</p>
-          <h2 id="archive-heading">Selected earlier work</h2>
-          <dl class="archive-list">
+          <h2 id="archive-heading">Earlier work</h2>
+          <ul class="archive-index">
             {
               archive.map((item) => (
-                <div>
-                  <dt>{item.period}</dt>
-                  <dd>
-                    {item.title && <strong class="archive-item-title">{item.title}</strong>}
-                    <p class="archive-item-description">{item.description}</p>
+                <li>
+                  {item.title && <strong>{item.title}</strong>}
+                  <p>
+                    {item.description}
                     {
                       item.link?.href && (
-                        <a class="archive-item-link" href={item.link.href}>{item.link.label}</a>
+                        <>
+                          <span aria-hidden="true"> · </span>
+                          <a href={item.link.href}>{item.link.label} <span aria-hidden="true">↗</span></a>
+                        </>
                       )
                     }
-                  </dd>
-                </div>
+                  </p>
+                </li>
               ))
             }
-          </dl>
+          </ul>
         </section>
 
         <footer class="site-footer">

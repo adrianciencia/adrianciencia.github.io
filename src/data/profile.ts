@@ -22,6 +22,6 @@ export const profile = {
 export const about = {
   paragraphs: [
     'I am an observational astrophysicist studying how galaxies build their stellar mass at high redshift, and how much of what we infer depends on the observational information and assumptions supplied to our models. My current work uses JWST/RUBIES spectroscopy and photometry to test recent star-formation-rate inference through controlled comparisons between different data constraints.',
-    'I am especially interested in separating astrophysical trends from fitting systematics and, over time, extending that work toward broader multi-wavelength inference. Beyond research, I build tools and communities around difficult problems—work that also shapes how I think about evidence, systems, and scientific training.',
+    'I am interested in problems where what we can conclude depends critically on the evidence available, the assumptions we make, and the systems we build around them. Beyond research, I contribute to tools and communities that make difficult scientific work more accessible, rigorous, and durable.',
   ],
 } satisfies AboutContent;
