@@ -2,6 +2,12 @@ import type { ArchiveItem } from '../types/content';
 
 export const archive = [
   {
+    period: '2022–2024',
+    title: 'Exploratory near-infrared spectroscopy',
+    description:
+      'Tested the ESO KMOS pipeline on VLT/KMOS integral-field data, followed later by a separate reduction effort using PypeIt on MMIRS spectra. These were exploratory reduction projects rather than a combined analysis or publication-producing program.',
+  },
+  {
     period: '2020–2021',
     title: 'Resolved galaxy evolution with SDSS-IV MaNGA',
     description:
@@ -10,12 +16,6 @@ export const archive = [
       label: 'Thesis',
       href: 'https://hdl.handle.net/20.500.12672/16957',
     },
-  },
-  {
-    period: '2022–2024',
-    title: 'Exploratory near-infrared spectroscopy',
-    description:
-      'Tested the ESO KMOS pipeline on VLT/KMOS integral-field data, followed later by a separate reduction effort using PypeIt on MMIRS spectra. These were exploratory reduction projects rather than a combined analysis or publication-producing program.',
   },
   {
     period: '2015–2019',

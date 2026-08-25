@@ -144,6 +144,16 @@ const personSchema = {
                     <strong>{item.title}</strong>
                     {item.role && <p class="editorial-item-role">{item.role}</p>}
                     <p class="editorial-item-description">{item.description}</p>
+                    {
+                      item.links.map(
+                        (link) =>
+                          link.href && (
+                            <a class="editorial-item-link" href={link.href}>
+                              {link.label} <span aria-hidden="true">↗</span>
+                            </a>
+                          ),
+                      )
+                    }
                   </div>
                   {item.period && <span>{item.period}</span>}
                 </li>
@@ -164,6 +174,13 @@ const personSchema = {
                     {item.role && <p class="editorial-item-role">{item.role}</p>}
                     <p class="editorial-item-description">{item.description}</p>
                     {item.evidence && <p class="editorial-item-evidence">{item.evidence}</p>}
+                    {
+                      item.link?.href && (
+                        <a class="editorial-item-link" href={item.link.href}>
+                          {item.link.label} <span aria-hidden="true">↗</span>
+                        </a>
+                      )
+                    }
                   </div>
                   {item.period && <span>{item.period}</span>}
                 </li>

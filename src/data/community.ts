@@ -7,7 +7,12 @@ export const community = [
     role: 'Founder · Advisor',
     description:
       'A student-led initiative supporting Peruvian physics undergraduates as they develop research experience and prepare for graduate study. I advise the team and mentor students through research, applications, and the less visible parts of scientific training.',
-    links: [],
+    links: [
+      {
+        label: 'Visit Derívate',
+        href: 'https://derivate.org.pe',
+      },
+    ],
   },
   {
     title: 'Entre Físicos',
