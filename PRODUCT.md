@@ -1,0 +1,62 @@
+# Product
+
+<!-- impeccable:product-schema 1 -->
+
+## Platform
+
+web
+
+## Users
+
+A mixed audience arriving from different doors, usually after hearing Adrian's name somewhere specific:
+
+- **PhD admissions committees and prospective advisors** evaluating Adrian as a doctoral candidate.
+- **Research collaborators** (astronomers who know the JWST/RUBIES work, a talk, or a paper) checking his research and judgment.
+- **Industry contacts** who know him through Mindari or other personal projects.
+- **Peruvian students and the public** who know him from Derívate, Entre Físicos, or his earlier outreach as @adrianciencia.
+
+Most visits are a short, evaluative read: confirm who he is, judge the substance of the research, and find a way to follow up.
+
+## Product Purpose
+
+The personal academic site of Adrian Díaz Espinoza, an observational astrophysicist (high-redshift galaxies, spectroscopy, inference) based in Lima, Peru. It presents his research, community work, and building in one place. Success: each audience leaves able to state what he works on and with a reason to contact or follow him.
+
+## Positioning
+
+A scientific leader, not only a researcher: someone already shaping the Peruvian physics community (founder of Derívate, founding organizer of Entre Físicos, founding advisor of an undergraduate research mentorship program) while doing rigorous JWST/RUBIES research on what observational information actually constrains star-formation inference. The combination of inference-minded research and community-building in Peru is the claim a generic astronomer's page cannot make.
+
+## Operating Context
+
+- Single page in English; sections: About, Research, Community & Public Science, Building, Archive, with Writing and Photography appearing once they have content.
+- Content lives as typed data in `src/data/*.ts`; writing as Markdown in `src/content/writing/`.
+- Static Astro site deployed to GitHub Pages from `main` (every push goes live).
+
+## Capabilities and Constraints
+
+- **English only.** No Spanish version planned.
+- **Static and JS-free.** Plain static Astro on GitHub Pages; no client-side JavaScript.
+- **Unpublished results.** The spectroscopy/SFR work is a manuscript in preparation; its numbers and figures need care, and nothing should present them as published.
+- **Writing and Photography are coming.** Both sections will receive real content soon; designs must accommodate them rather than treat them as hypothetical.
+- Publications list is currently empty; research artifacts (paper, arXiv, ADS, code, data links) are not yet populated.
+
+## Brand Commitments
+
+- Name: Adrian Díaz Espinoza (with accent). Title: Astrophysicist. Descriptor: "High-redshift galaxies · spectroscopy · inference".
+- Voice: first person, precise, evidence-led; research is framed as questions ("What does spectroscopy actually constrain…").
+- Former public handle @adrianciencia (also the GitHub/LinkedIn handle and domain).
+
+## Evidence on Hand
+
+- Portrait: `public/images/profile/portrait.jpg`.
+- Research figures: `public/images/research/spectroscopy-sfr.png`, `public/images/research/halpha-calibration.png`.
+- Research results: 116 RUBIES galaxies at z ≈ 4–7 (spectroscopy vs. photometry SFR shifts); ~200 RUBIES galaxies at z = 3.4–7 (Hα calibration offset 0.16 ± 0.04 dex).
+- Community roles and Mindari described in `src/data/community.ts` and `src/data/building.ts`; earlier work (VLT/KMOS, SDSS-IV MaNGA thesis, science writing) in `src/data/archive.ts`.
+- Absent, must not be fabricated: publications, citations, awards, testimonials, audience metrics beyond the stated "more than 300,000", CV file.
+
+## Product Principles
+
+1. **Lead with substance.** Real research questions, results, and figures carry the credibility; no adjectives in their place.
+2. **Leadership is shown, not claimed.** Community roles appear as concrete initiatives with Adrian's actual role.
+3. **One page, many doors.** Each audience must find its part quickly without the page fragmenting into separate personas.
+4. **Honest status.** Work in progress is labelled as such; never imply publication or impact that does not exist.
+5. **Fast and durable.** Static, lightweight, accessible, no client JS.
