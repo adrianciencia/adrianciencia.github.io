@@ -6,6 +6,8 @@ import { profile } from '../data/profile';
   <img
     class="portrait-image"
     src={profile.portrait.src}
+    srcset={profile.portrait.sources?.map((source) => `${source.src} ${source.width}w`).join(', ')}
+    sizes={profile.portrait.sizes}
     alt={profile.portrait.alt ?? ''}
     width={profile.portrait.width}
     height={profile.portrait.height}
@@ -16,6 +18,7 @@ import { profile } from '../data/profile';
     <h1 id="profile-name">{profile.name}</h1>
     <p class="profile-role">{profile.title}</p>
     <p>{profile.descriptor}</p>
+    {profile.mission && <p class="profile-mission">{profile.mission}</p>}
   </div>
 
   <p class="profile-status">
@@ -27,11 +30,13 @@ import { profile } from '../data/profile';
     <h2>Links</h2>
     <ul>
       {
-        profile.links.map((link) => (
-          <li>
-            {link.href ? <a href={link.href}>{link.label}</a> : <span>{link.label} — link placeholder</span>}
-          </li>
-        ))
+        profile.links
+          .filter((link) => link.href)
+          .map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
       }
     </ul>
   </div>

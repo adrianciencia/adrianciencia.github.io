@@ -3,8 +3,15 @@ export type ExternalLink = {
   href?: string;
 };
 
+export type ImageSource = {
+  src: string;
+  width: number;
+};
+
 export type ImageMetadata = {
   src?: string;
+  sources?: ImageSource[];
+  sizes?: string;
   alt?: string;
   caption?: string;
   width?: number;
@@ -16,6 +23,7 @@ export type Profile = {
   name: string;
   title: string;
   descriptor: string;
+  mission?: string;
   currentStatus: string;
   location?: string;
   portrait: ImageMetadata;
@@ -25,6 +33,12 @@ export type Profile = {
 
 export type AboutContent = {
   paragraphs: string[];
+};
+
+export type ContactContent = {
+  heading: string;
+  invitation: string;
+  email: string;
 };
 
 export type ResearchArtifactKind = 'paper' | 'arxiv' | 'ads' | 'code' | 'data' | 'project';
@@ -37,6 +51,7 @@ export type ResearchItem = {
   id: string;
   title: string;
   question: string;
+  takeaway?: string;
   summary: string;
   figure: ImageMetadata;
   metadata?: string;

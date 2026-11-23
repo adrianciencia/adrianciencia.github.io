@@ -6,7 +6,7 @@ import { archive } from '../data/archive';
 import { building } from '../data/building';
 import { community } from '../data/community';
 import { photography } from '../data/photography';
-import { about, profile } from '../data/profile';
+import { about, contact, profile } from '../data/profile';
 import { publications } from '../data/publications';
 import { research } from '../data/research';
 import '../styles/global.css';
@@ -16,8 +16,9 @@ const writingEntries = (await getCollection('writing'))
   .sort((first, second) => second.data.date.getTime() - first.data.date.getTime());
 const showWriting = writingEntries.length > 0;
 const showPhotography = photography.length > 0;
-const communityFeature = community.find((item) => item.category === 'feature');
-const communityInitiatives = community.filter((item) => item.category === 'initiative');
+const communityLeadership = community.filter(
+  (item) => item.category === 'feature' || item.category === 'initiative',
+);
 const communityOutreach = community.find((item) => item.category === 'outreach');
 const canonicalUrl = 'https://adrianciencia.github.io/';
 const siteDescription =
@@ -36,7 +37,7 @@ const personSchema = {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
       content={siteDescription}
@@ -52,32 +53,50 @@ const personSchema = {
     <meta name="twitter:title" content={`${profile.name} — Astrophysicist`} />
     <meta name="twitter:description" content={siteDescription} />
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin />
     <title>{profile.name} — Astrophysicist</title>
   </head>
   <body>
+    <a class="skip-link" href="#content">Skip to content</a>
     <TopNav showWriting={showWriting} showPhotography={showPhotography} />
 
     <main class="site-layout">
       <ProfileSidebar />
 
-      <div class="document-column">
-        <section id="about" aria-labelledby="about-heading">
-          <p class="section-label">About</p>
+      <div class="document-column" id="content" tabindex="-1">
+        <section id="about" aria-labelledby="about-heading" class="section-about">
           <h2 id="about-heading" class="sr-only">About</h2>
-          {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          {
+            about.paragraphs.map((paragraph, index) => (
+              <p class={index === 0 ? 'about-lead' : undefined}>{paragraph}</p>
+            ))
+          }
         </section>
 
         <section id="research" aria-labelledby="research-heading" class="section-research">
-          <p class="section-label">Research</p>
-          <h2 id="research-heading">Selected research</h2>
+          <h2 id="research-heading">Research</h2>
           <div class="research-items">
             {
               research.map((item) => (
                 <article class="research-item" id={item.id}>
-                  <figure class="research-media">
+                  <header class="research-header">
+                    <h3>{item.title}</h3>
+                    <p class="research-question">{item.question}</p>
+                  </header>
+                  <figure
+                    class:list={[
+                      'research-media',
+                      {
+                        'research-media-tall':
+                          item.figure.width && item.figure.height && item.figure.height / item.figure.width > 0.7,
+                      },
+                    ]}
+                  >
                     <img
                       class="research-figure"
                       src={item.figure.src}
+                      srcset={item.figure.sources?.map((source) => `${source.src} ${source.width}w`).join(', ')}
+                      sizes={item.figure.sizes}
                       alt={item.figure.alt ?? ''}
                       width={item.figure.width}
                       height={item.figure.height}
@@ -87,14 +106,13 @@ const personSchema = {
                     {
                       item.figure.src && (
                         <a class="research-figure-link" href={item.figure.src}>
-                          Open full figure <span aria-hidden="true">↗</span>
+                          Open full figure<span class="sr-only">: {item.title}</span> <span aria-hidden="true">↗</span>
                         </a>
                       )
                     }
                   </figure>
                   <div class="research-copy">
-                    <h3>{item.title}</h3>
-                    <p class="research-question">{item.question}</p>
+                    {item.takeaway && <p class="research-takeaway">{item.takeaway}</p>}
                     <p class="research-summary">{item.summary}</p>
                     {item.status && <p class="research-status">{item.status}</p>}
                     {
@@ -136,88 +154,69 @@ const personSchema = {
           }
         </section>
 
-        <section id="community" aria-labelledby="community-heading">
-          <p class="section-label">Community</p>
+        <section id="community" aria-labelledby="community-heading" class="section-community">
           <h2 id="community-heading">Community &amp; Public Science</h2>
-          {
-            communityFeature && (
-              <article class="community-feature">
-                <h3>{communityFeature.title}</h3>
-                <p class="community-feature-description">{communityFeature.description}</p>
-                {
-                  communityFeature.links.map(
-                    (link) =>
-                      link.href && (
-                        <a class="editorial-item-link" href={link.href}>
-                          {link.label} <span aria-hidden="true">↗</span>
-                        </a>
-                      ),
-                  )
-                }
-                {communityFeature.role && <p class="community-meta">{communityFeature.role}</p>}
-              </article>
-            )
-          }
-
-          {
-            communityInitiatives.length > 0 && (
-              <div class="community-initiatives">
-                <p class="subsection-label">Selected initiatives</p>
-                <ul class="community-initiative-list">
-                  {
-                    communityInitiatives.map((item) => (
-                      <li>
-                        <h3>{item.title}</h3>
-                        <p>{item.description}</p>
-                        {item.role && <p class="community-meta">{item.role}</p>}
-                      </li>
-                    ))
-                  }
-                </ul>
-              </div>
-            )
-          }
-
+          <ul class="role-list role-list-community">
+            {
+              communityLeadership.map((item) => (
+                <li class="role-entry">
+                  <h3>{item.title}</h3>
+                  {item.role && <p class="role-entry-role">{item.role.replaceAll(' · ', '\u00a0· ')}</p>}
+                  <div class="role-entry-body">
+                    <p>{item.description}</p>
+                    {
+                      item.links.map(
+                        (link) =>
+                          link.href && (
+                            <a class="role-entry-link" href={link.href}>
+                              {link.label} <span aria-hidden="true">↗</span>
+                            </a>
+                          ),
+                      )
+                    }
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
           {
             communityOutreach && (
-              <article class="community-outreach">
-                <p class="subsection-label">Earlier public science</p>
-                <h3>{communityOutreach.title}</h3>
-                <p>{communityOutreach.description}</p>
-                {communityOutreach.role && <p class="community-meta">{communityOutreach.role}</p>}
-              </article>
+              <p class="community-outreach">
+                <strong>{communityOutreach.title}.</strong> {communityOutreach.description}
+                {communityOutreach.role && <span class="community-outreach-role">{communityOutreach.role}</span>}
+              </p>
             )
           }
         </section>
 
-        <section id="building" aria-labelledby="building-heading">
-          <p class="section-label">Building</p>
-          <h2 id="building-heading" class="sr-only">Building</h2>
-          <div class="building-items">
+        <section id="building" aria-labelledby="building-heading" class="section-building">
+          <h2 id="building-heading">Building</h2>
+          <ul class="role-list">
             {
               building.map((item) => (
-                <article class="building-feature">
+                <li class="role-entry">
                   <h3>{item.title}</h3>
-                  <p class="building-proposition">{item.description}</p>
-                  {item.contribution && <p>{item.contribution}</p>}
-                  {
-                    item.link?.href && (
-                      <a class="editorial-item-link" href={item.link.href}>
-                        {item.link.label} <span aria-hidden="true">↗</span>
-                      </a>
-                    )
-                  }
-                  {item.role && <p class="building-meta">{item.role}</p>}
-                </article>
+                  {item.role && <p class="role-entry-role">{item.role.replaceAll(' · ', '\u00a0· ')}</p>}
+                  <div class="role-entry-body">
+                    <p>{item.description}</p>
+                    {item.contribution && <p>{item.contribution}</p>}
+                    {
+                      item.link?.href && (
+                        <a class="role-entry-link" href={item.link.href}>
+                          {item.link.label} <span aria-hidden="true">↗</span>
+                        </a>
+                      )
+                    }
+                  </div>
+                </li>
               ))
             }
-          </div>
+          </ul>
         </section>
 
         {
           showWriting && (
             <section id="writing" aria-labelledby="writing-heading">
-              <p class="section-label">Writing</p>
               <h2 id="writing-heading">Selected writing</h2>
               <ul class="editorial-list editorial-list-writing">
                 {
@@ -239,7 +238,6 @@ const personSchema = {
         {
           showPhotography && (
             <section id="photography" aria-labelledby="photography-heading">
-              <p class="section-label">Photography</p>
               <h2 id="photography-heading">Selected photography</h2>
               <div class="gallery-placeholder">
                 {photography.map((item) => (
@@ -251,7 +249,6 @@ const personSchema = {
         }
 
         <section id="archive" aria-labelledby="archive-heading" class="section-archive">
-          <p class="section-label">Archive</p>
           <h2 id="archive-heading">Earlier work</h2>
           <ul class="archive-index">
             {
@@ -275,8 +272,16 @@ const personSchema = {
           </ul>
         </section>
 
+        <section id="contact" aria-labelledby="contact-heading" class="section-contact">
+          <h2 id="contact-heading">{contact.heading}</h2>
+          <p>{contact.invitation}</p>
+          <p class="contact-email">
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </p>
+        </section>
+
         <footer class="site-footer">
-          <p>© 2026 Adrian Díaz Espinoza</p>
+          <p>© {new Date().getFullYear()} {profile.name}</p>
         </footer>
       </div>
     </main>
