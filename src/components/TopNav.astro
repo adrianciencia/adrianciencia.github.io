@@ -1,25 +1,39 @@
 ---
+import { getCollection } from 'astro:content';
 import { profile } from '../data/profile';
+import { photography } from '../data/photography';
+import { getNews } from '../lib/news';
 
 interface Props {
-  showWriting: boolean;
-  showPhotography: boolean;
+  current?: 'news' | 'research' | 'community' | 'work';
 }
 
-const { showWriting, showPhotography } = Astro.props;
+const { current } = Astro.props;
+const { featured, list } = await getNews();
+const showWriting = (await getCollection('writing')).some((entry) => !entry.data.draft);
+
+const links = [
+  { id: 'news', label: 'News', href: '/#news', show: Boolean(featured) || list.length > 0 },
+  { id: 'research', label: 'Research', href: '/#research', show: true },
+  { id: 'community', label: 'Community', href: '/#community', show: true },
+  { id: 'work', label: 'Other work', href: '/#other-work', show: true },
+  { id: 'writing', label: 'Writing', href: '/#writing', show: showWriting },
+  { id: 'photography', label: 'Photography', href: '/#photography', show: photography.length > 0 },
+  { id: 'contact', label: 'Contact', href: '/#contact', show: true },
+].filter((link) => link.show);
 ---
 
 <header class="site-header">
   <nav class="top-nav" aria-label="Primary navigation">
-    <a class="wordmark" href="#about">{profile.name}</a>
+    <a class="wordmark" href="/">{profile.name}</a>
     <div class="nav-links">
-      <a href="#research">Research</a>
-      <a href="#community">Community</a>
-      <a href="#building">Building</a>
-      {showWriting && <a href="#writing">Writing</a>}
-      {showPhotography && <a href="#photography">Photography</a>}
-      <a href="#archive">Archive</a>
-      <a href="#contact">Contact</a>
+      {
+        links.map((link) => (
+          <a href={link.href} aria-current={link.id === current ? 'true' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
     </div>
   </nav>
 </header>

@@ -1,8 +1,16 @@
 ---
 import { profile } from '../data/profile';
+
+interface Props {
+  nameAsHeading?: boolean;
+}
+
+// The name is the page's h1 on the homepage only; project pages own their h1.
+const { nameAsHeading = true } = Astro.props;
+const NameTag = nameAsHeading ? 'h1' : 'p';
 ---
 
-<aside class="profile-sidebar" aria-labelledby="profile-name">
+<aside class:list={['profile-sidebar', { 'profile-sidebar-compact': !nameAsHeading }]} aria-labelledby="profile-name">
   <img
     class="portrait-image"
     src={profile.portrait.src}
@@ -15,11 +23,11 @@ import { profile } from '../data/profile';
   />
 
   <div class="profile-introduction">
-    <h1 id="profile-name">{profile.name}</h1>
+    <NameTag id="profile-name" class="profile-name">{profile.name}</NameTag>
     <p class="profile-role">{profile.title}</p>
-    <p>{profile.descriptor}</p>
-    {profile.mission && <p class="profile-mission">{profile.mission}</p>}
   </div>
+
+  <p class="profile-bio">{profile.bio}</p>
 
   <p class="profile-status">
     {profile.currentStatus}
@@ -27,7 +35,7 @@ import { profile } from '../data/profile';
   </p>
 
   <div class="profile-links">
-    <h2>Links</h2>
+    <h2 class="sr-only">Links</h2>
     <ul>
       {
         profile.links

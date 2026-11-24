@@ -1,289 +1,208 @@
 ---
 import { getCollection } from 'astro:content';
-import ProfileSidebar from '../components/ProfileSidebar.astro';
-import TopNav from '../components/TopNav.astro';
-import { archive } from '../data/archive';
-import { building } from '../data/building';
-import { community } from '../data/community';
+import Card from '../components/Card.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { photography } from '../data/photography';
-import { about, contact, profile } from '../data/profile';
-import { publications } from '../data/publications';
+import { contact, profile } from '../data/profile';
 import { research } from '../data/research';
-import '../styles/global.css';
+import { findResearchCover, publicAssetExists } from '../lib/assets';
+import { formatDate, formatMonth, getNews } from '../lib/news';
 
 const writingEntries = (await getCollection('writing'))
   .filter((entry) => !entry.data.draft)
   .sort((first, second) => second.data.date.getTime() - first.data.date.getTime());
 const showWriting = writingEntries.length > 0;
 const showPhotography = photography.length > 0;
-const communityLeadership = community.filter(
-  (item) => item.category === 'feature' || item.category === 'initiative',
-);
-const communityOutreach = community.find((item) => item.category === 'outreach');
-const canonicalUrl = 'https://adrianciencia.github.io/';
+
+const byOrder = (first: { data: { order: number } }, second: { data: { order: number } }) =>
+  first.data.order - second.data.order;
+const communityEntries = (await getCollection('community')).sort(byOrder);
+const workEntries = (await getCollection('work')).sort(byOrder);
+
+const { featured, list: newsList } = await getNews();
+const featuredImage =
+  featured?.data.image && publicAssetExists(featured.data.image) ? featured.data.image : undefined;
+
+const researchCards = research.map((item) => {
+  const cover = findResearchCover(item.id);
+  return {
+    item,
+    image: cover ?? item.figure.sources?.[0]?.src ?? item.figure.src,
+    imageFit: cover ? ('cover' as const) : ('contain' as const),
+    imageCredit: cover ? 'Illustration' : undefined,
+  };
+});
+
 const siteDescription =
   'Observational astrophysicist studying high-redshift galaxy evolution, spectroscopy, and scientific inference.';
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: profile.name,
-  url: canonicalUrl,
+  url: 'https://adrianciencia.github.io/',
   jobTitle: profile.title,
   sameAs: ['https://github.com/adrianciencia', 'https://www.linkedin.com/in/adrianciencia'],
 };
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content={siteDescription}
-    />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={`${profile.name} — Astrophysicist`} />
-    <meta property="og:description" content={siteDescription} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:site_name" content={profile.name} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={`${profile.name} — Astrophysicist`} />
-    <meta name="twitter:description" content={siteDescription} />
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-    <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <title>{profile.name} — Astrophysicist</title>
-  </head>
-  <body>
-    <a class="skip-link" href="#content">Skip to content</a>
-    <TopNav showWriting={showWriting} showPhotography={showPhotography} />
+<BaseLayout title={`${profile.name} — Astrophysicist`} description={siteDescription} path="/" jsonLd={personSchema}>
+  {
+    (featured || newsList.length > 0) && (
+      <section id="news" aria-labelledby="news-heading" class="section-news">
+        <h2 id="news-heading">News</h2>
+        {
+          featured && (
+            <article class:list={['featured-item', 'card', { 'featured-item-with-image': featuredImage }]} id={`news-${featured.id}`}>
+              {
+                featuredImage && (
+                  <img
+                    class="featured-image"
+                    src={featuredImage}
+                    alt={featured.data.imageAlt}
+                    width="1600"
+                    height="1067"
+                    decoding="async"
+                  />
+                )
+              }
+              <div class="featured-body">
+                <h3>
+                  <a class="card-link" href={`/news/${featured.id}/`}>
+                    {featured.data.title}
+                  </a>
+                </h3>
+                <p class="featured-meta">
+                  <time datetime={featured.data.date.toISOString().slice(0, 10)}>{formatDate(featured.data.date)}</time>
+                  {featured.data.format && <span> · {featured.data.format}</span>}
+                  {featured.data.location && <span> · {featured.data.location}</span>}
+                </p>
+                <p class="card-summary">{featured.data.summary}</p>
+              </div>
+            </article>
+          )
+        }
+        {
+          newsList.length > 0 && (
+            <ul class="news-list">
+              {
+                newsList.map((entry) => (
+                  <li>
+                    <time class="news-date" datetime={entry.data.date.toISOString().slice(0, 10)}>
+                      {formatMonth(entry.data.date)}
+                    </time>
+                    <div>
+                      <a class="news-title" href={`/news/${entry.id}/`}>
+                        {entry.data.title}
+                      </a>
+                      <p>{entry.data.summary}</p>
+                    </div>
+                  </li>
+                ))
+              }
+            </ul>
+          )
+        }
+      </section>
+    )
+  }
 
-    <main class="site-layout">
-      <ProfileSidebar />
+  <section id="research" aria-labelledby="research-heading" class="section-research">
+    <h2 id="research-heading">Research</h2>
+    <div class="card-grid">
+      {
+        researchCards.map(({ item, image, imageFit, imageCredit }) => (
+          <Card
+            id={`research-${item.id}`}
+            href={`/research/${item.id}/`}
+            title={item.title}
+            summary={item.takeaway}
+            meta={item.status}
+            image={image}
+            imageFit={imageFit}
+            imageCredit={imageCredit}
+          />
+        ))
+      }
+    </div>
+  </section>
 
-      <div class="document-column" id="content" tabindex="-1">
-        <section id="about" aria-labelledby="about-heading" class="section-about">
-          <h2 id="about-heading" class="sr-only">About</h2>
+  <section id="community" aria-labelledby="community-heading" class="section-community">
+    <h2 id="community-heading">Community &amp; Public Science</h2>
+    <div class="card-grid card-grid-with-lead">
+      {
+        communityEntries.map((entry, index) => (
+          <Card
+            id={`community-${entry.id}`}
+            href={`/community/${entry.id}/`}
+            title={entry.data.title}
+            role={entry.data.role}
+            summary={entry.data.summary}
+            evidence={entry.data.evidence}
+            lead={index === 0}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    showWriting && (
+      <section id="writing" aria-labelledby="writing-heading">
+        <h2 id="writing-heading">Selected writing</h2>
+        <ul class="editorial-list editorial-list-writing">
           {
-            about.paragraphs.map((paragraph, index) => (
-              <p class={index === 0 ? 'about-lead' : undefined}>{paragraph}</p>
+            writingEntries.map((entry) => (
+              <li>
+                <div>
+                  <strong>{entry.data.title}</strong>
+                  <p>{entry.data.summary}</p>
+                </div>
+                <span>{entry.data.date.getFullYear()}</span>
+              </li>
             ))
           }
-        </section>
+        </ul>
+      </section>
+    )
+  }
 
-        <section id="research" aria-labelledby="research-heading" class="section-research">
-          <h2 id="research-heading">Research</h2>
-          <div class="research-items">
-            {
-              research.map((item) => (
-                <article class="research-item" id={item.id}>
-                  <header class="research-header">
-                    <h3>{item.title}</h3>
-                    <p class="research-question">{item.question}</p>
-                  </header>
-                  <figure
-                    class:list={[
-                      'research-media',
-                      {
-                        'research-media-tall':
-                          item.figure.width && item.figure.height && item.figure.height / item.figure.width > 0.7,
-                      },
-                    ]}
-                  >
-                    <img
-                      class="research-figure"
-                      src={item.figure.src}
-                      srcset={item.figure.sources?.map((source) => `${source.src} ${source.width}w`).join(', ')}
-                      sizes={item.figure.sizes}
-                      alt={item.figure.alt ?? ''}
-                      width={item.figure.width}
-                      height={item.figure.height}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    {
-                      item.figure.src && (
-                        <a class="research-figure-link" href={item.figure.src}>
-                          Open full figure<span class="sr-only">: {item.title}</span> <span aria-hidden="true">↗</span>
-                        </a>
-                      )
-                    }
-                  </figure>
-                  <div class="research-copy">
-                    {item.takeaway && <p class="research-takeaway">{item.takeaway}</p>}
-                    <p class="research-summary">{item.summary}</p>
-                    {item.status && <p class="research-status">{item.status}</p>}
-                    {
-                      item.artifacts.some((artifact) => artifact.href) && (
-                        <p class="artifact-labels">
-                          {
-                            item.artifacts.map((artifact) =>
-                              artifact.href && <a href={artifact.href}>{artifact.label}</a>,
-                            )
-                          }
-                        </p>
-                      )
-                    }
-                  </div>
-                </article>
-              ))
-            }
-          </div>
+  {
+    showPhotography && (
+      <section id="photography" aria-labelledby="photography-heading">
+        <h2 id="photography-heading">Selected photography</h2>
+        <div class="gallery-placeholder">
+          {photography.map((item) => (
+            <span>{item.caption ?? item.placeholder}</span>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-          {
-            publications.length > 0 && (
-              <div class="publications-placeholder">
-                <h3>Selected publications</h3>
-                <ol class="publication-list">
-                  {
-                    publications.map((publication) => (
-                      <li>
-                        <div>
-                          <strong>{publication.title}</strong>
-                          <span>{publication.authors}</span>
-                        </div>
-                        <span>{publication.year}</span>
-                      </li>
-                    ))
-                  }
-                </ol>
-              </div>
-            )
-          }
-        </section>
+  <section id="other-work" aria-labelledby="other-work-heading" class="section-other">
+    <h2 id="other-work-heading">Other work</h2>
+    <div class="card-grid">
+      {
+        workEntries.map((entry) => (
+          <Card
+            id={`work-${entry.id}`}
+            href={`/work/${entry.id}/`}
+            title={entry.data.title}
+            role={entry.data.role}
+            summary={entry.data.summary}
+            evidence={entry.data.evidence}
+          />
+        ))
+      }
+    </div>
+  </section>
 
-        <section id="community" aria-labelledby="community-heading" class="section-community">
-          <h2 id="community-heading">Community &amp; Public Science</h2>
-          <ul class="role-list role-list-community">
-            {
-              communityLeadership.map((item) => (
-                <li class="role-entry">
-                  <h3>{item.title}</h3>
-                  {item.role && <p class="role-entry-role">{item.role.replaceAll(' · ', '\u00a0· ')}</p>}
-                  <div class="role-entry-body">
-                    <p>{item.description}</p>
-                    {
-                      item.links.map(
-                        (link) =>
-                          link.href && (
-                            <a class="role-entry-link" href={link.href}>
-                              {link.label} <span aria-hidden="true">↗</span>
-                            </a>
-                          ),
-                      )
-                    }
-                  </div>
-                </li>
-              ))
-            }
-          </ul>
-          {
-            communityOutreach && (
-              <p class="community-outreach">
-                <strong>{communityOutreach.title}.</strong> {communityOutreach.description}
-                {communityOutreach.role && <span class="community-outreach-role">{communityOutreach.role}</span>}
-              </p>
-            )
-          }
-        </section>
+  <section id="contact" aria-labelledby="contact-heading" class="section-contact">
+    <h2 id="contact-heading">{contact.heading}</h2>
+    <p>{contact.invitation}</p>
+    <p class="contact-email">
+      <a href={`mailto:${contact.email}`}>{contact.email}</a>
+    </p>
+  </section>
 
-        <section id="building" aria-labelledby="building-heading" class="section-building">
-          <h2 id="building-heading">Building</h2>
-          <ul class="role-list">
-            {
-              building.map((item) => (
-                <li class="role-entry">
-                  <h3>{item.title}</h3>
-                  {item.role && <p class="role-entry-role">{item.role.replaceAll(' · ', '\u00a0· ')}</p>}
-                  <div class="role-entry-body">
-                    <p>{item.description}</p>
-                    {item.contribution && <p>{item.contribution}</p>}
-                    {
-                      item.link?.href && (
-                        <a class="role-entry-link" href={item.link.href}>
-                          {item.link.label} <span aria-hidden="true">↗</span>
-                        </a>
-                      )
-                    }
-                  </div>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-
-        {
-          showWriting && (
-            <section id="writing" aria-labelledby="writing-heading">
-              <h2 id="writing-heading">Selected writing</h2>
-              <ul class="editorial-list editorial-list-writing">
-                {
-                  writingEntries.map((entry) => (
-                    <li>
-                      <div>
-                        <strong>{entry.data.title}</strong>
-                        <p>{entry.data.summary}</p>
-                      </div>
-                      <span>{entry.data.date.getFullYear()}</span>
-                    </li>
-                  ))
-                }
-              </ul>
-            </section>
-          )
-        }
-
-        {
-          showPhotography && (
-            <section id="photography" aria-labelledby="photography-heading">
-              <h2 id="photography-heading">Selected photography</h2>
-              <div class="gallery-placeholder">
-                {photography.map((item) => (
-                  <span>{item.caption ?? item.placeholder}</span>
-                ))}
-              </div>
-            </section>
-          )
-        }
-
-        <section id="archive" aria-labelledby="archive-heading" class="section-archive">
-          <h2 id="archive-heading">Earlier work</h2>
-          <ul class="archive-index">
-            {
-              archive.map((item) => (
-                <li>
-                  {item.title && <strong>{item.title}</strong>}
-                  <p>
-                    {item.description}
-                    {
-                      item.link?.href && (
-                        <>
-                          <span aria-hidden="true"> · </span>
-                          <a href={item.link.href}>{item.link.label} <span aria-hidden="true">↗</span></a>
-                        </>
-                      )
-                    }
-                  </p>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-
-        <section id="contact" aria-labelledby="contact-heading" class="section-contact">
-          <h2 id="contact-heading">{contact.heading}</h2>
-          <p>{contact.invitation}</p>
-          <p class="contact-email">
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          </p>
-        </section>
-
-        <footer class="site-footer">
-          <p>© {new Date().getFullYear()} {profile.name}</p>
-        </footer>
-      </div>
-    </main>
-  </body>
-</html>
+</BaseLayout>

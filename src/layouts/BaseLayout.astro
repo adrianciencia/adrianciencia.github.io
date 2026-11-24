@@ -1,0 +1,57 @@
+---
+import ProfileSidebar from '../components/ProfileSidebar.astro';
+import TopNav from '../components/TopNav.astro';
+import { profile } from '../data/profile';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  nameAsHeading?: boolean;
+  /** The homepage section this page belongs to; the nav marks it as current. */
+  section?: 'news' | 'research' | 'community' | 'work';
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, path, nameAsHeading = true, section, jsonLd } = Astro.props;
+const canonicalUrl = new URL(path, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <TopNav current={section} />
+
+    <main class="site-layout">
+      <ProfileSidebar nameAsHeading={nameAsHeading} />
+
+      <div class="document-column" id="content" tabindex="-1">
+        <slot />
+
+        <footer class="site-footer">
+          <p>© {new Date().getFullYear()} {profile.name}</p>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

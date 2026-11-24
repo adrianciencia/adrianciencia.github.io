@@ -12,6 +12,8 @@ export type ImageMetadata = {
   src?: string;
   sources?: ImageSource[];
   sizes?: string;
+  readoutCaption?: string;
+  readout?: { label: string; value: string }[];
   alt?: string;
   caption?: string;
   width?: number;
@@ -22,17 +24,12 @@ export type ImageMetadata = {
 export type Profile = {
   name: string;
   title: string;
-  descriptor: string;
-  mission?: string;
+  bio: string;
   currentStatus: string;
   location?: string;
   portrait: ImageMetadata;
   links: ExternalLink[];
   cv?: ExternalLink;
-};
-
-export type AboutContent = {
-  paragraphs: string[];
 };
 
 export type ContactContent = {
@@ -69,22 +66,7 @@ export type Publication = {
   featured?: boolean;
 };
 
-export type BuildingItem = {
-  title: string;
-  description: string;
-  contribution?: string;
-  role?: string;
-  link?: ExternalLink;
-  status?: string;
-};
 
-export type CommunityItem = {
-  category: 'feature' | 'initiative' | 'outreach';
-  title: string;
-  description: string;
-  role?: string;
-  links: ExternalLink[];
-};
 
 export type PhotographyItem = ImageMetadata & {
   location?: string;
@@ -92,8 +74,3 @@ export type PhotographyItem = ImageMetadata & {
   featured?: boolean;
 };
 
-export type ArchiveItem = {
-  title?: string;
-  description: string;
-  link?: ExternalLink;
-};

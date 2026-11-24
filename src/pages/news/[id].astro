@@ -1,0 +1,54 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import EntryPage from '../../components/EntryPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { profile } from '../../data/profile';
+import { publicAssetExists } from '../../lib/assets';
+import { formatDate } from '../../lib/news';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('news'))
+    .filter((entry) => !entry.data.draft || import.meta.env.DEV)
+    .sort((first, second) => second.data.date.getTime() - first.data.date.getTime());
+  return entries.map((entry, index) => ({
+    params: { id: entry.id },
+    props: { entry, newer: entries[index - 1], older: entries[index + 1] },
+  }));
+}
+
+type Entry = CollectionEntry<'news'>;
+
+interface Props {
+  entry: Entry;
+  newer?: Entry;
+  older?: Entry;
+}
+
+const { entry, newer, older } = Astro.props;
+const neighbour = (item?: Entry) => item && { href: `/news/${item.id}/`, title: item.data.title };
+const { Content } = await render(entry);
+const image = entry.data.image && publicAssetExists(entry.data.image) ? entry.data.image : undefined;
+---
+
+<BaseLayout
+  title={`${entry.data.title} — ${profile.name}`}
+  description={entry.data.summary}
+  path={`/news/${entry.id}/`}
+  nameAsHeading={false}
+  section="news"
+>
+  <EntryPage
+    backHref="/#news"
+    backLabel="All news"
+    title={entry.data.title}
+    meta={[formatDate(entry.data.date), entry.data.format ?? '', entry.data.location ?? '']}
+    image={image}
+    imageAlt={entry.data.imageAlt}
+    link={entry.data.link}
+    draft={entry.data.draft}
+    previous={neighbour(older)}
+    next={neighbour(newer)}
+  >
+    <Content />
+  </EntryPage>
+</BaseLayout>

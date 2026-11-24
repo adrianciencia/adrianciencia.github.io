@@ -1,0 +1,75 @@
+---
+interface Props {
+  backHref: string;
+  backLabel: string;
+  title: string;
+  meta?: string[];
+  image?: string;
+  imageAlt?: string;
+  link?: { label: string; href: string };
+  draft?: boolean;
+  previous?: { href: string; title: string };
+  next?: { href: string; title: string };
+}
+
+const {
+  backHref,
+  backLabel,
+  title,
+  meta = [],
+  image,
+  imageAlt = '',
+  link,
+  draft = false,
+  previous,
+  next,
+} = Astro.props;
+const metaLine = meta.filter(Boolean);
+---
+
+<article class="entry-page">
+  <a class="research-page-back" href={backHref}><span aria-hidden="true">←</span> {backLabel}</a>
+
+  <header class="entry-page-header">
+    <h1>{title}</h1>
+    {metaLine.length > 0 && <p class="entry-page-meta">{metaLine.join(' · ')}</p>}
+    {draft && <p class="draft-note">Draft: visible on the local dev server only.</p>}
+  </header>
+
+  {image && <img class="entry-page-image" src={image} alt={imageAlt} width="1600" height="1067" decoding="async" />}
+
+  <div class="entry-page-body">
+    <slot />
+  </div>
+
+  {
+    link && (
+      <a class="featured-link" href={link.href}>
+        {link.label} <span aria-hidden="true">↗</span>
+      </a>
+    )
+  }
+
+  {
+    (previous || next) && (
+      <nav class="research-pager" aria-label={`More in ${backLabel}`}>
+        {
+          previous && (
+            <a href={previous.href}>
+              <span class="research-pager-label">Previous</span>
+              {previous.title}
+            </a>
+          )
+        }
+        {
+          next && (
+            <a class="research-pager-next" href={next.href}>
+              <span class="research-pager-label">Next</span>
+              {next.title}
+            </a>
+          )
+        }
+      </nav>
+    )
+  }
+</article>

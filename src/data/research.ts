@@ -16,6 +16,12 @@ export const research = [
         { src: '/images/research/spectroscopy-sfr-1800.webp', width: 1800 },
       ],
       sizes: '(max-width: 860px) calc(100vw - 2.5rem), 52.5rem',
+      readoutCaption: 'Median shift in 10 Myr SFR relative to the full-spectrum fit',
+      readout: [
+        { label: 'Balmer lines masked', value: '+0.01 dex' },
+        { label: 'Photometry + spectroscopic Z', value: '−0.44 dex' },
+        { label: 'Photometry only', value: '−0.44 dex' },
+      ],
       alt: 'Changes in inferred 10 Myr SFR relative to the full-spectrum fit for three reduced-information experiments. Masking Balmer lines has a median shift of +0.01 dex, while photometry with spectroscopic metallicity and photometry alone each have medians of −0.44 dex; horizontal lines show galaxy 16–84% ranges.',
       width: 1800,
       height: 1000,

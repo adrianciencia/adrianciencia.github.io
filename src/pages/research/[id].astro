@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { profile } from '../../data/profile';
+import { research } from '../../data/research';
+import type { ResearchItem } from '../../types/content';
+
+export function getStaticPaths() {
+  return research.map((item, index) => ({
+    params: { id: item.id },
+    props: { item, index },
+  }));
+}
+
+interface Props {
+  item: ResearchItem;
+  index: number;
+}
+
+const { item, index } = Astro.props;
+const previous = research[index - 1];
+const next = research[index + 1];
+const isTallFigure =
+  item.figure.width && item.figure.height ? item.figure.height / item.figure.width > 0.7 : false;
+---
+
+<BaseLayout
+  title={`${item.title} — ${profile.name}`}
+  description={item.takeaway ?? item.question}
+  path={`/research/${item.id}/`}
+  nameAsHeading={false}
+  section="research"
+>
+  <article class="research-item research-page" id={item.id}>
+    <a class="research-page-back" href={`/#research-${item.id}`}><span aria-hidden="true">←</span> All research</a>
+
+    <header class="research-header">
+      <h1>{item.title}</h1>
+      <p class="research-question">{item.question}</p>
+    </header>
+
+    <figure class:list={['research-media', { 'research-media-tall': isTallFigure }]}>
+      <img
+        class="research-figure"
+        src={item.figure.src}
+        srcset={item.figure.sources?.map((source) => `${source.src} ${source.width}w`).join(', ')}
+        sizes={item.figure.sizes}
+        alt={item.figure.alt ?? ''}
+        width={item.figure.width}
+        height={item.figure.height}
+        decoding="async"
+      />
+      <figcaption>
+        {
+          item.figure.readout && (
+            <div class="plate-readout">
+              {item.figure.readoutCaption && <p>{item.figure.readoutCaption}</p>}
+              <dl>
+                {
+                  item.figure.readout.map((row) => (
+                    <div>
+                      <dt>{row.label}</dt>
+                      <dd>{row.value}</dd>
+                    </div>
+                  ))
+                }
+              </dl>
+            </div>
+          )
+        }
+        <div class="plate-caption">
+          <span class="plate-number">Plate {index + 1}</span>
+          {item.status && <span class="plate-status">{item.status}</span>}
+          {
+            item.figure.src && (
+              <a class="research-figure-link" href={item.figure.src}>
+                Open full figure<span class="sr-only">: {item.title}</span> <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </div>
+      </figcaption>
+    </figure>
+
+    <div class="research-copy">
+      {item.takeaway && <p class="research-takeaway">{item.takeaway}</p>}
+      <p class="research-summary">{item.summary}</p>
+      {
+        item.artifacts.some((artifact) => artifact.href) && (
+          <p class="artifact-labels">
+            {item.artifacts.map((artifact) => artifact.href && <a href={artifact.href}>{artifact.label}</a>)}
+          </p>
+        )
+      }
+    </div>
+
+    {
+      (previous || next) && (
+        <nav class="research-pager" aria-label="More research">
+          {
+            previous && (
+              <a href={`/research/${previous.id}/`}>
+                <span class="research-pager-label">Previous</span>
+                {previous.title}
+              </a>
+            )
+          }
+          {
+            next && (
+              <a class="research-pager-next" href={`/research/${next.id}/`}>
+                <span class="research-pager-label">Next</span>
+                {next.title}
+              </a>
+            )
+          }
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
