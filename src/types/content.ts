@@ -3,6 +3,12 @@ export type ExternalLink = {
   href?: string;
 };
 
+export type SocialLink = {
+  label: string;
+  href: string;
+  icon: 'email' | 'github' | 'linkedin' | 'instagram' | 'x';
+};
+
 export type ImageSource = {
   src: string;
   width: number;
@@ -23,17 +29,23 @@ export type ImageMetadata = {
 
 export type Profile = {
   name: string;
+  /** Given name and both surnames; the surnames never break across lines. */
+  givenName: string;
+  surnames: string;
   title: string;
   bio: string;
+  /** Highest degree and institution, e.g. "MSc in Astronomy, University of Wisconsin–Madison". */
+  credential?: string;
   currentStatus: string;
   location?: string;
   portrait: ImageMetadata;
-  links: ExternalLink[];
+  /** The handle shared across every social profile, shown under the icons. */
+  handle: string;
+  links: SocialLink[];
   cv?: ExternalLink;
 };
 
 export type ContactContent = {
-  heading: string;
   invitation: string;
   email: string;
 };
@@ -49,6 +61,8 @@ export type ResearchItem = {
   title: string;
   question: string;
   takeaway?: string;
+  /** The result in one number, shown on the homepage card until an illustration exists. */
+  keyFigure?: { value: string; label: string };
   summary: string;
   figure: ImageMetadata;
   metadata?: string;

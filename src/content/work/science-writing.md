@@ -7,7 +7,6 @@
 title: "Science writing & astronomy community"
 role: "SPACE Seminar Series · N+1"
 order: 4
-summary: "Science writing and astronomy community work with the SPACE Seminar Series and N+1."
 ---
 
 Science writing and astronomy community work with the SPACE Seminar Series and N+1.

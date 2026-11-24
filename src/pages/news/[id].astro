@@ -2,9 +2,11 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import EntryPage from '../../components/EntryPage.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { profile } from '../../data/profile';
-import { publicAssetExists } from '../../lib/assets';
-import { formatDate } from '../../lib/news';
+import { statSync } from 'node:fs';
+import { join } from 'node:path';
+import { contact, profile } from '../../data/profile';
+import { publicAssetExists, responsiveSrcset } from '../../lib/assets';
+import { datedLine as buildDatedLine, deadlinePassed, timelineSteps } from '../../lib/news';
 
 export async function getStaticPaths() {
   const entries = (await getCollection('news'))
@@ -28,6 +30,20 @@ const { entry, newer, older } = Astro.props;
 const neighbour = (item?: Entry) => item && { href: `/news/${item.id}/`, title: item.data.title };
 const { Content } = await render(entry);
 const image = entry.data.image && publicAssetExists(entry.data.image) ? entry.data.image : undefined;
+// Link previews use a lighter `-share.jpg` copy of the flyer when one exists.
+const flyerShare = entry.data.flyer?.replace(/\.\w+$/, '-share.jpg');
+const shareImage = flyerShare && publicAssetExists(flyerShare) ? flyerShare : (entry.data.flyer ?? image);
+const datedLine = buildDatedLine(entry.data);
+// A deadline that has passed withdraws the action and says so instead.
+const closed = Boolean(entry.data.closedLabel) && deadlinePassed(entry.data.date);
+// With a facts summary on the page, the meta line only needs the date; the facts carry format and place.
+const hasFacts = Boolean(entry.data.facts?.length);
+const isEvent = entry.data.kind === 'event';
+// The download label states the file type and size, since many readers are on mobile data.
+const flyer = entry.data.flyer;
+const flyerLabel = flyer
+  ? `Download the flyer (${flyer.split('.').pop()?.toUpperCase()}, ${(statSync(join(process.cwd(), 'public', flyer)).size / 1e6).toFixed(1)} MB)`
+  : undefined;
 ---
 
 <BaseLayout
@@ -36,15 +52,25 @@ const image = entry.data.image && publicAssetExists(entry.data.image) ? entry.da
   path={`/news/${entry.id}/`}
   nameAsHeading={false}
   section="news"
+  shareImage={shareImage}
+  footerInvitation={!(isEvent && !closed)}
 >
   <EntryPage
     backHref="/#news"
     backLabel="All news"
     title={entry.data.title}
-    meta={[formatDate(entry.data.date), entry.data.format ?? '', entry.data.location ?? '']}
+    meta={hasFacts ? [datedLine] : [datedLine, entry.data.format ?? '', entry.data.location ?? '']}
+    actionStyle={isEvent ? 'primary' : 'secondary'}
+    closingNote={isEvent && entry.data.dateLabel && !closed ? `${datedLine}.` : undefined}
+    facts={entry.data.facts}
+    timeline={entry.data.timeline ? timelineSteps(entry.data.timeline) : undefined}
     image={image}
     imageAlt={entry.data.imageAlt}
-    link={entry.data.link}
+    imageSrcset={image ? responsiveSrcset(image) : undefined}
+    download={flyer && flyerLabel ? { label: flyerLabel, href: flyer } : undefined}
+    questionsEmail={isEvent && !closed ? contact.email : undefined}
+    link={closed ? undefined : entry.data.link}
+    closedNote={closed ? `${datedLine}.` : undefined}
     draft={entry.data.draft}
     previous={neighbour(older)}
     next={neighbour(newer)}

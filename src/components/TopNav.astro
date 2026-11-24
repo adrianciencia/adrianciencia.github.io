@@ -6,9 +6,11 @@ import { getNews } from '../lib/news';
 
 interface Props {
   current?: 'news' | 'research' | 'community' | 'work';
+  /** On the homepage the sidebar's large name already identifies the site. */
+  isHome?: boolean;
 }
 
-const { current } = Astro.props;
+const { current, isHome = false } = Astro.props;
 const { featured, list } = await getNews();
 const showWriting = (await getCollection('writing')).some((entry) => !entry.data.draft);
 
@@ -19,13 +21,14 @@ const links = [
   { id: 'work', label: 'Other work', href: '/#other-work', show: true },
   { id: 'writing', label: 'Writing', href: '/#writing', show: showWriting },
   { id: 'photography', label: 'Photography', href: '/#photography', show: photography.length > 0 },
-  { id: 'contact', label: 'Contact', href: '/#contact', show: true },
 ].filter((link) => link.show);
 ---
 
 <header class="site-header">
   <nav class="top-nav" aria-label="Primary navigation">
-    <a class="wordmark" href="/">{profile.name}</a>
+    <a class:list={['wordmark', { 'wordmark-home': isHome }]} href="/">
+      <span>{profile.givenName}{' '}<span class="name-surnames">{profile.surnames}</span></span>
+    </a>
     <div class="nav-links">
       {
         links.map((link) => (

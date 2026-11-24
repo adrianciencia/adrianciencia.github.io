@@ -11,11 +11,27 @@ interface Props {
   /** Illustrations fill the frame; figures are shown whole so no labels are cut. */
   imageFit?: 'cover' | 'contain';
   imageCredit?: string;
+  imageSrcset?: string;
+  /** A headline number shown where the image would go, e.g. a research result. */
+  stat?: { value: string; label: string };
   lead?: boolean;
 }
 
-const { id, href, title, summary, role, evidence, meta, image, imageFit = 'cover', imageCredit, lead = false } =
-  Astro.props;
+const {
+  id,
+  href,
+  title,
+  summary,
+  role,
+  evidence,
+  meta,
+  image,
+  imageFit = 'cover',
+  imageCredit,
+  imageSrcset,
+  stat,
+  lead = false,
+} = Astro.props;
 ---
 
 <!-- The title link stretches over the whole card, so the card is one click target and one tab stop. -->
@@ -23,15 +39,36 @@ const { id, href, title, summary, role, evidence, meta, image, imageFit = 'cover
   {
     image && (
       <div class:list={['card-media', `card-media-${imageFit}`]}>
-        <img src={image} alt="" width="1600" height="1067" loading="lazy" decoding="async" />
-        {imageCredit && <p class="card-credit">{imageCredit}</p>}
+        <img
+          src={image}
+          srcset={imageSrcset}
+          sizes="(max-width: 560px) calc(100vw - 2rem), 26rem"
+          alt=""
+          width="1600"
+          height="1067"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     )
   }
   <h3 class="card-title">
     <a class="card-link" href={href}>{title}</a>
   </h3>
+  <!-- After the title in reading order; CSS shows it at the top of the card, where the image would be. -->
+  {
+    !image && stat && (
+      <p class="card-stat">
+        <span class="card-stat-value">{stat.value}</span>
+        <span class="card-stat-label">{stat.label}</span>
+      </p>
+    )
+  }
   {role && <p class="card-role">{role}</p>}
   {summary && <p class="card-summary">{summary}</p>}
-  {(evidence || meta) && <p class="card-footer">{evidence ?? meta}</p>}
+  {
+    (imageCredit || evidence || meta) && (
+      <p class="card-footer">{[imageCredit, evidence ?? meta].filter(Boolean).join(' · ')}</p>
+    )
+  }
 </article>

@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import Card from '../components/Card.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { photography } from '../data/photography';
-import { contact, profile } from '../data/profile';
+import { profile } from '../data/profile';
 import { research } from '../data/research';
-import { findResearchCover, publicAssetExists } from '../lib/assets';
-import { formatDate, formatMonth, getNews } from '../lib/news';
+import { findResearchCover, publicAssetExists, responsiveSrcset } from '../lib/assets';
+import { datedLine, formatMonth, getNews } from '../lib/news';
 
 const writingEntries = (await getCollection('writing'))
   .filter((entry) => !entry.data.draft)
@@ -18,6 +18,9 @@ const byOrder = (first: { data: { order: number } }, second: { data: { order: nu
   first.data.order - second.data.order;
 const communityEntries = (await getCollection('community')).sort(byOrder);
 const workEntries = (await getCollection('work')).sort(byOrder);
+// Derívate (first by order) leads only once it carries an evidence line; until then all four sit 2×2.
+const communityHasLead = Boolean(communityEntries[0]?.data.evidence);
+const workIsDated = workEntries.some((entry) => entry.data.year);
 
 const { featured, list: newsList } = await getNews();
 const featuredImage =
@@ -27,9 +30,12 @@ const researchCards = research.map((item) => {
   const cover = findResearchCover(item.id);
   return {
     item,
-    image: cover ?? item.figure.sources?.[0]?.src ?? item.figure.src,
+    // An illustration when there is one; otherwise the result as a number, and the figure only as a last resort.
+    image: cover ?? (item.keyFigure ? undefined : (item.figure.sources?.[0]?.src ?? item.figure.src)),
     imageFit: cover ? ('cover' as const) : ('contain' as const),
     imageCredit: cover ? 'Illustration' : undefined,
+    imageSrcset: cover ? responsiveSrcset(cover) : undefined,
+    stat: item.keyFigure,
   };
 });
 
@@ -41,7 +47,7 @@ const personSchema = {
   name: profile.name,
   url: 'https://adrianciencia.github.io/',
   jobTitle: profile.title,
-  sameAs: ['https://github.com/adrianciencia', 'https://www.linkedin.com/in/adrianciencia'],
+  sameAs: profile.links.filter((link) => link.icon !== 'email').map((link) => link.href),
 };
 ---
 
@@ -58,6 +64,8 @@ const personSchema = {
                   <img
                     class="featured-image"
                     src={featuredImage}
+                    srcset={responsiveSrcset(featuredImage)}
+                    sizes="(max-width: 560px) calc(100vw - 2rem), 28rem"
                     alt={featured.data.imageAlt}
                     width="1600"
                     height="1067"
@@ -72,9 +80,14 @@ const personSchema = {
                   </a>
                 </h3>
                 <p class="featured-meta">
-                  <time datetime={featured.data.date.toISOString().slice(0, 10)}>{formatDate(featured.data.date)}</time>
-                  {featured.data.format && <span> · {featured.data.format}</span>}
-                  {featured.data.location && <span> · {featured.data.location}</span>}
+                  <time datetime={featured.data.date.toISOString().slice(0, 10)}>{datedLine(featured.data)}</time>
+                  {
+                    (featured.data.format || featured.data.location) && (
+                      <span class="featured-meta-rest">
+                        {[featured.data.format, featured.data.location].filter(Boolean).join(' · ')}
+                      </span>
+                    )
+                  }
                 </p>
                 <p class="card-summary">{featured.data.summary}</p>
               </div>
@@ -110,7 +123,7 @@ const personSchema = {
     <h2 id="research-heading">Research</h2>
     <div class="card-grid">
       {
-        researchCards.map(({ item, image, imageFit, imageCredit }) => (
+        researchCards.map(({ item, image, imageFit, imageCredit, imageSrcset, stat }) => (
           <Card
             id={`research-${item.id}`}
             href={`/research/${item.id}/`}
@@ -120,6 +133,8 @@ const personSchema = {
             image={image}
             imageFit={imageFit}
             imageCredit={imageCredit}
+            imageSrcset={imageSrcset}
+            stat={stat}
           />
         ))
       }
@@ -128,7 +143,7 @@ const personSchema = {
 
   <section id="community" aria-labelledby="community-heading" class="section-community">
     <h2 id="community-heading">Community &amp; Public Science</h2>
-    <div class="card-grid card-grid-with-lead">
+    <div class:list={['card-grid', { 'card-grid-with-lead': communityHasLead }]}>
       {
         communityEntries.map((entry, index) => (
           <Card
@@ -138,7 +153,7 @@ const personSchema = {
             role={entry.data.role}
             summary={entry.data.summary}
             evidence={entry.data.evidence}
-            lead={index === 0}
+            lead={communityHasLead && index === 0}
           />
         ))
       }
@@ -181,28 +196,22 @@ const personSchema = {
 
   <section id="other-work" aria-labelledby="other-work-heading" class="section-other">
     <h2 id="other-work-heading">Other work</h2>
-    <div class="card-grid">
+    <ul class:list={['work-list', { 'work-list-dated': workIsDated }]}>
       {
         workEntries.map((entry) => (
-          <Card
-            id={`work-${entry.id}`}
-            href={`/work/${entry.id}/`}
-            title={entry.data.title}
-            role={entry.data.role}
-            summary={entry.data.summary}
-            evidence={entry.data.evidence}
-          />
+          <li class="work-row" id={`work-${entry.id}`}>
+            {workIsDated && <span class="work-year">{entry.data.year}</span>}
+            <div>
+              <a class="work-title" href={`/work/${entry.id}/`}>
+                {entry.data.title}
+              </a>
+              {entry.data.role && <p class="work-role">{entry.data.role}</p>}
+              {entry.data.summary && <p class="work-summary">{entry.data.summary}</p>}
+            </div>
+          </li>
         ))
       }
-    </div>
-  </section>
-
-  <section id="contact" aria-labelledby="contact-heading" class="section-contact">
-    <h2 id="contact-heading">{contact.heading}</h2>
-    <p>{contact.invitation}</p>
-    <p class="contact-email">
-      <a href={`mailto:${contact.email}`}>{contact.email}</a>
-    </p>
+    </ul>
   </section>
 
 </BaseLayout>

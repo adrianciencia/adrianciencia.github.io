@@ -5,6 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  # Daily rebuild so date-driven content (deadlines, timelines, featured news) updates on time.
+  schedule:
+    - cron: '0 6 * * *'
 
 permissions:
   contents: read

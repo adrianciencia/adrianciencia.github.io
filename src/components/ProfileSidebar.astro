@@ -1,5 +1,6 @@
 ---
 import { profile } from '../data/profile';
+import SocialIcon from './SocialIcon.astro';
 
 interface Props {
   nameAsHeading?: boolean;
@@ -15,7 +16,7 @@ const NameTag = nameAsHeading ? 'h1' : 'p';
     class="portrait-image"
     src={profile.portrait.src}
     srcset={profile.portrait.sources?.map((source) => `${source.src} ${source.width}w`).join(', ')}
-    sizes={profile.portrait.sizes}
+    sizes={nameAsHeading ? profile.portrait.sizes : '(max-width: 860px) 3.5rem, 13.75rem'}
     alt={profile.portrait.alt ?? ''}
     width={profile.portrait.width}
     height={profile.portrait.height}
@@ -23,29 +24,40 @@ const NameTag = nameAsHeading ? 'h1' : 'p';
   />
 
   <div class="profile-introduction">
-    <NameTag id="profile-name" class="profile-name">{profile.name}</NameTag>
+    <NameTag id="profile-name" class="profile-name">
+      <span class="name-given">{profile.givenName}</span>{' '}
+      <span class="name-surnames">{profile.surnames}</span>
+    </NameTag>
     <p class="profile-role">{profile.title}</p>
   </div>
 
   <p class="profile-bio">{profile.bio}</p>
 
+  <!-- On phones this condenses to one line: credential · location (see global.css). -->
   <p class="profile-status">
-    {profile.currentStatus}
-    {profile.location && <><br />{profile.location}</>}
+    {profile.credential && <span class="profile-credential">{profile.credential}</span>}
+    <span class="profile-current">{profile.currentStatus}</span>
+    {profile.location && <span class="profile-location">{profile.location}</span>}
   </p>
 
   <div class="profile-links">
     <h2 class="sr-only">Links</h2>
-    <ul>
+    <ul class="social-links">
       {
-        profile.links
-          .filter((link) => link.href)
-          .map((link) => (
-            <li>
-              <a href={link.href}>{link.label}</a>
-            </li>
-          ))
+        profile.links.map((link) => (
+          <li>
+            <a
+              class="social-link"
+              href={link.href}
+              aria-label={link.icon === 'email' ? `Email ${profile.name}` : `${link.label}: ${profile.handle}`}
+              title={link.label}
+            >
+              <SocialIcon name={link.icon} />
+            </a>
+          </li>
+        ))
       }
     </ul>
+    <p class="profile-handle">{profile.handle}</p>
   </div>
 </aside>

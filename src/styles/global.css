@@ -38,6 +38,7 @@
   --color-bg: #ffffff;
   --color-text: #171717;
   --color-accent: #a51d1d;
+  --color-accent-deep: #741515;
   --color-muted: #666666;
   --color-faint: #767676;
   --color-rule: #e3e3e3;
@@ -64,6 +65,9 @@
   --space-9: 6rem;
 
   --measure: 38rem;
+  /* Width of structural blocks on entry pages (facts, timeline, image, closing row, footer).
+     44rem keeps entry pages a narrower article; `none` would fill the content column. Running text stays at --measure. */
+  --entry-width: 44rem;
   --layout-max: 73rem;
   --sidebar-width: 16rem;
   --document-width: 52.5rem;
@@ -194,6 +198,9 @@ a:focus-visible {
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   flex: 0 0 auto;
   font-family: var(--font-display);
   font-size: 1.125rem;
@@ -259,8 +266,10 @@ a:focus-visible {
 
 .portrait-image {
   width: min(100%, 13.75rem);
-  aspect-ratio: 2 / 3;
+  /* Square crop of a 2:3 portrait, framed so the face sits in the visual centre. */
+  aspect-ratio: 1 / 1;
   height: auto;
+  object-position: 50% 30%;
   margin-bottom: var(--space-5);
   display: block;
   border: var(--rule);
@@ -269,7 +278,6 @@ a:focus-visible {
 }
 
 .profile-introduction .profile-name {
-  max-width: 9ch;
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--font-size-profile);
@@ -293,6 +301,29 @@ a:focus-visible {
   font-size: 0.875rem;
 }
 
+/* Both surnames stay on one line: "Díaz Espinoza". */
+.name-surnames {
+  white-space: nowrap;
+}
+
+/* In the sidebar the given name sits above the surnames. */
+.profile-name .name-given,
+.profile-name .name-surnames {
+  display: block;
+}
+
+.profile-current,
+.profile-location {
+  display: block;
+}
+
+.profile-credential {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
 .profile-bio {
   max-width: 15rem;
   margin: var(--space-4) 0 0;
@@ -308,13 +339,54 @@ a:focus-visible {
 
 .profile-links {
   margin-top: var(--space-5);
+  padding-top: var(--space-3);
   border-top: var(--rule);
 }
 
-.profile-links ul {
-  margin: 0;
+/* One row of icon links; each keeps a 44px tap target around a 20px glyph. */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 0 -0.75rem;
   padding: 0;
   list-style: none;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-muted);
+}
+
+.social-link:hover,
+.social-link:focus-visible {
+  color: var(--color-accent);
+}
+
+.social-link:focus-visible {
+  outline-offset: -2px;
+}
+
+.social-icon {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-3);
+}
+
+.profile-handle {
+  margin: var(--space-1) 0 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
 }
 
 .editorial-list,
@@ -324,17 +396,6 @@ a:focus-visible {
   list-style: none;
 }
 
-.profile-links li {
-  border-bottom: var(--rule);
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-}
-
-.profile-links a {
-  display: flex;
-  align-items: center;
-  min-height: 2.75rem;
-}
 
 /* Document column */
 
@@ -393,7 +454,7 @@ a:focus-visible {
 
 .featured-item.featured-item-with-image {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-6);
   align-items: center;
 }
@@ -420,6 +481,13 @@ a:focus-visible {
   color: var(--color-accent);
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+.featured-meta-rest {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-weight: 400;
 }
 
 .featured-link {
@@ -517,12 +585,6 @@ a:focus-visible {
   object-fit: cover;
 }
 
-.document-column .card-credit {
-  margin: var(--space-2) var(--card-padding) 0;
-  color: var(--color-faint);
-  font-size: var(--font-size-small);
-}
-
 .card .card-title {
   font-family: var(--font-display);
   font-size: var(--font-size-entry);
@@ -584,6 +646,109 @@ a:focus-visible {
   font-weight: 500;
 }
 
+/* A research result as one number, in the image slot: sans proves. */
+.card-stat {
+  order: -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: calc(var(--card-padding) * -1) calc(var(--card-padding) * -1) var(--space-4);
+  padding: var(--space-5) var(--card-padding);
+  border-bottom: var(--rule);
+}
+
+.card-stat-value {
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.card-stat-label {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.card:hover .card-stat-value {
+  color: var(--color-accent);
+}
+
+/* Other work: a ruled list, each title opening its page. */
+.work-list {
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  border-top: var(--rule);
+  list-style: none;
+}
+
+.work-row {
+  position: relative;
+  padding: var(--space-4) 0;
+  border-bottom: var(--rule);
+}
+
+.work-list-dated .work-row {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.work-year {
+  padding-top: 0.15rem;
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.work-title {
+  text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+/* The title link covers the row. */
+.work-title::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.work-row:hover .work-title {
+  color: var(--color-accent);
+}
+
+.work-title:focus-visible {
+  outline: none;
+}
+
+.work-row:has(.work-title:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.document-column .work-role {
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.document-column .work-summary {
+  margin-top: var(--space-1);
+  font-size: 0.875rem;
+}
+
+.work-row {
+  scroll-margin-top: calc(var(--header-height) + var(--space-5));
+}
+
+/* The footer's rule closes the list; don't stack a second one above it. */
+.work-row:last-child {
+  border-bottom: 0;
+}
+
 /* Figures are shown whole inside the frame so no axis labels are cut. */
 .card-media-contain img {
   padding: var(--space-3);
@@ -624,7 +789,7 @@ a:focus-visible {
 }
 
 .entry-page-header {
-  max-width: 40rem;
+  max-width: var(--entry-width);
 }
 
 .entry-page h1 {
@@ -645,6 +810,7 @@ a:focus-visible {
 
 .entry-page-image {
   display: block;
+  max-width: var(--entry-width);
   width: 100%;
   height: auto;
   margin-top: var(--space-6);
@@ -654,6 +820,200 @@ a:focus-visible {
 .entry-page-body {
   margin-top: var(--space-5);
   font-size: 1.0625rem;
+}
+
+/* The entry's main action (apply, visit): under the meta line and again at the end. */
+.entry-page-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 3rem;
+  margin-top: var(--space-4);
+  padding: 0 var(--space-6);
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.entry-page-action-secondary:hover,
+.entry-page-action-secondary:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* The one filled control on the site: something to do now, such as applying. */
+.entry-page-action-primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.entry-page-action-primary:hover,
+.entry-page-action-primary:focus-visible {
+  border-color: var(--color-accent-deep);
+  background: var(--color-accent-deep);
+  color: var(--color-on-accent);
+}
+
+.entry-page-action-primary:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+/* Key facts: a ruled two-column summary under the title. */
+/* Key facts: a one-column ledger on the timeline's grid (label column, then value). */
+.entry-facts {
+  max-width: var(--entry-width);
+  margin: var(--space-6) 0 0;
+  border-top: var(--rule);
+}
+
+.entry-facts div {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-3) 0;
+  border-bottom: var(--rule);
+}
+
+.entry-facts dt {
+  padding-top: 0.1rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.entry-facts dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Timeline: past steps fade, the next one is marked. */
+.document-column .entry-timeline {
+  max-width: var(--entry-width);
+  margin-top: var(--space-7);
+  padding-bottom: 0;
+}
+
+.document-column .entry-timeline h2 {
+  font-size: var(--font-size-entry);
+  line-height: 1.15;
+}
+
+.entry-timeline ol {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  border-top: var(--rule);
+  list-style: none;
+}
+
+.entry-timeline li {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-3) 0;
+  border-bottom: var(--rule);
+}
+
+.entry-timeline-when {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-timeline-past .entry-timeline-what,
+.entry-timeline-past .entry-timeline-when {
+  color: var(--color-faint);
+}
+
+.entry-timeline-now .entry-timeline-when,
+.entry-timeline-now .entry-timeline-what,
+.entry-timeline-next .entry-timeline-when,
+.entry-timeline-next .entry-timeline-what {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.entry-timeline-flag {
+  margin-left: var(--space-2);
+  font-size: var(--font-size-small);
+}
+
+.entry-timeline-flag::before {
+  content: "· ";
+}
+
+/* After a deadline: a plain statement where the action was. */
+.document-column .entry-page-closed {
+  margin-top: var(--space-4);
+  font-weight: 600;
+}
+
+/* Closing call to action after the article body. */
+.entry-page-close {
+  max-width: var(--entry-width);
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: var(--rule);
+}
+
+/* Line 1: the action first, on the left edge, then the deadline beside it. */
+.entry-page-close-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+}
+
+.document-column .entry-page-close-action p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.entry-page-close .entry-page-action {
+  margin-top: 0;
+}
+
+/* Line 2: the flyer and a way to ask, in one quiet line. */
+.document-column .entry-page-close-extras {
+  margin: var(--space-4) 0 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+/* Markdown inside an entry: subheads at Entry size, not section size. */
+.document-column .entry-page-body h2 {
+  margin: var(--space-6) 0 0;
+  font-size: var(--font-size-entry);
+  line-height: 1.15;
+}
+
+.entry-page-body ul,
+.entry-page-body ol {
+  max-width: var(--measure);
+  margin: var(--space-3) 0 0;
+  padding-left: 1.25rem;
+}
+
+.entry-page-body li + li {
+  margin-top: var(--space-2);
+}
+
+.entry-page-body li::marker {
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-page-body ol li::marker {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* Entry pages share one right edge: the footer follows the entry width. */
+.document-column:has(> .entry-page) .site-footer {
+  max-width: var(--entry-width);
 }
 
 /* Research project page */
@@ -691,6 +1051,7 @@ a:focus-visible {
 }
 
 .research-pager a {
+  text-wrap: balance;
   max-width: 20rem;
   font-family: var(--font-display);
   font-size: 1.1875rem;
@@ -888,36 +1249,8 @@ a:focus-visible {
   grid-row: span 2;
 }
 
-.document-column .section-other {
-  padding-bottom: 0;
-}
-
-/* Contact */
-
-.document-column .section-contact {
-  padding-top: var(--space-8);
-  padding-bottom: var(--space-7);
-  border-top: 0;
-}
-
-.contact-email {
-  font-family: var(--font-display);
-  font-size: var(--font-size-entry);
-  line-height: 1.3;
-}
-
-.document-column .contact-email {
-  margin-top: var(--space-4);
-}
-
-.contact-email a {
-  text-decoration-color: var(--color-accent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
-  overflow-wrap: anywhere;
-}
-
 .site-footer {
+  scroll-margin-top: calc(var(--header-height) + var(--space-5));
   padding-top: var(--space-5);
   border-top: var(--rule);
   color: var(--color-faint);
@@ -926,6 +1259,21 @@ a:focus-visible {
 
 .site-footer p {
   margin: 0;
+}
+
+/* The closing invitation: one quiet line, with the email as the only link. */
+.site-footer .footer-invitation {
+  max-width: var(--measure);
+  margin-bottom: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.footer-invitation a {
+  color: var(--color-text);
+  font-weight: 500;
+  text-decoration-color: var(--color-accent);
+  overflow-wrap: anywhere;
 }
 
 /* 404 */
@@ -970,16 +1318,30 @@ a:focus-visible {
     --page-gutter: 1.25rem;
   }
 
+  /* Phones and tablets: the name scrolls away; only the nav row stays pinned (about 45px). */
+  .site-header,
   .top-nav {
-    align-items: flex-start;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-2);
-    padding: var(--space-3) 0;
+    display: contents;
   }
 
-  .site-header {
-    min-height: 0;
+  .wordmark {
+    padding: var(--space-2) var(--page-gutter) 0;
+  }
+
+  /* Phones: the homepage's large name is the identity, so the top-bar name steps aside. */
+  .wordmark-home {
+    display: none;
+  }
+
+  .nav-links {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    justify-content: flex-start;
+    gap: 0 var(--space-4);
+    padding: 0 var(--page-gutter);
+    border-bottom: var(--rule);
+    background: var(--color-bg);
   }
 
   .site-layout {
@@ -1023,56 +1385,47 @@ a:focus-visible {
     margin-top: var(--space-2);
   }
 
+  /* Condensed on phones: credential · location on one grey line. */
   .profile-status {
     grid-area: status;
     max-width: none;
-    margin-top: var(--space-5);
+    margin-top: var(--space-4);
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .profile-credential,
+  .profile-location {
+    display: inline;
+    color: var(--color-muted);
+    font-weight: 400;
+  }
+
+  .profile-current {
+    display: none;
+  }
+
+  .profile-location::before {
+    content: " · ";
   }
 
   .profile-links {
     grid-area: links;
-    margin-top: var(--space-3);
+    margin-top: var(--space-2);
+    padding-top: 0;
     border-top: 0;
   }
 
-  .profile-links ul {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: var(--space-5);
-  }
-
-  .profile-links li {
-    border-bottom: 0;
-  }
-
   .document-column section,
-  .card {
-    scroll-margin-top: 7rem;
+  .card,
+  .work-row,
+  .site-footer {
+    scroll-margin-top: 4rem;
   }
 
-  /* Project pages: on small screens the sidebar shrinks to a byline */
+  /* Inner pages on phones: no byline; the top-bar name identifies the site. */
   .profile-sidebar-compact {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    grid-template-areas: "portrait intro";
-    align-items: center;
-  }
-
-  .profile-sidebar-compact .profile-introduction {
-    align-self: center;
-  }
-
-  .profile-sidebar-compact .profile-bio,
-  .profile-sidebar-compact .profile-status,
-  .profile-sidebar-compact .profile-links {
     display: none;
-  }
-
-  .profile-sidebar-compact .profile-name {
-    font-size: var(--font-size-entry);
-  }
-
-  .profile-sidebar-compact .profile-role {
-    margin-top: var(--space-1);
   }
 
 }
@@ -1089,7 +1442,14 @@ a:focus-visible {
     grid-column: auto;
   }
 
-  .news-list li {
+  .entry-facts div,
+  .entry-timeline li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .news-list li,
+  .work-list-dated .work-row {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
   }
@@ -1099,14 +1459,25 @@ a:focus-visible {
   }
 
   .research-pager-next {
+    margin-left: 0;
     text-align: left;
+  }
+
+  .featured-item-with-image .featured-image {
+    order: 1;
+  }
+
+  /* Shorter image strips on phones to shorten the scroll. */
+  .featured-image,
+  .card-media img {
+    aspect-ratio: 2 / 1;
   }
 
   :root {
     --page-gutter: 1rem;
     --space-8: 3rem;
     --space-9: 4rem;
-    --font-size-profile: 1.875rem;
+    --font-size-profile: clamp(1.5rem, 1rem + 2.5vw, 1.875rem);
     --font-size-entry: 1.375rem;
   }
 
@@ -1173,16 +1544,6 @@ a:focus-visible {
 
   .gallery-placeholder span {
     min-height: 8rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .site-header {
-    position: static;
-  }
-
-  .document-column section {
-    scroll-margin-top: var(--space-4);
   }
 }
 

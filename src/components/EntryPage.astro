@@ -1,4 +1,6 @@
 ---
+import type { TimelineStep } from '../lib/news';
+
 interface Props {
   backHref: string;
   backLabel: string;
@@ -6,7 +8,20 @@ interface Props {
   meta?: string[];
   image?: string;
   imageAlt?: string;
+  imageSrcset?: string;
+  /** A file to download, e.g. a printable flyer, offered in the closing row. */
+  download?: { label: string; href: string };
+  /** Shown in the closing row so applicants can ask before applying. */
+  questionsEmail?: string;
   link?: { label: string; href: string };
+  /** `primary` fills the action in red; reserve it for something to do now (apply, register). */
+  actionStyle?: 'primary' | 'secondary';
+  /** One line shown beside the closing action, e.g. the deadline. */
+  closingNote?: string;
+  /** Shown instead of the action once it has closed, e.g. "Applications closed 6 December 2026." */
+  closedNote?: string;
+  facts?: { label: string; value: string }[];
+  timeline?: TimelineStep[];
   draft?: boolean;
   previous?: { href: string; title: string };
   next?: { href: string; title: string };
@@ -19,12 +34,28 @@ const {
   meta = [],
   image,
   imageAlt = '',
+  imageSrcset,
+  download,
+  questionsEmail,
   link,
+  actionStyle = 'secondary',
+  closingNote,
+  closedNote,
+  facts = [],
+  timeline = [],
   draft = false,
   previous,
   next,
 } = Astro.props;
 const metaLine = meta.filter(Boolean);
+const actionClass = ['entry-page-action', `entry-page-action-${actionStyle}`];
+// Links that leave the site say where they go, for screen readers; the ↗ is visual only.
+const knownHosts: Record<string, string> = {
+  'forms.gle': 'Google Forms',
+  'docs.google.com': 'Google Docs',
+};
+const host = link && /^https?:/.test(link.href) ? new URL(link.href).hostname.replace(/^www\./, '') : undefined;
+const externalHost = host && (knownHosts[host] ?? host);
 ---
 
 <article class="entry-page">
@@ -33,20 +64,111 @@ const metaLine = meta.filter(Boolean);
   <header class="entry-page-header">
     <h1>{title}</h1>
     {metaLine.length > 0 && <p class="entry-page-meta">{metaLine.join(' · ')}</p>}
+    {
+      link && (
+        <a class:list={actionClass} href={link.href}>
+          {link.label}
+          {externalHost && <span class="sr-only"> (opens {externalHost})</span>} <span aria-hidden="true">↗</span>
+        </a>
+      )
+    }
+    {closedNote && <p class="entry-page-closed">{closedNote}</p>}
     {draft && <p class="draft-note">Draft: visible on the local dev server only.</p>}
   </header>
 
-  {image && <img class="entry-page-image" src={image} alt={imageAlt} width="1600" height="1067" decoding="async" />}
+  {
+    facts.length > 0 && (
+      <dl class="entry-facts">
+        {
+          facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    )
+  }
+
+
+  {
+    timeline.length > 0 && (
+      <section class="entry-timeline" aria-labelledby="timeline-heading">
+        <h2 id="timeline-heading">Timeline</h2>
+        <ol role="list">
+          {
+            timeline.map((step) => (
+              <li class={`entry-timeline-${step.state}`}>
+                <time class="entry-timeline-when" datetime={step.datetime}>
+                  {step.when}
+                </time>
+                <span class="entry-timeline-what">
+                  {step.label}
+                  {step.state === 'now' && <span class="entry-timeline-flag">Now</span>}
+                  {step.state === 'next' && <span class="entry-timeline-flag">Next</span>}
+                  {step.state === 'past' && <span class="sr-only"> (done)</span>}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+    )
+  }
+
+  {
+    image && (
+      <img
+        class="entry-page-image"
+        src={image}
+        srcset={imageSrcset}
+        sizes="(max-width: 860px) calc(100vw - 2.5rem), 44rem"
+        alt={imageAlt}
+        width="1600"
+        height="1067"
+        decoding="async"
+      />
+    )
+  }
 
   <div class="entry-page-body">
     <slot />
   </div>
 
   {
-    link && (
-      <a class="featured-link" href={link.href}>
-        {link.label} <span aria-hidden="true">↗</span>
-      </a>
+    /* The closing row repeats the action only where acting is the point (events); short pages don't need it twice. */
+    link && actionStyle === 'primary' && (
+      <div class="entry-page-close">
+        <div class="entry-page-close-action">
+          <a class:list={actionClass} href={link.href}>
+            {link.label}
+            {externalHost && <span class="sr-only"> (opens {externalHost})</span>} <span aria-hidden="true">↗</span>
+          </a>
+          {closingNote && <p>{closingNote}</p>}
+        </div>
+        {
+          (download || questionsEmail) && (
+            <p class="entry-page-close-extras">
+              {
+                download && (
+                  <a href={download.href} download>
+                    {download.label}
+                  </a>
+                )
+              }
+              {download && questionsEmail && <span aria-hidden="true"> · </span>}
+              {
+                questionsEmail && (
+                  <span>
+                    Questions? <a href={`mailto:${questionsEmail}`}>{questionsEmail}</a>
+                  </span>
+                )
+              }
+            </p>
+          )
+        }
+      </div>
     )
   }
 

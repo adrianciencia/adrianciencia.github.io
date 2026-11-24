@@ -1,7 +1,7 @@
 ---
 import ProfileSidebar from '../components/ProfileSidebar.astro';
 import TopNav from '../components/TopNav.astro';
-import { profile } from '../data/profile';
+import { contact, profile } from '../data/profile';
 import '../styles/global.css';
 
 interface Props {
@@ -11,10 +11,24 @@ interface Props {
   nameAsHeading?: boolean;
   /** The homepage section this page belongs to; the nav marks it as current. */
   section?: 'news' | 'research' | 'community' | 'work';
+  /** Site-root path of the image shown when the page is shared. */
+  shareImage?: string;
+  /** Pages with their own closing contact (events) end on the © line only. */
+  footerInvitation?: boolean;
   jsonLd?: Record<string, unknown>;
 }
 
-const { title, description, path, nameAsHeading = true, section, jsonLd } = Astro.props;
+const {
+  title,
+  description,
+  path,
+  nameAsHeading = true,
+  section,
+  shareImage,
+  footerInvitation = true,
+  jsonLd,
+} = Astro.props;
+const shareImageUrl = shareImage ? new URL(shareImage, Astro.site).href : undefined;
 const canonicalUrl = new URL(path, Astro.site).href;
 ---
 
@@ -31,7 +45,9 @@ const canonicalUrl = new URL(path, Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={profile.name} />
-    <meta name="twitter:card" content="summary" />
+    {shareImageUrl && <meta property="og:image" content={shareImageUrl} />}
+    <meta name="twitter:card" content={shareImageUrl ? 'summary_large_image' : 'summary'} />
+    {shareImageUrl && <meta name="twitter:image" content={shareImageUrl} />}
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
@@ -40,7 +56,7 @@ const canonicalUrl = new URL(path, Astro.site).href;
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
-    <TopNav current={section} />
+    <TopNav current={section} isHome={nameAsHeading} />
 
     <main class="site-layout">
       <ProfileSidebar nameAsHeading={nameAsHeading} />
@@ -48,8 +64,17 @@ const canonicalUrl = new URL(path, Astro.site).href;
       <div class="document-column" id="content" tabindex="-1">
         <slot />
 
-        <footer class="site-footer">
-          <p>© {new Date().getFullYear()} {profile.name}</p>
+        <footer class="site-footer" id="contact">
+          {
+            footerInvitation && (
+              <p class="footer-invitation">
+                {contact.invitation} <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </p>
+            )
+          }
+          <p>
+            © {new Date().getFullYear()} {profile.givenName}{' '}<span class="name-surnames">{profile.surnames}</span>
+          </p>
         </footer>
       </div>
     </main>

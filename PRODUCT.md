@@ -55,7 +55,8 @@ A scientific leader, not only a researcher: someone already shaping the Peruvian
 - Research results: 116 RUBIES galaxies at z ≈ 4–7 (spectroscopy vs. photometry SFR shifts); ~200 RUBIES galaxies at z = 3.4–7 (Hα calibration offset 0.16 ± 0.04 dex).
 - Community roles and Mindari described in `src/data/community.ts` and `src/data/building.ts`; earlier work (VLT/KMOS, SDSS-IV MaNGA thesis, science writing) in `src/data/archive.ts`.
 - Illustrations (pending, to be supplied by Adrian): `public/images/research/<research-id>-cover.png` and `public/images/news/journal-club-cover.png`.
-- Journal club: being launched by Adrian; name, date, format and how to join are still to be supplied.
+- Astronomy Journal Club (2027-0 cohort): call for applications in `src/content/news/journal-club.md`; applications via Google Form, close 6 December 2026.
+- Degree: MSc in Astronomy, University of Wisconsin–Madison.
 - Absent, must not be fabricated: publications, citations, awards, testimonials, audience metrics beyond the stated "more than 300,000", CV file.
 
 ## Product Principles
