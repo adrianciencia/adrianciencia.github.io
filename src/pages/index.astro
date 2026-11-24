@@ -41,17 +41,33 @@ const researchCards = research.map((item) => {
 
 const siteDescription =
   'Observational astrophysicist studying high-redshift galaxy evolution, spectroscopy, and scientific inference.';
+// Search engines and LLMs read this to tie the name, its unaccented spelling and the social profiles to one person.
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': 'https://adrianciencia.github.io/#person',
   name: profile.name,
+  alternateName: ['Adrian Diaz Espinoza', profile.handle],
+  givenName: profile.givenName,
+  familyName: profile.surnames,
   url: 'https://adrianciencia.github.io/',
+  image: new URL(profile.portrait.src, 'https://adrianciencia.github.io').href,
   jobTitle: profile.title,
+  description: profile.bio,
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Wisconsin–Madison' },
+  homeLocation: { '@type': 'Place', name: profile.location },
+  knowsAbout: ['High-redshift galaxy evolution', 'JWST', 'Spectroscopy', 'Star formation', 'Scientific inference'],
   sameAs: profile.links.filter((link) => link.icon !== 'email').map((link) => link.href),
 };
 ---
 
-<BaseLayout title={`${profile.name} — Astrophysicist`} description={siteDescription} path="/" jsonLd={personSchema}>
+<BaseLayout
+  title={`${profile.name} — Astrophysicist`}
+  description={siteDescription}
+  path="/"
+  shareImage={profile.portrait.src}
+  jsonLd={personSchema}
+>
   {
     (featured || newsList.length > 0) && (
       <section id="news" aria-labelledby="news-heading" class="section-news">
