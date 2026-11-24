@@ -3,6 +3,7 @@ name: Adrian Díaz Espinoza
 description: Personal academic site of an observational astrophysicist and community builder
 colors:
   redshift-red: "#a51d1d"
+  redshift-red-deep: "#741515"
   ink: "#171717"
   graphite: "#666666"
   slate-annotation: "#767676"
@@ -85,17 +86,19 @@ components:
     typography: "{typography.meta}"
   nav-link-hover:
     textColor: "{colors.redshift-red}"
-  role-entry-title:
-    textColor: "{colors.ink}"
-    typography: "{typography.entry}"
-  role-entry-role:
-    textColor: "{colors.graphite}"
-    typography: "{typography.role}"
   card:
     backgroundColor: "{colors.plate-white}"
     textColor: "{colors.ink}"
     rounded: "{rounded.none}"
-    padding: "1rem 0 0"
+    padding: "1.5rem"
+  primary-action:
+    backgroundColor: "{colors.redshift-red}"
+    textColor: "{colors.plate-white}"
+    rounded: "{rounded.none}"
+    padding: "0 2rem"
+    height: "3rem"
+  primary-action-hover:
+    backgroundColor: "{colors.redshift-red-deep}"
   research-plate:
     backgroundColor: "{colors.plate-white}"
     rounded: "{rounded.none}"
@@ -127,7 +130,7 @@ The voice is **editorial and bold**. Each research figure runs at full column wi
 A monochrome plate with one saturated red: ink on white, greys for annotation, and red reserved for emphasis.
 
 ### Primary
-- **Redshift Red** (#a51d1d): the single accent. It matches the portrait background, which ties the photograph to the type system. It marks roles and dates, the "Astrophysicist" line, card and link hover, text selection and the focus outline. It is never a background surface. Contrast on white is about 7.4:1.
+- **Redshift Red** (#a51d1d): the single accent. **Redshift Red Deep** (#741515) is its hover state on the primary action only. It matches the portrait background, which ties the photograph to the type system. It marks roles and dates, the "Astrophysicist" line, card and link hover, text selection and the focus outline. It is never a background surface. Contrast on white is about 7.4:1.
 
 ### Neutral
 - **Ink** (#171717): body text, headings, and links at rest.
@@ -178,13 +181,12 @@ A monochrome plate with one saturated red: ink on white, greys for annotation, a
 - **Homepage order:** News (one featured item and a short dated list; hidden when empty), then Research (two-column grid), Community (2×2, or a lead card plus three across once Derívate has evidence), Other work (a ruled list), then the footer invitation. Every card opens a page: `/research/<id>/`, `/news/<id>/`, `/community/<id>/`, `/work/<id>/`.
 - **Project pages** (`/research/<id>/`) share the homepage shell through one layout. The article holds the full research plate. On phones inner pages show no byline at all (no photo or name); the top-bar name identifies the site. Desktop keeps the full sidebar.
 - **Phone image strips:** below 560px, card images and the featured news image use a 2:1 strip to shorten the scroll.
-- **Card grid:** two equal columns (gap 1.5rem); Community uses the lead-card variant. One column below 560px. Cards in a row stretch to equal height, and the footer line sits at the bottom.
+- **Card grid:** two equal columns (gap 1.5rem); Community switches to the lead-card variant only once Derívate has an `evidence` line. One column below 560px. Cards in a row stretch to equal height, and the footer line sits at the bottom.
 - **Section rhythm:** sections are separated by a top hairline, with 3rem above the heading and 4rem below the content. Lists are hairline-ruled rows with 0.75rem vertical padding.
 - **Breakpoints:**
-  - 860px: single column. The sidebar becomes a compact intro: a 6.5rem portrait beside the name and role; the bio full-width below, then status; social icons in one row under the status, then the handle. The bio and the start of News fit on the first screen of a 390×844 phone.
+  - 860px: single column. On the homepage the sidebar becomes a compact intro: a square 6.5rem portrait beside the name and role, the bio full-width below, the status condensed to one line (credential · location), then the social icons and handle on one row. The bio and the featured news fit on the first screen of a 360–390px phone. Inner pages show no sidebar at all on phones. The header splits so only the nav row stays pinned.
   - 560px: tighter navigation and type.
   - 35rem: detailed lists stack.
-  - 360px: header no longer sticky.
 - **Touch:** every standalone link (nav, sidebar links, figure links) has at least a 2.75rem (44px) tap height. Inline links in running text are exempt.
 - **Spacing scale:** 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4 and 6rem (`--space-1` to `--space-9`). Always use the tokens.
 
@@ -207,7 +209,7 @@ Square everything: zero radius on images, figures, rules and focus rings. The po
 ### Links
 - **Text link:** inherits ink and has a 1px underline in Slate Annotation, offset 0.22em. On hover, both text and underline turn Redshift Red over 140ms.
 - **Focus:** a 2px solid Redshift Red outline, offset 3px, on every link.
-- **External link:** label followed by ↗. On entry pages it closes the article as an ink link with a red underline; in lists it sits inline at Meta size.
+- **External link:** label followed by ↗ (`aria-hidden`), with visually hidden "(opens …)" text. On entry pages an entry's main external link is an action button (see Entry page); in lists and body text it stays an inline link.
 
 ### Skip link
 - The first focusable element on the page: "Skip to content", hidden above the viewport until focused. It then appears top-left in Redshift Red with white sans 600 text, a 44px tap height and a 2px ink focus outline. It moves focus to the document column.
@@ -217,7 +219,7 @@ Square everything: zero radius on images, figures, rules and focus rings. The po
 - Below 860px the homepage status condenses to one Graphite line (credential · location). The research status hides there because the bio already names JWST, and the social icons and handle share one row. This keeps the featured news on the first screen of a 360–390px phone.
 
 ### Social links
-- A row of five 20px filled glyphs in the sidebar: email, GitHub, LinkedIn, Instagram and X. They're Graphite and turn Redshift Red on hover or focus, each inside a 44px tap target. The shared handle (@adrianciencia) sits below them in sans 0.875rem.
+- A row of five 20px filled glyphs in the sidebar: email, GitHub, LinkedIn, Instagram and X. They're Graphite and turn Redshift Red on hover or focus, each inside a 44px tap target. The shared handle (@adrianciencia) follows them in sans 0.875rem: below the row on desktop (the sidebar is too narrow), on the same row on phones.
 - The glyphs are inline SVG in `SocialIcon.astro` (Simple Icons, CC0; the envelope is drawn to match), never icon fonts or emoji. Each link's accessible name includes the platform and handle.
 
 ### Navigation
@@ -237,7 +239,7 @@ Square everything: zero radius on images, figures, rules and focus rings. The po
 ### Card (signature)
 - One card for research, community and other work: a closed 1px hairline frame (#e3e3e3) with 1.5rem padding, square corners, no fill and no shadow, like a mounted plate. On hover or focus the frame darkens to ink and the title turns red.
 - Inside, in order: an optional 3:2 image flush with the frame's top and sides (its credit, e.g. "Illustration", goes in the footer line, never between image and title); the Entry-size serif title; an optional red role line; the summary in Newsreader 1.0625rem ink (every card states its point the same way); and an optional footer line in sans 500 ink (research status, or a community/work `evidence` line such as "Since 2021 · 40 students").
-- **Images:** commissioned illustrations fill the frame (`cover`, captioned "Illustration"). Scientific figures are shown whole (`contain`, 0.75rem inset) so no axis labels are cut, with no caption.
+- **Images:** commissioned illustrations fill the frame (`cover`, credited "Illustration" in the footer line). Scientific figures are shown whole (`contain`, 0.75rem inset) so no axis labels are cut, with no caption.
 - **No "Read more":** the frame and the stretched title link signal the click. The title link covers the whole card, so each card is one click target and one tab stop, and focus draws a 2px red outline around it. Each card has an id (`research-<id>`, `community-<id>`, `work-<id>`) so "back" links return to it.
 - **Lead card:** the first Community card (Derívate) becomes a lead only once it has an `evidence` line. It then spans the full row, with a Plate-size title and a 1.1875rem summary capped at 38rem, and the rest sit three across beneath it. Until then all four cards sit 2×2, so a large card never holds the least content.
 - **Key figure:** a research card without an illustration leads with its result as one number in the image slot. The number is sans 500, clamp 2–2.75rem, tabular figures, with a Graphite 0.875rem label beneath and a hairline below, and it turns red on hover. In reading order it follows the title. Thumbnails of full plots are not used; the figure lives on the project page.
@@ -261,7 +263,7 @@ Square everything: zero radius on images, figures, rules and focus rings. The po
 
 ### Footer
 - Entry pages are a deliberately narrow article: structural blocks (header, facts, timeline, image, closing row, footer) share `--entry-width: 44rem`, and running text stays at the 38rem reading measure. A full-column (52.5rem) version was tried and rejected. On entry pages the footer aligns to the 44rem entry column, so every block shares one right edge (running text stays at the narrower reading measure on purpose).
-- Every page ends with one quiet invitation line (Graphite, sans 0.875rem, capped at 38rem) naming reasons to write, with the email as its only link (ink, 500, red underline), then the © line in Slate Annotation. A hairline sits above it. It replaces a separate Contact section: the sidebar already carries the email and social icons, and the footer keeps a way to write at the end of long phone scrolls.
+- Every page except an open event ends with one quiet invitation line (Graphite, sans 0.875rem, capped at 38rem) naming reasons to write, with the email as its only link (ink, 500, red underline), then the © line in Slate Annotation. A hairline sits above it. It replaces a separate Contact section: the sidebar already carries the email and social icons, and the footer keeps a way to write at the end of long phone scrolls.
 
 ### Other work list
 - A ruled list instead of cards. Each row has a serif title at 1.1875rem that opens the item's page (the link covers the row), then a Graphite role line and an optional sans summary. When any item has a `year`, a 6.5rem year column appears on the left. The last row drops its rule because the footer's rule closes the list.

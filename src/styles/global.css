@@ -337,7 +337,9 @@ a:focus-visible {
   border-top: var(--rule);
 }
 
+/* Same width as the status block, so both sidebar hairlines end together. */
 .profile-links {
+  max-width: 15rem;
   margin-top: var(--space-5);
   padding-top: var(--space-3);
   border-top: var(--rule);
@@ -389,13 +391,11 @@ a:focus-visible {
   font-size: 0.875rem;
 }
 
-.editorial-list,
-.publication-list {
+.editorial-list {
   margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
 }
-
 
 /* Document column */
 
@@ -488,16 +488,6 @@ a:focus-visible {
   margin-top: var(--space-1);
   color: var(--color-muted);
   font-weight: 400;
-}
-
-.featured-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  min-height: 2.75rem;
-  margin-top: var(--space-2);
-  font-weight: 600;
-  text-decoration-color: var(--color-accent);
 }
 
 .document-column .draft-note {
@@ -1011,8 +1001,9 @@ a:focus-visible {
   font-weight: 600;
 }
 
-/* Entry pages share one right edge: the footer follows the entry width. */
-.document-column:has(> .entry-page) .site-footer {
+/* Entry and research pages share one right edge: the pager and footer follow the entry width. */
+.research-pager,
+.document-column:has(> .entry-page, > .research-page) .site-footer {
   max-width: var(--entry-width);
 }
 
@@ -1153,59 +1144,29 @@ a:focus-visible {
   font-size: var(--font-size-small);
 }
 
-.publications-placeholder {
-  margin-top: var(--space-7);
-  padding-top: var(--space-5);
-  border-top: var(--rule);
-}
-
-.publications-placeholder h3 {
-  font-size: 1rem;
-}
-
-.publication-list {
-  border-top: var(--rule);
-}
-
-.publication-list li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-4);
-  align-items: start;
-  padding: var(--space-3) 0;
-  border-bottom: var(--rule);
-}
-
 /* Lists: writing */
 
-.publication-list strong,
-.publication-list span,
 .editorial-list strong,
 .editorial-list p,
 .editorial-list > li > span {
   display: block;
 }
 
-.publication-list strong,
 .editorial-list strong {
   font-size: 1rem;
   font-weight: 600;
 }
 
-.publication-list div > span,
-.publication-list > li > span,
 .editorial-list p,
 .editorial-list > li > span {
   color: var(--color-muted);
   font-size: var(--font-size-small);
 }
 
-.publication-list div > span,
 .editorial-list p {
   margin-top: var(--space-1);
 }
 
-.publication-list > li > span,
 .editorial-list > li > span {
   white-space: nowrap;
 }
@@ -1411,6 +1372,7 @@ a:focus-visible {
 
   .profile-links {
     grid-area: links;
+    max-width: none;
     margin-top: var(--space-2);
     padding-top: 0;
     border-top: 0;
@@ -1526,7 +1488,6 @@ a:focus-visible {
     border-top: 0;
   }
 
-  .publication-list li,
   .editorial-list > li {
     gap: var(--space-3);
   }

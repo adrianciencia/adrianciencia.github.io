@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-23T21:30:00Z",
+  "generatedAt": "2026-11-24T04:48:22Z",
   "title": "Design System: Adrian Díaz Espinoza",
   "extensions": {
     "colorMeta": {
@@ -94,34 +94,19 @@
           "#f9f9f9"
         ]
       },
-      "on-red-white": {
-        "role": "neutral",
-        "displayName": "Plate White (on red)",
-        "canonical": "#ffffff",
+      "redshift-red-deep": {
+        "role": "primary",
+        "displayName": "Redshift Red Deep",
+        "canonical": "#741515",
         "tonalRamp": [
-          "#262626",
-          "#4d4d4d",
-          "#808080",
-          "#b3b3b3",
-          "#d9d9d9",
-          "#ededed",
-          "#f7f7f7",
-          "#ffffff"
-        ]
-      },
-      "on-red-blush": {
-        "role": "neutral",
-        "displayName": "Red-Band Blush",
-        "canonical": "#f3cfcd",
-        "tonalRamp": [
-          "#3d1312",
-          "#6b2422",
-          "#9a3a37",
-          "#c26763",
-          "#de9995",
-          "#f3cfcd",
-          "#f8e2e1",
-          "#fdf4f4"
+          "#2a0707",
+          "#4d0e0e",
+          "#741515",
+          "#a51d1d",
+          "#c94a45",
+          "#e08480",
+          "#f0bdbb",
+          "#fae9e8"
         ]
       }
     },
@@ -181,16 +166,16 @@
     ],
     "breakpoints": [
       {
-        "name": "narrow-list",
-        "value": "35rem"
+        "name": "single-column",
+        "value": "860px"
       },
       {
         "name": "mobile",
         "value": "560px"
       },
       {
-        "name": "single-column",
-        "value": "860px"
+        "name": "narrow-list",
+        "value": "35rem"
       }
     ]
   },
@@ -199,58 +184,83 @@
       "name": "Text Link",
       "kind": "custom",
       "refersTo": "text-link",
-      "description": "Inline link with offset hairline underline; Redshift Red on hover.",
-      "html": "<p class=\"ds-p\">SDSS-IV MaNGA · <a class=\"ds-link\" href=\"#\">Thesis <span aria-hidden=\"true\">↗</span></a></p>",
-      "css": ".ds-p { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; font-size: 0.8125rem; color: var(--color-muted, #666); } .ds-link { color: var(--color-text, #171717); text-decoration-color: var(--color-faint, #767676); text-decoration-thickness: 1px; text-underline-offset: 0.22em; transition: color 140ms ease, text-decoration-color 140ms ease; } .ds-link:hover { color: var(--color-accent, #a51d1d); text-decoration-color: currentColor; } .ds-link:focus-visible { outline: 2px solid var(--color-accent, #a51d1d); outline-offset: 3px; }"
+      "description": "Inline link: ink with a Slate Annotation underline; text and underline turn Redshift Red on hover.",
+      "html": "<p class=\"ds-p\">Explore the journal club's <a class=\"ds-link\" href=\"#\">paper collection <span aria-hidden=\"true\">↗</span></a>.</p>",
+      "css": ".ds-p{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);color:#171717;font-size:1rem;line-height:1.6;margin:0}.ds-link{color:inherit;text-decoration:underline;text-decoration-color:#767676;text-decoration-thickness:1px;text-underline-offset:.22em;transition:color 140ms ease,text-decoration-color 140ms ease}.ds-link:hover{color:#a51d1d;text-decoration-color:#a51d1d}.ds-link:focus-visible{outline:2px solid #a51d1d;outline-offset:3px}"
     },
     {
       "name": "Top Navigation",
       "kind": "nav",
       "refersTo": "nav-link",
-      "description": "Sticky white header: serif wordmark left, Graphite meta links right.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-wordmark\" href=\"#\">Adrian Díaz Espinoza</a><div class=\"ds-nav-links\"><a href=\"#\">Research</a><a href=\"#\">Community</a><a href=\"#\">Building</a></div></nav>",
-      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 2rem; min-height: 4rem; padding: 0 1.5rem; background: #fff; border-bottom: 1px solid var(--color-rule, #e3e3e3); font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; } .ds-wordmark { font-family: var(--font-display, Newsreader, Georgia, serif); font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; color: #171717; text-decoration: none; } .ds-nav-links { display: flex; gap: 1.5rem; } .ds-nav-links a { color: var(--color-muted, #666); font-size: 0.8125rem; font-weight: 500; text-decoration: none; transition: color 140ms ease; } .ds-nav-links a:hover, .ds-nav-links a:focus-visible { color: var(--color-accent, #a51d1d); text-decoration: underline; text-decoration-thickness: 1px; outline: none; }"
+      "description": "White header with the serif wordmark left and Graphite section links right; current section in ink with a red underline.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-word\" href=\"#\">Adrian Díaz&nbsp;Espinoza</a><span class=\"ds-links\"><a href=\"#\" aria-current=\"page\">News</a><a href=\"#\">Research</a><a href=\"#\">Community</a><a href=\"#\">Other work</a></span></nav>",
+      "css": ".ds-nav{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;padding:0 1rem;height:4rem;background:#fff;border-bottom:1px solid #e3e3e3}.ds-word{font-family:var(--font-display,Newsreader,Georgia,serif);font-size:1.125rem;font-weight:500;color:#171717;text-decoration:none}.ds-links{display:flex;gap:1.5rem}.ds-links a{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);font-size:.8125rem;font-weight:500;color:#666;text-decoration:none;padding:.75rem 0}.ds-links a:hover,.ds-links a:focus-visible{color:#a51d1d;text-decoration:underline}.ds-links a[aria-current]{color:#171717;text-decoration:underline;text-decoration-color:#a51d1d;text-decoration-thickness:2px;text-underline-offset:.4em}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Signature hairline-framed card; the stretched title link makes the whole card one target. Frame darkens to ink and the title turns red on hover.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\"><a href=\"#\">Derívate</a></h3><p class=\"ds-card-role\">Founder · Advisor</p><p class=\"ds-card-sum\">A student-led initiative helping Peruvian physics undergraduates develop research experience and prepare for graduate study.</p></article>",
+      "css": ".ds-card{position:relative;max-width:26rem;padding:1.5rem;border:1px solid #e3e3e3;background:#fff;transition:border-color 140ms ease}.ds-card:hover{border-color:#171717}.ds-card-title{font-family:var(--font-display,Newsreader,Georgia,serif);font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.01em;margin:0}.ds-card-title a{color:#171717;text-decoration:none}.ds-card-title a::after{content:'';position:absolute;inset:0}.ds-card:hover .ds-card-title a{color:#a51d1d}.ds-card-title a:focus-visible{outline:none}.ds-card:has(a:focus-visible){outline:2px solid #a51d1d;outline-offset:3px}.ds-card-role{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);color:#a51d1d;font-size:.875rem;font-weight:600;margin:.5rem 0 0}.ds-card-sum{font-family:var(--font-display,Newsreader,Georgia,serif);font-size:1.0625rem;line-height:1.45;color:#171717;margin:.75rem 0 0}.ds-card-foot{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);font-size:.8125rem;font-weight:500;color:#171717;margin:1rem 0 0}"
+    },
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "primary-action",
+      "description": "The only red fill on the site: for something the visitor can do now (apply, register). Deepens to #741515 on hover.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Apply now <span aria-hidden=\"true\">↗</span></a>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:.4rem;height:3rem;padding:0 2rem;background:#a51d1d;color:#fff;font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);font-size:1rem;font-weight:600;text-decoration:none;border-radius:0;transition:background 140ms ease}.ds-btn-primary:hover{background:#741515}.ds-btn-primary:focus-visible{outline:2px solid #171717;outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Action",
+      "kind": "button",
+      "refersTo": "secondary-action",
+      "description": "Outlined action for entries whose link isn't time-bound (e.g. Visit Derívate).",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">Visit Derívate <span aria-hidden=\"true\">↗</span></a>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;gap:.4rem;height:2.75rem;padding:0 1.25rem;border:1px solid #171717;color:#171717;font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);font-size:.9375rem;font-weight:600;text-decoration:none;border-radius:0;transition:color 140ms ease,border-color 140ms ease}.ds-btn-secondary:hover{color:#a51d1d;border-color:#a51d1d}.ds-btn-secondary:focus-visible{outline:2px solid #a51d1d;outline-offset:3px}"
+    },
+    {
+      "name": "Key Facts Ledger",
+      "kind": "custom",
+      "refersTo": "entry-facts",
+      "description": "One-column ruled ledger on the timeline's grid: an 11rem Graphite label column, then the value in sans 500 ink.",
+      "html": "<dl class=\"ds-facts\"><div><dt>Spots</dt><dd>10, in the 2027‑0 cohort</dd></div><div><dt>Cost</dt><dd>Free</dd></div><div><dt>When</dt><dd>Wednesdays, 12:00 Peru time (UTC−5), online</dd></div></dl>",
+      "css": ".ds-facts{max-width:44rem;margin:0;border-top:1px solid #e3e3e3;font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);}.ds-facts div{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:1.5rem;padding:.75rem 0;border-bottom:1px solid #e3e3e3}.ds-facts dt{color:#666;font-size:.875rem;padding-top:.1rem}.ds-facts dd{margin:0;font-weight:500;color:#171717}"
+    },
+    {
+      "name": "Timeline",
+      "kind": "custom",
+      "refersTo": "entry-timeline",
+      "description": "Ruled dated steps worked out at build time: past steps fade, the current one is red 600 with a Now flag.",
+      "html": "<ol class=\"ds-tl\" role=\"list\"><li class=\"past\"><time>18 Nov – 6 Dec 2026</time><span>Applications open</span></li><li class=\"now\"><time>7–11 Dec 2026</time><span>Interviews with shortlisted applicants <em>· Now</em></span></li><li><time>12 Dec 2026</time><span>Selection results announced</span></li></ol>",
+      "css": ".ds-tl{list-style:none;margin:0;padding:0;max-width:44rem;border-top:1px solid #e3e3e3;font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);}.ds-tl li{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:1.5rem;padding:.75rem 0;border-bottom:1px solid #e3e3e3;color:#171717}.ds-tl time{font-size:.875rem;font-variant-numeric:tabular-nums;color:#666}.ds-tl .past,.ds-tl .past time{color:#767676}.ds-tl .now,.ds-tl .now time{color:#a51d1d;font-weight:600}.ds-tl em{font-style:normal;font-size:.8125rem}"
     },
     {
       "name": "Research Plate",
-      "kind": "card",
+      "kind": "custom",
       "refersTo": "research-plate",
-      "description": "Signature block: serif question title, italic serif annotation, full-width figure, sans caption and status.",
-      "html": "<article class=\"ds-plate\"><h3>How should Hα trace star formation at z &gt; 3?</h3><p class=\"ds-plate-q\">Can local Hα calibrations be applied to galaxies in the early Universe?</p><div class=\"ds-plate-figure\" aria-hidden=\"true\"></div><p>Classical calibrations overestimate 10 Myr SFRs by 0.16 ± 0.04 dex.</p><p class=\"ds-plate-meta\">M.Sc. research · JWST/RUBIES</p></article>",
-      "css": ".ds-plate { max-width: 40rem; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; color: #171717; line-height: 1.6; } .ds-plate h3 { margin: 0; font-family: var(--font-display, Newsreader, Georgia, serif); font-size: 2rem; font-weight: 500; letter-spacing: -0.015em; line-height: 1.12; text-wrap: balance; } .ds-plate-q { margin: 0.75rem 0 0; color: var(--color-muted, #666); font-family: var(--font-display, Newsreader, Georgia, serif); font-style: italic; font-size: 1.1875rem; line-height: 1.45; } .ds-plate-figure { aspect-ratio: 9 / 5; margin: 2rem 0 1.5rem; border: 1px solid var(--color-rule, #e3e3e3); background: repeating-linear-gradient(0deg, #fff 0 23px, #f2f2f2 23px 24px); } .ds-plate p { margin: 0.75rem 0 0; } .ds-plate-meta { color: var(--color-muted, #666); font-size: 0.8125rem; }"
-    },
-    {
-      "name": "Role Entry",
-      "kind": "custom",
-      "refersTo": "role-entry-title",
-      "description": "One format for leadership and building: role in a left column, serif title, body and external link.",
-      "html": "<ul class=\"ds-roles\"><li><h3>Mindari</h3><p class=\"ds-role\">Co-founder&nbsp;· Product development</p><div class=\"ds-role-body\"><p>A system for therapist discovery, intake, and matching.</p><a href=\"#\">Visit Mindari <span aria-hidden=\"true\">↗</span></a></div></li></ul>",
-      "css": ".ds-roles { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--color-rule, #e3e3e3); font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; color: #171717; } .ds-roles li { display: grid; grid-template-columns: 11rem minmax(0, 1fr); grid-template-areas: 'role title' 'role body'; column-gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--color-rule, #e3e3e3); } .ds-roles h3 { grid-area: title; margin: 0; font-family: var(--font-display, Newsreader, Georgia, serif); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15; } .ds-role { grid-area: role; margin: 0.3rem 0 0; color: var(--color-muted, #666); font-size: 0.875rem; font-weight: 600; line-height: 1.4; } .ds-role-body { grid-area: body; } .ds-role-body p { margin: 0.5rem 0 0; line-height: 1.6; } .ds-role-body a { display: inline-block; margin-top: 0.75rem; color: inherit; font-size: 0.875rem; font-weight: 500; text-decoration-color: var(--color-faint, #767676); text-underline-offset: 0.22em; } .ds-role-body a:hover { color: var(--color-accent, #a51d1d); text-decoration-color: currentColor; } .ds-role-body a:focus-visible { outline: 2px solid var(--color-accent, #a51d1d); outline-offset: 3px; }"
-    },
-    {
-      "name": "Community Band",
-      "kind": "custom",
-      "refersTo": "community-band",
-      "description": "The page's one Redshift Red section: white serif heading and titles, Blush roles, 30% white rules.",
-      "html": "<section class=\"ds-band\"><h2>Community &amp; Public Science</h2><ul><li><h3>Derívate</h3><p class=\"ds-band-role\">Founder&nbsp;· Advisor</p><div><p>A student-led initiative helping Peruvian physics undergraduates develop research experience.</p><a href=\"#\">Visit Derívate <span aria-hidden=\"true\">↗</span></a></div></li></ul></section>",
-      "css": ".ds-band { padding: 2.5rem; background: var(--color-accent, #a51d1d); color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; line-height: 1.6; } .ds-band h2 { margin: 0; font-family: var(--font-display, Newsreader, Georgia, serif); font-size: 2.5rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; } .ds-band ul { margin: 2rem 0 0; padding: 0; list-style: none; border-top: 1px solid rgb(255 255 255 / 0.3); } .ds-band li { display: grid; grid-template-columns: 11rem minmax(0, 1fr); grid-template-areas: 'role title' 'role body'; column-gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid rgb(255 255 255 / 0.3); } .ds-band h3 { grid-area: title; margin: 0; font-family: var(--font-display, Newsreader, Georgia, serif); font-size: 1.5rem; font-weight: 500; line-height: 1.15; } .ds-band-role { grid-area: role; margin: 0.3rem 0 0; color: #f3cfcd; font-size: 0.875rem; font-weight: 600; line-height: 1.4; } .ds-band li > div { grid-area: body; } .ds-band li p { margin: 0.5rem 0 0; } .ds-band a { display: inline-block; margin-top: 0.75rem; color: #fff; font-size: 0.875rem; font-weight: 500; text-decoration-color: #f3cfcd; text-underline-offset: 0.22em; } .ds-band a:hover { text-decoration-color: #fff; text-decoration-thickness: 2px; } .ds-band a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }"
+      "description": "Serif question title, italic Graphite annotation, the figure at full column width, then a hairline-topped plate caption.",
+      "html": "<figure class=\"ds-plate\"><h3>How should Hα trace star formation at z &gt; 3?</h3><p class=\"ds-ann\">Can local Hα star-formation-rate calibrations be applied to galaxies in the early Universe?</p><div class=\"ds-fig\"></div><figcaption><em>Plate 1</em><span>MSc research · JWST/RUBIES</span><a href=\"#\">Open full figure <span aria-hidden=\"true\">↗</span></a></figcaption></figure>",
+      "css": ".ds-plate{margin:0;max-width:40rem}.ds-plate h3{font-family:var(--font-display,Newsreader,Georgia,serif);font-size:2rem;font-weight:500;line-height:1.12;letter-spacing:-.015em;color:#171717;margin:0}.ds-ann{font-family:var(--font-display,Newsreader,Georgia,serif);font-style:italic;font-size:1.1875rem;line-height:1.45;color:#666;margin:.75rem 0 1.5rem}.ds-fig{aspect-ratio:3/2;background:#f4f4f4;border:1px solid #e3e3e3}.ds-plate figcaption{display:flex;gap:1rem;align-items:center;border-top:1px solid #e3e3e3;margin-top:.75rem;padding-top:.5rem;font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);font-size:.8125rem;color:#666}.ds-plate figcaption em{font-family:var(--font-display,Newsreader,Georgia,serif);color:#171717;font-size:1rem}.ds-plate figcaption a{margin-left:auto;color:#171717;min-height:2.75rem;display:inline-flex;align-items:center}.ds-plate figcaption a:hover{color:#a51d1d}"
     },
     {
       "name": "Ruled List",
       "kind": "custom",
-      "description": "Hairline-ruled rows for archive, writing and sidebar links.",
-      "html": "<ul class=\"ds-ruled\"><li><strong>Exploratory near-infrared spectroscopy</strong><p>VLT/KMOS · MMIRS</p></li><li><strong>Resolved galaxy evolution with SDSS-IV MaNGA</strong><p>SDSS-IV MaNGA</p></li></ul>",
-      "css": ".ds-ruled { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--color-rule, #e3e3e3); font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif; } .ds-ruled li { padding: 0.75rem 0; border-bottom: 1px solid var(--color-rule, #e3e3e3); } .ds-ruled strong { font-size: 1rem; font-weight: 600; color: #171717; } .ds-ruled p { margin: 0.25rem 0 0; color: var(--color-muted, #666); font-size: 0.8125rem; line-height: 1.6; }"
+      "refersTo": "ruled-list",
+      "description": "News list rows: a tabular Meta date column, then a sans 600 title and Graphite summary, with hairlines between rows.",
+      "html": "<ul class=\"ds-list\"><li><time>18 Nov</time><div><a href=\"#\">Astronomy Journal Club: call for applications</a><p>A free, online journal club for physics students at Peruvian universities. Ten spots in the 2027‑0 cohort.</p></div></li></ul>",
+      "css": ".ds-list{list-style:none;margin:0;padding:0;border-top:1px solid #e3e3e3;font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Segoe UI',Arial,sans-serif);}.ds-list li{display:grid;grid-template-columns:6.5rem minmax(0,1fr);padding:.75rem 0;border-bottom:1px solid #e3e3e3}.ds-list time{font-size:.8125rem;color:#666;font-variant-numeric:tabular-nums}.ds-list a{font-weight:600;color:#171717;text-decoration:none}.ds-list a:hover{color:#a51d1d}.ds-list p{margin:.25rem 0 0;font-size:.8125rem;color:#666}"
     }
   ],
   "narrative": {
     "northStar": "The Annotated Plate",
-    "overview": "The site is built like an astronomical plate with handwritten notes beside it. The evidence (a figure, a measured result, a named role) is the plate, and everything else is annotation: smaller, quieter and set beside it, never competing with it. A visitor should be able to read the plate alone and understand the claim, then read the annotations to see how it was earned.\n\nThe system is flat, white and ruled, with one strong exception. Headings, research questions and the About lede are set in Newsreader, an editorial serif; data, roles and metadata stay in the platform sans. A two-column layout pins a portrait-and-identity sidebar beside a single document column. There are no shadows, radii, gradients or ornaments.\n\nThe voice is **editorial and bold**. Each research figure runs at full column width with its question set large above it and the summary as a caption below. Community leadership sits in a solid Redshift Red band, the page's single loud moment. Sections open with a large serif heading and no label above it.",
+    "overview": "The site is built like an astronomical plate with handwritten notes beside it. The evidence (a figure, a measured result, a named role) is the plate, and everything else is annotation: smaller, quieter and set beside it, never competing with it. A visitor should be able to read the plate alone and understand the claim, then read the annotations to see how it was earned.\n\nThe system is flat, white and ruled, with one strong exception. Headings, research questions and the sidebar bio are set in Newsreader, an editorial serif; data, roles and metadata stay in the platform sans. A two-column layout pins a portrait-and-identity sidebar beside a single document column. There are no shadows, radii, gradients or ornaments.\n\nThe voice is **editorial and bold**. Each research figure runs at full column width with its question set large above it and the summary as a caption below. The homepage reads like a blog front page: every News, Research, Community and Other work item is a card that opens its own page. Sections open with a large serif heading and no label above it.",
     "keyCharacteristics": [
       "Flat white surface; depth from hairline rules, never shadows.",
       "One accent, Redshift Red, shared with the portrait backdrop.",
-      "Newsreader serif for headings, plates and the lede; system sans for body, roles and metadata.",
-      "One Redshift Red band (Community) as the page's structural peak.",
+      "Newsreader serif for headings, plates and the bio; system sans for body, roles and metadata.",
+      "Two-column grids of hairline-framed cards; red appears as accent (roles, dates, hover), never as a surface.",
       "Sticky identity sidebar plus one document column; collapses to a single column on mobile.",
       "Evidence (figures, numbers, roles) leads; metadata recedes into grey."
     ],
@@ -261,13 +271,13 @@
         "section": "colors"
       },
       {
-        "name": "The One Band Rule",
-        "body": "Only one section is set on solid red: Community. A second band would cancel the first.",
+        "name": "The Accent-Only Rule",
+        "body": "Redshift Red is a voice, not a surface: roles, dates, hover and focus. No section, card or block is filled with it. The one exception is the primary action button (e.g. \"Apply now\"), and only for something the visitor can do now.",
         "section": "colors"
       },
       {
         "name": "The Annotation Floor Rule",
-        "body": "No text is lighter than Slate Annotation (#767676) on white, or Red-Band Blush on red.",
+        "body": "No text is lighter than Slate Annotation (#767676).",
         "section": "colors"
       },
       {
@@ -277,7 +287,7 @@
       },
       {
         "name": "The No-Kicker Rule",
-        "body": "No label sits above a heading. Each section opens with its serif heading alone. About is the only exception: it has a visually hidden heading and opens with the Lead paragraph instead. The sidebar \"Links\" label heads a list, not a heading, so it's allowed.",
+        "body": "No label sits above a heading. Each section opens with its serif heading alone. The homepage has no About section; the sidebar bio carries the self-description. The page has no uppercase text at all; the sidebar's \"Links\" heading is visually hidden.",
         "section": "typography"
       },
       {
@@ -293,14 +303,14 @@
     ],
     "dos": [
       "Do let the evidence (figure, number or named role) be the largest element in its block, with annotation at Meta size or smaller.",
-      "Do use Redshift Red (#a51d1d) as the only accent, once structurally (the Community band) and otherwise for hover, focus, selection and the role line.",
+      "Do use Redshift Red (#a51d1d) as the only accent: roles, dates, hover, focus and selection.",
       "Do separate content with a single 1px #e3e3e3 hairline or a spacing token from 0.25 to 6rem.",
-      "Do keep every corner square; Plate White everywhere except the one red band.",
-      "Do set headings, questions and the lede in Newsreader, and evidence and metadata in the sans.",
+      "Do keep every corner square and every surface Plate White.",
+      "Do set headings, questions and the bio in Newsreader, and evidence and metadata in the sans.",
       "Do cap running text at 38rem (about 75 characters) and keep the 2px Redshift Red focus outline on everything interactive."
     ],
     "donts": [
-      "Don't add shadows, rounded corners, gradients or tinted cards, or a second coloured band.",
+      "Don't add shadows, rounded corners, gradients, tinted card fills, or red-filled sections (the primary action button is the only red fill). Card frames are hairline only.",
       "Don't introduce a second accent hue.",
       "Don't set text lighter than #767676.",
       "Don't put any label or eyebrow above a heading.",
