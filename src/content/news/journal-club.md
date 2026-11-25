@@ -57,7 +57,7 @@ Interested in pursuing graduate studies in astronomy? Join a small group of stud
 
 ## Paper list
 
-Explore the journal club's <a href="https://docs.google.com/spreadsheets/d/1My0F453rWZI2oWSowO-OWfrJX62awap57kySeU5Aqes/edit?usp=sharing">paper collection<span class="sr-only"> (opens Google Sheets)</span> <span aria-hidden="true">↗</span></a>.
+Explore the journal club's <a href="https://docs.google.com/spreadsheets/d/1My0F453rWZI2oWSowO-OWfrJX62awap57kySeU5Aqes/edit?usp=sharing" data-goatcounter-click="/news/journal-club/#paper-collection">paper collection<span class="sr-only"> (opens Google Sheets)</span> <span aria-hidden="true">↗</span></a>.
 
 ## Organised by
 

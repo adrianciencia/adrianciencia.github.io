@@ -4,6 +4,9 @@ import TopNav from '../components/TopNav.astro';
 import { contact, profile } from '../data/profile';
 import '../styles/global.css';
 
+// Cookieless page counts (goatcounter.com). The one script on the site; production builds only.
+const goatcounterCode = 'adrianciencia';
+
 interface Props {
   title: string;
   description: string;
@@ -54,6 +57,16 @@ const canonicalUrl = new URL(path, Astro.site).href;
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
+    {
+      import.meta.env.PROD && (
+        <script
+          is:inline
+          data-goatcounter={`https://${goatcounterCode}.goatcounter.com/count`}
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>

@@ -1,0 +1,20 @@
+---
+// Short, stable target for printed QR codes. Change the destination here, never the QR.
+// Not listed in the sitemap or llms.txt; the UTM parameters attribute the visit in GoatCounter.
+const destination = '/news/journal-club/?utm_source=flyer&utm_medium=qr&utm_campaign=journal_club_2027';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={new URL('/news/journal-club/', Astro.site).href} />
+    <title>Astronomy Journal Club</title>
+  </head>
+  <body>
+    <p><a href={destination}>Astronomy Journal Club: call for applications</a></p>
+  </body>
+</html>

@@ -56,6 +56,9 @@ const knownHosts: Record<string, string> = {
 };
 const host = link && /^https?:/.test(link.href) ? new URL(link.href).hostname.replace(/^www\./, '') : undefined;
 const externalHost = host && (knownHosts[host] ?? host);
+// GoatCounter click events, named by page and position, e.g. "/news/journal-club/#apply-now-header".
+const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const clickEvent = (name: string) => `${Astro.url.pathname}#${name}`;
 ---
 
 <article class="entry-page">
@@ -66,7 +69,7 @@ const externalHost = host && (knownHosts[host] ?? host);
     {metaLine.length > 0 && <p class="entry-page-meta">{metaLine.join(' · ')}</p>}
     {
       link && (
-        <a class:list={actionClass} href={link.href}>
+        <a class:list={actionClass} href={link.href} data-goatcounter-click={clickEvent(`${slug(link.label)}-header`)}>
           {link.label}
           {externalHost && <span class="sr-only"> (opens {externalHost})</span>} <span aria-hidden="true">↗</span>
         </a>
@@ -141,7 +144,7 @@ const externalHost = host && (knownHosts[host] ?? host);
     link && actionStyle === 'primary' && (
       <div class="entry-page-close">
         <div class="entry-page-close-action">
-          <a class:list={actionClass} href={link.href}>
+          <a class:list={actionClass} href={link.href} data-goatcounter-click={clickEvent(`${slug(link.label)}-closing`)}>
             {link.label}
             {externalHost && <span class="sr-only"> (opens {externalHost})</span>} <span aria-hidden="true">↗</span>
           </a>
@@ -152,7 +155,7 @@ const externalHost = host && (knownHosts[host] ?? host);
             <p class="entry-page-close-extras">
               {
                 download && (
-                  <a href={download.href} download>
+                  <a href={download.href} download data-goatcounter-click={clickEvent('download')}>
                     {download.label}
                   </a>
                 )
